@@ -1,12 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-
-import 'package:pixamart/data/data.dart';
+import 'package:pixamart/private.dart';
 import '../model/wallpaper_model.dart';
-import '../widget/widget.dart';
+import '../widget/brand_name.dart';
 import 'Image_view.dart';
+
 class Search extends StatefulWidget {
   final String searchQuery;
   Search({required this.searchQuery});
@@ -21,12 +20,10 @@ class _SearchState extends State<Search> {
   Future<List<dynamic>>getSearchWallpapers(String query) async{
     Response url = await get(Uri.parse("https://api.pexels.com/v1/search?query=$query&per_page=80"),
         headers: {
-          "Authorization": apiKey});
+          "Authorization": getApiKey()});
     if(url.statusCode == 200){
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos = body['photos'].map((dynamic item)=>Photos.fromJson(item)).toList();
-      //List<Photos> photos = body.toList();
-      print(photos);
       return photos;
     }
     else{
@@ -46,7 +43,6 @@ class _SearchState extends State<Search> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         centerTitle: true,
-        elevation: 0.0,
         backgroundColor: Colors.transparent,
         title: brand_name(),
       ),
@@ -94,7 +90,7 @@ class _SearchState extends State<Search> {
                     return Container(
                       padding: EdgeInsets.all(16),
                       child: GridView.count(
-                        physics: ClampingScrollPhysics(),
+                        physics: BouncingScrollPhysics(),
                         shrinkWrap: true,
                         childAspectRatio: 0.6,
                         scrollDirection: Axis.vertical,
@@ -116,8 +112,8 @@ class _SearchState extends State<Search> {
                   }
                   return Center(child: CircularProgressIndicator());
                 },
-
-              ),),
+              ),
+            ),
 
           ],
         ),

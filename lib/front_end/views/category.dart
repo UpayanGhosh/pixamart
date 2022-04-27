@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:pixamart/data/data.dart';
+import 'package:pixamart/private.dart';
 import 'package:pixamart/front_end/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/widget.dart';
+import 'package:pixamart/front_end/widget/brand_name.dart';
 import 'package:pixamart/front_end/views/Image_view.dart';
 
 class Category extends StatefulWidget {
@@ -19,7 +18,7 @@ class _CategoryState extends State<Category> {
   Future<List<dynamic>> getSearchWallpapers(String query) async {
     Response url = await get(
         Uri.parse("https://api.pexels.com/v1/search?query=$query&per_page=80"),
-        headers: {"Authorization": apiKey});
+        headers: {"Authorization": getApiKey()});
     if (url.statusCode == 200) {
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos =

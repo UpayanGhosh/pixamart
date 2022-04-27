@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:pixamart/data/data.dart';
 import 'package:pixamart/front_end/model/categories_model.dart';
 import 'package:pixamart/front_end/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/views/Image_view.dart';
-import 'package:pixamart/front_end/views/categorie.dart';
-import 'package:pixamart/front_end/views/search.dart';
-import 'package:pixamart/front_end/widget/widget.dart';
+import 'package:pixamart/front_end/views/category.dart';
+import 'package:pixamart/front_end/widget/search_bar.dart';
+import 'package:pixamart/front_end/widget/brand_name.dart';
+import 'package:pixamart/private.dart';
+import '../widget/categories.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,11 +19,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<CategoriesModel> categories = [];
-  TextEditingController searchController = TextEditingController();
+
   Future<List<dynamic>> getTrendingWallpapers() async {
     Response url = await get(
         Uri.parse("https://api.pexels.com/v1/curated?per_page=80"),
-        headers: {"Authorization": apiKey});
+        headers: {"Authorization": getApiKey()});
     if (url.statusCode == 200) {
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos =
@@ -35,9 +36,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    super.initState();
     getTrendingWallpapers();
     categories = getCategory();
-    super.initState();
   }
 
   @override
@@ -57,63 +58,37 @@ class _HomeState extends State<Home> {
             child: Container(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
                     child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: TextField(
-                            controller: searchController,
-                            decoration: InputDecoration(
-                              hintText: "search wallpaper",
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Search(
-                                          searchQuery: searchController.text,
-                                        )));
-                          },
-                          child: Container(child: Icon(Icons.search)),
+                      children: [
+                        SearchBar(),
+                        Container(
+                          height: 80,
+                          child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              padding: EdgeInsets.symmetric(horizontal: 4),
+                              itemCount: categories.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return CategoriesTile(
+                                  title: categories[index].categoriesName,
+                                  imgUrl: categories[index].imgUrl,
+                                );
+                              }),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Container(
-                    height: 80,
-                    child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        itemCount: categories.length,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          //wallpapers[index].src.portrait;
-                          return CategoriesTile(
-                            title: categories[index].categoriesName,
-                            imgUrl: categories[index].imgUrl,
-                          );
-                        }),
-                  ),
+
                 ],
               ),
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height - 263,
+            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height / 3.9,
             child: FutureBuilder(
               future: getTrendingWallpapers(),
               builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
