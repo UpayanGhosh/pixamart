@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
   Future<List<dynamic>> getTrendingWallpapers() async {
     Response url = await get(
         Uri.parse("https://api.pexels.com/v1/curated?per_page=80"),
-        headers: {"Authorization": getApiKey()});
+        headers: {"Authorization": getPexelsApiKey()});
     if (url.statusCode == 200) {
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos =
