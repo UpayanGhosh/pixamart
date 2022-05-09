@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../views/search.dart';
+import 'package:pixamart/front_end/views/search.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
@@ -51,37 +51,5 @@ class _SearchBarState extends State<SearchBar> {
         ],
       ),
     );
-    /*Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(50),
-      ),
-      margin: EdgeInsets.symmetric(horizontal: 24),
-      padding: EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: "search wallpaper",
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Search(
-                        searchQuery: searchController.text,
-                      )));
-            },
-            child: Container(child: Icon(Icons.search)),
-          ),
-        ],
-      ),
-    );*/
   }
 }
