@@ -20,7 +20,7 @@ class _SearchState extends State<Search> {
   Future<List<dynamic>>getSearchWallpapers(String query) async{
     Response url = await get(Uri.parse("https://api.pexels.com/v1/search?query=$query&per_page=80"),
         headers: {
-          "Authorization": getApiKey()});
+          "Authorization": getPexelsApiKey()});
     if(url.statusCode == 200){
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos = body['photos'].map((dynamic item)=>Photos.fromJson(item)).toList();
