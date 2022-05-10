@@ -1,3 +1,5 @@
+// This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
+
 import 'dart:typed_data';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
@@ -36,8 +38,6 @@ class _ImageViewState extends State<ImageView> {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper Set Successfully')));
                 },
                 child: Container(
-                  //alignment: Alignment.bottomCenter,
-                  //margin: EdgeInsets.symmetric(horizontal:16,vertical: 0.1),
                   height: 65,
                   width: 200,
                   decoration: BoxDecoration(
@@ -57,8 +57,6 @@ class _ImageViewState extends State<ImageView> {
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 40),
-                  //alignment: Alignment.bottomCenter,
-                  //margin: EdgeInsets.symmetric(horizontal:16,vertical: 0.1),
                   height: 65,
                   width: 200,
                   decoration: BoxDecoration(
@@ -71,27 +69,6 @@ class _ImageViewState extends State<ImageView> {
                   child: Center(child: Text("Set as Lockscreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
                 ),
               ),
-              /*GestureDetector(
-                onTap: (){
-                  setWallpaper('bothscreen');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Both Wallpaper Set Successfully')));
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 40),
-                  //alignment: Alignment.bottomCenter,
-                  //margin: EdgeInsets.symmetric(horizontal:16,vertical: 0.1),
-                  height: 65,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(colors: [
-                        Colors.transparent,
-                        Colors.blueAccent,
-                      ])
-                  ),
-                  child: Center(child: Text("Set as Both",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
-                ),
-              ),*/
             ],
           ),
           ),
