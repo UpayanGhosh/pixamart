@@ -47,3 +47,4 @@ app.*.map.json
 /android/key.properties
 
 # Library Files
+/lib/private.dart
