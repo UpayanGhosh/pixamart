@@ -1,14 +1,16 @@
+// When user searches something he/she lands on this page
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pixamart/private.dart';
-import '../model/wallpaper_model.dart';
-import '../widget/brand_name.dart';
-import 'Image_view.dart';
+import 'package:pixamart/backend/model/wallpaper_model.dart';
+import '../widget/app_title.dart';
+import 'Image_view_page.dart';
 
 class Search extends StatefulWidget {
   final String searchQuery;
-  Search({required this.searchQuery});
+  const Search({Key? key, required this.searchQuery}) : super(key: key);
 
 
   @override
@@ -44,7 +46,7 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        title: brand_name(),
+        title: AppTitle(),
       ),
       body: Container(
         child: Column(

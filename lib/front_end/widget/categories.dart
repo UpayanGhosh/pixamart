@@ -1,4 +1,4 @@
-import 'package:pixamart/front_end/model/categories_model.dart';
+import 'package:pixamart/backend/model/categories_model.dart';
 
 List<CategoriesModel> getCategory() {
 

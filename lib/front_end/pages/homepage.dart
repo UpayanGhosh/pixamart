@@ -1,23 +1,25 @@
+// This is the HomePage of the application
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:pixamart/front_end/model/categories_model.dart';
-import 'package:pixamart/front_end/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/views/Image_view.dart';
-import 'package:pixamart/front_end/views/category.dart';
+import 'package:pixamart/backend/model/categories_model.dart';
+import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
-import 'package:pixamart/front_end/widget/brand_name.dart';
+import 'package:pixamart/front_end/widget/app_title.dart';
 import 'package:pixamart/private.dart';
-import '../widget/categories.dart';
+import 'package:pixamart/front_end/widget/categories.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+import '../widget/category_tile.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   List<CategoriesModel> categories = [];
 
   Future<List<dynamic>> getTrendingWallpapers() async {
@@ -49,7 +51,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: brand_name(),
+        title: AppTitle(),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -73,7 +75,7 @@ class _HomeState extends State<Home> {
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                return CategoriesTile(
+                                return CategoryTile(
                                   title: categories[index].categoriesName,
                                   imgUrl: categories[index].imgUrl,
                                 );
@@ -82,7 +84,6 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -110,12 +111,8 @@ class _HomeState extends State<Home> {
                                   borderRadius: BorderRadius.circular(16),
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ImageView(
-                                                    imgUrl: photos.src.portrait,
-                                                  )));
+                                      Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photos.src.portrait});
+                                      //Navigator.push(context, MaterialPageRoute(builder: (context) => ImageView(imgUrl: photos.src.portrait)));
                                     },
                                     child: Hero(
                                         tag: photos.src.portrait,
@@ -140,50 +137,4 @@ class _HomeState extends State<Home> {
   }
 }
 
-class CategoriesTile extends StatelessWidget {
-  final String imgUrl, title;
-  CategoriesTile({required this.title, required this.imgUrl});
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Category(categoryName: title.toLowerCase())));
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4),
-        child: Stack(
-          children: <Widget>[
-            ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imgUrl,
-                  height: 50,
-                  width: 100,
-                  fit: BoxFit.cover,
-                )),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.black38,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              height: 50,
-              width: 100,
-              alignment: Alignment.center,
-              child: Text(
-                title,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 16),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+

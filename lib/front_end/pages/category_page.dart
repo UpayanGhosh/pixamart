@@ -1,10 +1,12 @@
+// This Page is for when the user clicks on a Catergory tile and lands on the page where all of the images of the same catergory is shown
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pixamart/private.dart';
-import 'package:pixamart/front_end/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/brand_name.dart';
-import 'package:pixamart/front_end/views/Image_view.dart';
+import 'package:pixamart/backend/model/wallpaper_model.dart';
+import 'package:pixamart/front_end/widget/app_title.dart';
+import 'package:pixamart/front_end/pages/Image_view_page.dart';
 
 class Category extends StatefulWidget {
   final String categoryName;
@@ -46,7 +48,7 @@ class _CategoryState extends State<Category> {
         centerTitle: true,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: brand_name(),
+        title: AppTitle(),
       ),
       body: Container(
         child: Column(
