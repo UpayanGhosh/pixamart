@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pixamart/front_end/views/search.dart';
+import 'package:pixamart/front_end/pages/search_page.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
