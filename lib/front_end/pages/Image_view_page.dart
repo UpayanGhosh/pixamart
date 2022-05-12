@@ -42,10 +42,7 @@ class _ImageViewState extends State<ImageView> {
                   width: 200,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(colors: [
-                        Colors.blueAccent,
-                        Colors.transparent,
-                      ])
+                      color: Colors.black38
                   ),
                   child: Center(child: Text("Set as Homescreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
                 ),
@@ -60,11 +57,8 @@ class _ImageViewState extends State<ImageView> {
                   height: 65,
                   width: 200,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(colors: [
-                        Colors.transparent,
-                        Colors.blueAccent,
-                      ])
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.black38,
                   ),
                   child: Center(child: Text("Set as Lockscreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
                 ),

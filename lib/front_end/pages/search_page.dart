@@ -3,13 +3,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:pixamart/front_end/widget/anime.dart';
 import 'package:pixamart/private.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import '../widget/app_title.dart';
 import 'Image_view_page.dart';
 
 class Search extends StatefulWidget {
-  final String searchQuery;
+  final TextEditingController searchQuery;
   const Search({Key? key, required this.searchQuery}) : super(key: key);
 
 
@@ -35,7 +36,7 @@ class _SearchState extends State<Search> {
   }
   @override
   void initState() {
-    getSearchWallpapers(widget.searchQuery);
+    getSearchWallpapers(widget.searchQuery.text);
     super.initState();
   }
   @override
@@ -51,41 +52,14 @@ class _SearchState extends State<Search> {
       body: Container(
         child: Column(
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 24),
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: "search wallpaper",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Search(
-                        searchQuery:searchController.text,
-                      )
-                      ));
-                    },
-                    child: Container(
-                        child: Icon(Icons.search)),
-                  ),
-                ],
-              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16,0,0,22),
+              child: Anime(width: MediaQuery.of(context).size.width/1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){}),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height - 167,
+              height: MediaQuery.of(context).size.height - 202,
               child: FutureBuilder(
-                future: getSearchWallpapers(widget.searchQuery),
+                future: getSearchWallpapers(widget.searchQuery.text),
                 builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                   if(snapshot.hasData) {
                     List<dynamic> photos = snapshot.data!;

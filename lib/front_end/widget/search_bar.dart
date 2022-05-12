@@ -1,5 +1,7 @@
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pixamart/front_end/pages/search_page.dart';
+import 'package:pixamart/front_end/widget/anime.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
@@ -18,38 +20,8 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width / 2,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      margin: EdgeInsets.fromLTRB(14, 0,0,30),
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: "search wallpaper",
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Search(
-                        searchQuery: searchController.text,
-                      )));
-            },
-            child: Container(child: Icon(Icons.search)),
-          ),
-        ],
-      ),
-    );
+    return Anime(width: MediaQuery.of(context).size.width/1.525, textController: searchController, onSuffixTap: (){
+
+    }, searchQuery: searchController,);
   }
 }

@@ -1,5 +1,8 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:pixamart/front_end/pages/Image_view_page.dart';
+import 'package:pixamart/front_end/pages/search_page.dart';
 import '../front_end/pages/category_page.dart';
 import '../front_end/pages/homepage.dart';
 
@@ -15,6 +18,9 @@ class RouteGenerator {
       case '/imageView':
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => ImageView(imgUrl: args['imgUrl']));
+      case '/search':
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (context) => Search(searchQuery: args['searchQuery']));
       default:
         return MaterialPageRoute(builder: (context) => ErrorPage());
     }

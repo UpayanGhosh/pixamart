@@ -65,7 +65,10 @@ class _HomePageState extends State<HomePage> {
                     physics: BouncingScrollPhysics(),
                     child: Row(
                       children: [
-                        SearchBar(),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16,0,0,22),
+                          child: SearchBar(),
+                        ),
                         Container(
                           height: 80,
                           child: ListView.builder(
