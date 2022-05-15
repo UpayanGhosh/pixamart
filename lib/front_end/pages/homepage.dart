@@ -105,10 +105,10 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photos.src.portrait});
+                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photos.src.original });
                                   },
                                   child: Hero(
-                                      tag: photos.src.portrait,
+                                      tag: photos.src.original,
                                       child: Image.network(
                                         '${photos.src.portrait}',
                                         fit: BoxFit.cover,

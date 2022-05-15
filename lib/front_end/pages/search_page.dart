@@ -6,13 +6,11 @@ import 'package:http/http.dart';
 import 'package:pixamart/front_end/widget/animated_search_bar.dart';
 import 'package:pixamart/private.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
-import '../widget/app_title.dart';
-import 'Image_view_page.dart';
+import 'package:pixamart/front_end/widget/app_title.dart';
 
 class Search extends StatefulWidget {
   final TextEditingController searchQuery;
   const Search({Key? key, required this.searchQuery}) : super(key: key);
-
 
   @override
   State<Search> createState() => _SearchState();
@@ -32,7 +30,6 @@ class _SearchState extends State<Search> {
     else{
       throw Exception('Failed to Fetch Photos');
     }
-    //print(jsonData);
   }
   @override
   void initState() {
@@ -42,7 +39,6 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       appBar: AppBar(
         centerTitle: true,
@@ -52,8 +48,8 @@ class _SearchState extends State<Search> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16,0,0,22),
-            child: AnimatedSearchBar(width: MediaQuery.of(context).size.width/1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){}),
+            padding: const EdgeInsets.fromLTRB(16, 0, 0, 22),
+            child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){print("hello");}),
           ),
           FutureBuilder(
             future: getSearchWallpapers(widget.searchQuery.text),
@@ -62,22 +58,22 @@ class _SearchState extends State<Search> {
                 List<dynamic> photos = snapshot.data!;
                 return Container(
                   height: MediaQuery.of(context).size.height / 1.44,
-                  color: Colors.white,
+                  color: Colors.black,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: GridView.count(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     childAspectRatio: 0.6,
                     scrollDirection: Axis.vertical,
-                    crossAxisCount: 2,
+                    crossAxisCount: 4,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                     children: photos.map((dynamic photos) => GridTile(child: ClipRRect(borderRadius: BorderRadius.circular(16),child: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ImageView(imgUrl:photos.src.portrait,)));
+                        Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photos.src.original});
                       },
                       child: Hero(
-                          tag:photos.src.portrait,child: Image.network('${photos.src.portrait}',fit: BoxFit.cover,)),
+                          tag:photos.src.original, child: Image.network('${photos.src.portrait}',fit: BoxFit.cover,)),
                     )))).toList(),
                   ),
                 );
