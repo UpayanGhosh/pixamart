@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:pixamart/front_end/pages/Image_view_page.dart';
 import 'package:pixamart/front_end/pages/search_page.dart';
