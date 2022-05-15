@@ -182,8 +182,9 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       labelText: widget.helpText,
                       labelStyle: TextStyle(
                         color: Color(0xff5B5B5B),
-                        fontSize: 17.0,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
                       ),
                       alignLabelWithHint: true,
                       border: OutlineInputBorder(

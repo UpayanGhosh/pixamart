@@ -1,7 +1,5 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:pixamart/front_end/pages/search_page.dart';
-import 'package:pixamart/front_end/widget/anime.dart';
+import 'package:pixamart/front_end/widget/animated_search_bar.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
@@ -20,8 +18,6 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Anime(width: MediaQuery.of(context).size.width/1.525, textController: searchController, onSuffixTap: (){
-
-    }, searchQuery: searchController,);
+    return AnimatedSearchBar(width: MediaQuery.of(context).size.width/1.525, textController: searchController, onSuffixTap: (){}, searchQuery: searchController,);
   }
 }

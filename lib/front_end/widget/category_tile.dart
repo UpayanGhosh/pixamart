@@ -8,19 +8,18 @@ class CategoryTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, '/category', arguments: {'categoryName': title.toLowerCase()});
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => Category(categoryName: title.toLowerCase())));
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 4),
         child: Stack(
-          children: <Widget>[
+          children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
                   imgUrl,
                   height: 50,
                   width: 100,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitWidth,
                 )),
             Container(
               decoration: BoxDecoration(

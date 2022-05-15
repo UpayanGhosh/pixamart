@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:pixamart/front_end/widget/anime.dart';
+import 'package:pixamart/front_end/widget/animated_search_bar.dart';
 import 'package:pixamart/private.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import '../widget/app_title.dart';
@@ -47,52 +47,49 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        title: AppTitle(),
+        title: AppTitle(padLeft: 0.0, padTop: 60.0, padRight: 0.0, padBottom: 15.0,),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16,0,0,22),
-              child: Anime(width: MediaQuery.of(context).size.width/1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){}),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 202,
-              child: FutureBuilder(
-                future: getSearchWallpapers(widget.searchQuery.text),
-                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                  if(snapshot.hasData) {
-                    List<dynamic> photos = snapshot.data!;
-                    return Container(
-                      padding: EdgeInsets.all(16),
-                      child: GridView.count(
-                        physics: BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        childAspectRatio: 0.6,
-                        scrollDirection: Axis.vertical,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        children: photos.map((dynamic photos) => GridTile(child: ClipRRect(borderRadius: BorderRadius.circular(16),child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ImageView(imgUrl:photos.src.portrait,)));
-                          },
-                          child: Hero(
-                              tag:photos.src.portrait,child: Image.network('${photos.src.portrait}',fit: BoxFit.cover,)),
-                        )))).toList(),
-                      ),
-                    );
-                  }
-                  else if(snapshot.hasError){
-                    return Center(child: Text('Failed to Load Wallpapers'));
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ),
-            ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16,0,0,22),
+            child: AnimatedSearchBar(width: MediaQuery.of(context).size.width/1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){}),
+          ),
+          FutureBuilder(
+            future: getSearchWallpapers(widget.searchQuery.text),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if(snapshot.hasData) {
+                List<dynamic> photos = snapshot.data!;
+                return Container(
+                  height: MediaQuery.of(context).size.height / 1.44,
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: GridView.count(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    childAspectRatio: 0.6,
+                    scrollDirection: Axis.vertical,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    children: photos.map((dynamic photos) => GridTile(child: ClipRRect(borderRadius: BorderRadius.circular(16),child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ImageView(imgUrl:photos.src.portrait,)));
+                      },
+                      child: Hero(
+                          tag:photos.src.portrait,child: Image.network('${photos.src.portrait}',fit: BoxFit.cover,)),
+                    )))).toList(),
+                  ),
+                );
+              }
+              else if(snapshot.hasError){
+                return Center(child: Text('Failed to Load Wallpapers'));
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          ),
 
-          ],
-        ),
+        ],
       ),
     );
   }
