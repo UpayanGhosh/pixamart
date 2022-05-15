@@ -48,7 +48,7 @@ class _CategoryState extends State<Category> {
         centerTitle: true,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: AppTitle(),
+        title: AppTitle(padLeft: 0.0, padTop: 60.0, padRight: 0.0, padBottom: 15.0,),
       ),
       body: Container(
         child: Column(
