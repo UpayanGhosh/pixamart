@@ -1,23 +1,27 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AppTitle extends StatelessWidget {
-  const AppTitle({Key? key}) : super(key: key);
+  final double padLeft;
+  final double padRight;
+  final double padTop;
+  final double padBottom;
+  const AppTitle({Key? key, required this.padLeft, required this.padTop, required this.padRight, required this.padBottom}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+      padding: EdgeInsets.fromLTRB(padLeft, padTop, padRight, padBottom),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text('Pixa', style: TextStyle(
-            fontSize: 50,
+            fontSize: MediaQuery.of(context).size.height / 21,
             fontFamily: 'Raunchies',
             fontWeight: FontWeight.bold,
           ),),
           Text('Mart', style: TextStyle(
-            fontSize: 50,
+            fontSize: MediaQuery.of(context).size.height / 21,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
             fontFamily: 'Raunchies',
