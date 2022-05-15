@@ -1,4 +1,4 @@
-// This Page is for when the user clicks on a Catergory tile and lands on the page where all of the images of the same catergory is shown
+// This Page is for when the user clicks on a Category tile and lands on the page where all of the images of the same category is shown
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -25,12 +25,10 @@ class _CategoryState extends State<Category> {
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos =
           body['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
-      //List<Photos> photos = body.toList();
       return photos;
     } else {
       throw Exception('Failed to Fetch Photos');
     }
-    //print(jsonData);
   }
 
   @override
@@ -77,13 +75,8 @@ class _CategoryState extends State<Category> {
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ImageView(
-                                                      imgUrl:
-                                                          photos.src.portrait,
-                                                    )));
-                                      },
+                                            context, MaterialPageRoute(builder: (context) => ImageView(imgUrl: photos.src.portrait,)));
+                                        },
                                       child: Hero(
                                           tag: photos.src.portrait,
                                           child: Image.network(
