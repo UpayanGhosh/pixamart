@@ -7,7 +7,7 @@ import 'package:pixamart/backend/model/categories_model.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
-import 'package:pixamart/private.dart';
+import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/front_end/widget/categories.dart';
 import 'package:pixamart/front_end/widget/category_tile.dart';
 
