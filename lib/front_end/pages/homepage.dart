@@ -7,6 +7,7 @@ import 'package:pixamart/backend/model/categories_model.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
+import 'package:pixamart/private/api_key.dart';
 import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/front_end/widget/categories.dart';
 import 'package:pixamart/front_end/widget/category_tile.dart';
@@ -43,9 +44,9 @@ class _HomePageState extends State<HomePage> {
             page++;
             if (url.statusCode == 200) {
               Map<String, dynamic> curated = jsonDecode(url.body);
-              List<dynamic> photos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+              List<dynamic> newPhotos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
               setState(() {
-                photoList.addAll(photos);
+                photoList.addAll(newPhotos);
                 photoList.reversed;
               });
             } else {
@@ -56,7 +57,9 @@ class _HomePageState extends State<HomePage> {
       });
       return photoList;
     } else {
-      throw Exception('Failed to Fetch Curated');
+      swapKeys();
+      return photoList;
+      //throw Exception('Failed to Fetch Curated');
     }
   }
 
@@ -121,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 future: getPexelsCuratedWallpapers(),
                 builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                   if (snapshot.hasData) {
-                    List<dynamic> photos = snapshot.data!;
+                    List<dynamic> photoList = snapshot.data!;
                     return Container(
                       height: MediaQuery.of(context).size.height / 1.39,
                       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -139,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original});
+                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                                   },
                                   child: Hero(
                                       tag: photo.src.portrait,
