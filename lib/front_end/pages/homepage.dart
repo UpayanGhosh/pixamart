@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
               List<dynamic> photos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
               setState(() {
                 photoList.addAll(photos);
+                photoList.reversed;
               });
             } else {
               throw Exception('Failed to Fetch Curated');
@@ -164,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: Icon(Icons.rocket),
+                    child: Icon(Icons.rocket_rounded,size: 30,),
                   ),
                   style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
               ),
