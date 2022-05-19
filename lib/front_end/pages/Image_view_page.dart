@@ -10,7 +10,8 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
   final String imgDownloadUrl;
-  const ImageView({required this.imgShowUrl, required this.imgDownloadUrl, Key? key}) : super(key: key);
+  final String alt;
+  const ImageView({required this.imgShowUrl, required this.imgDownloadUrl, required this.alt, Key? key}) : super(key: key);
 
   @override
   State<ImageView> createState() => _ImageViewState();
@@ -21,54 +22,51 @@ class _ImageViewState extends State<ImageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Hero(
-            tag: widget.imgShowUrl,
-            child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Image.network(widget.imgShowUrl,fit: BoxFit.cover,),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setWallpaper('homescreen');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper Set Successfully')));
-                },
-                child: Container(
-                  height: 65,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.black38
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height / 12,),
+            Text(widget.alt, style: TextStyle(color: Colors.white, fontSize: 27, fontFamily: 'Raunchies'), textAlign: TextAlign.center,),
+            SizedBox(height: MediaQuery.of(context).size.height / 40,),
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+                child: Hero(
+                  tag: widget.imgShowUrl,
+                  child: Container(
+                      height: MediaQuery.of(context).size.height - 100,
+                      width: MediaQuery.of(context).size.width - 50,
+                      child: Image.network(widget.imgShowUrl,fit: BoxFit.cover,),
                   ),
-                  child: Center(child: Text("Set as Homescreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
+                ),
               ),
             ),
-            GestureDetector(
-              onTap: (){
-                setWallpaper('lockscreen');
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper Set Successfully')));
-              },
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 40),
-                height: 65,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.black38,
+            SizedBox(height: MediaQuery.of(context).size.height / 40,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(onPressed: () {
+                  setWallpaper('homescreen');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper will be set Shortly!')));
+                }, child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0,14,0,0),
+                  child: Text('Set as Homescreen', style: TextStyle(color: Colors.black87, fontFamily: 'Raunchies', fontSize: 20),),
+                ), style: ElevatedButton.styleFrom(primary: Colors.white, shape: StadiumBorder()),),
+                ElevatedButton(onPressed: () {
+                  setWallpaper('lockscreen');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper will be set Shortly')));
+                }, child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0,14,0,0),
+                  child: Text('Set as Lockscreen', style: TextStyle(fontFamily: 'Raunchies', fontSize: 20)),
                 ),
-                child: Center(child: Text("Set as Lockscreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
-              ),
+                  style: ElevatedButton.styleFrom(primary: Colors.blue, shape: StadiumBorder()),
+                ),
+              ],
             ),
           ],
-          ),
-        ],
+        ),
       ),
     );
   }

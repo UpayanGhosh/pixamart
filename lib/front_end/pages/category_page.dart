@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
+import 'package:pixamart/private/api_key.dart';
 import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
@@ -39,8 +40,8 @@ class _CategoryState extends State<Category> {
                 headers: {"Authorization": getPexelsApiKey()});
             page++;
             if (url.statusCode == 200) {
-              Map<String, dynamic> curated = jsonDecode(url.body);
-              List<dynamic> photos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+              Map<String, dynamic> newPhotos = jsonDecode(url.body);
+              List<dynamic> photos = newPhotos['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
               setState(() {
                 photoList.addAll(photos);
               });
@@ -52,7 +53,9 @@ class _CategoryState extends State<Category> {
       });
       return photoList;
     } else {
-      throw Exception('Failed to Fetch Photos');
+      swapKeys();
+      return photoList;
+      //throw Exception('Failed to Fetch Photos');
     }
   }
 
@@ -95,7 +98,7 @@ class _CategoryState extends State<Category> {
                   future: getSearchWallpapers(widget.categoryName),
                   builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                     if (snapshot.hasData) {
-                      List<dynamic> photos = snapshot.data!;
+                      List<dynamic> photoList = snapshot.data!;
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: GridView.count(
@@ -113,7 +116,7 @@ class _CategoryState extends State<Category> {
                                       borderRadius: BorderRadius.circular(16),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original});
+                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                                           },
                                         child: Hero(
                                             tag: photo.src.portrait,
