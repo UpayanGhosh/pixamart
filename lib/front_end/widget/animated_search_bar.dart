@@ -27,20 +27,13 @@ class AnimatedSearchBar extends StatefulWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.helpText = "Search...",
-
     this.color = Colors.white,
-
     required this.onSuffixTap,
     this.animationDurationInMilli = 375,
-
     this.rtl = false,
-
     this.autoFocus = false,
-
     this.style,
-
     this.closeSearchOnSuffixTap = false,
-
     this.inputFormatters,
   }) : super(key: key);
 
@@ -51,16 +44,15 @@ class AnimatedSearchBar extends StatefulWidget {
 int toggle = 0;
 
 class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerProviderStateMixin {
-  late AnimationController _con;
+  late AnimationController _animationController;
   FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
 
-    _con = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
-
       duration: Duration(milliseconds: widget.animationDurationInMilli),
     );
   }
@@ -70,6 +62,10 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
     if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
       FocusManager.instance.primaryFocus?.unfocus();
     }
+    toggle = 0;
+    if(widget.textController.text.isNotEmpty){
+      Navigator.pushNamed(context, '/search', arguments: {'searchQuery': widget.searchQuery});
+    }
   }
 
   @override
@@ -77,7 +73,6 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
     return Container(
       height: 100.0,
       alignment: widget.rtl ? Alignment.centerRight : Alignment(-1.0, 0.0),
-
       child: AnimatedContainer(
         duration: Duration(milliseconds: widget.animationDurationInMilli),
         height: 48.0,
@@ -116,7 +111,6 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       onTap: () {
                         try {
                           widget.onSuffixTap();
-
                           if (widget.closeSearchOnSuffixTap) {
                             unfocusKeyboard();
                             setState(() {
@@ -124,27 +118,24 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                             });
                           }
                         } catch (e) {
-                          print(e);
+
                         }
                       },
-                      child: widget.suffixIcon != null
-                          ? widget.suffixIcon
-                          :
-                        GestureDetector(
-                          child: Icon(Icons.search_rounded,
+                      child: GestureDetector(
+                        child: Icon(Icons.search_rounded,
                             size: 20.0),
-                          onTap: (){
-                            Navigator.pushNamed(context, '/search', arguments: {'searchQuery': widget.searchQuery});
+                        onTap: (){
+                          unfocusKeyboard();
                           },
                         ),
                     ),
                     builder: (context, widget) {
                       return Transform.rotate(
-                        angle: _con.value * 2.0 * pi,
+                        angle: _animationController.value * 2.0 * pi,
                         child: widget,
                       );
                     },
-                    animation: _con,
+                    animation: _animationController,
                   ),
                 ),
               ),
@@ -207,29 +198,34 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                     ? Icon(Icons.arrow_back_ios)
                     : widget.prefixIcon!
                     : Icon(
-                  toggle == 1 ? Icons.arrow_back_ios : Icons.search,
+                  toggle == 1 ? Icons.align_horizontal_left_rounded : Icons.search,
                   size: 20.0,
                 ),
                 onPressed: () {
-                  setState(
-                        () {
+                  if(widget.textController.text.isNotEmpty && toggle == 1) {
+                    widget.textController.clear();
+                  }
+                  else {
+                    setState(() {
                       if (toggle == 0) {
                         toggle = 1;
                         setState(() {
                           if (widget.autoFocus)
                             FocusScope.of(context).requestFocus(focusNode);
                         });
+                        _animationController.forward();
+                      }
 
-                        _con.forward();
-                      } else {
+                      else {
                         toggle = 0;
                         setState(() {
                           if (widget.autoFocus) unfocusKeyboard();
                         });
-                        _con.reverse();
+                        _animationController.reverse();
                       }
                     },
                   );
+                  }
                 },
               ),
             ),

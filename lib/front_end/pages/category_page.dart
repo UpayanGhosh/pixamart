@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:pixamart/front_end/widget/search_bar.dart';
 import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
@@ -84,8 +85,9 @@ class _CategoryState extends State<Category> {
       body: Container(
         child: Column(
           children: <Widget>[
+            SearchBar(),
             SizedBox(
-              height: MediaQuery.of(context).size.height - 119,
+              height: MediaQuery.of(context).size.height - 185,
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
@@ -111,10 +113,10 @@ class _CategoryState extends State<Category> {
                                       borderRadius: BorderRadius.circular(16),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photo.src.original});
+                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original});
                                           },
                                         child: Hero(
-                                            tag: photo.src.original,
+                                            tag: photo.src.portrait,
                                             child: Image.network(
                                               '${photo.src.portrait}',
                                               fit: BoxFit.cover,

@@ -15,7 +15,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => Category(categoryName: args['categoryName'],));
       case '/imageView':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => ImageView(imgUrl: args['imgUrl']));
+        return MaterialPageRoute(builder: (context) => ImageView(imgShowUrl: args['imgShowUrl'], imgDownloadUrl: args['imgDownloadUrl'],));
       case '/search':
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => Search(searchQuery: args['searchQuery']));

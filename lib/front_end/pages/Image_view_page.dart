@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class ImageView extends StatefulWidget {
-  final String imgUrl;
-  const ImageView({required this.imgUrl, Key? key}) : super(key: key);
+  final String imgShowUrl;
+  final String imgDownloadUrl;
+  const ImageView({required this.imgShowUrl, required this.imgDownloadUrl, Key? key}) : super(key: key);
 
   @override
   State<ImageView> createState() => _ImageViewState();
@@ -24,11 +25,11 @@ class _ImageViewState extends State<ImageView> {
         alignment: Alignment.bottomCenter,
         children: [
           Hero(
-            tag: widget.imgUrl,
+            tag: widget.imgShowUrl,
             child: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                child: Image.network(widget.imgUrl,fit: BoxFit.cover,),
+                child: Image.network(widget.imgShowUrl,fit: BoxFit.cover,),
             ),
           ),
           Column(
@@ -74,7 +75,7 @@ class _ImageViewState extends State<ImageView> {
 
   _save() async {
     //await _askPermission();
-    var response = await Dio().get(widget.imgUrl,
+    var response = await Dio().get(widget.imgDownloadUrl,
         options: Options(responseType: ResponseType.bytes));
     final result = await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
   }
@@ -83,12 +84,12 @@ class _ImageViewState extends State<ImageView> {
     Navigator.pop(context);
     if(place == 'homescreen') {
     int location = WallpaperManager.HOME_SCREEN;
-    var file =  await DefaultCacheManager().getSingleFile(widget.imgUrl);  //image file
+    var file =  await DefaultCacheManager().getSingleFile(widget.imgDownloadUrl);  //image file
     await WallpaperManager.setWallpaperFromFile(file.path, location);
     }
     else if(place == 'lockscreen') {
       int location = WallpaperManager.LOCK_SCREEN;
-      var file =  await DefaultCacheManager().getSingleFile(widget.imgUrl);  //image file
+      var file =  await DefaultCacheManager().getSingleFile(widget.imgDownloadUrl);  //image file
       await WallpaperManager.setWallpaperFromFile(file.path, location);
     }
     _save();
