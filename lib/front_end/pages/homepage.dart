@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       appBar: AppBar(
         elevation: 0.0,
@@ -137,10 +138,10 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photo.src.original});
+                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original});
                                   },
                                   child: Hero(
-                                      tag: photo.src.original,
+                                      tag: photo.src.portrait,
                                       child: Image.network(
                                         '${photo.src.portrait}',
                                         fit: BoxFit.cover,
