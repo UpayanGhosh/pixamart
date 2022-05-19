@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: Icon(Icons.rocket),
+                    child: Icon(Icons.rocket_rounded,size: 30,),
                   ),
                   style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
               ),
