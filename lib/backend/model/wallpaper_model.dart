@@ -8,20 +8,29 @@ class Photos{
   int? photographer_id;
   String? avg_color;
   Src src;
-  Photos(this.id,this.width,this.height,this.url,
-      this.photographer,this.photographer_url,this.photographer_id,this.avg_color,this
-  .src);
+  String? alt;
+  Photos(this.id,this.width,this.height,this.url, this.photographer,this.photographer_url,this.photographer_id,this.avg_color,this.src, this.alt);
   factory Photos.fromJson(Map<String,dynamic> photos){
     return Photos(photos['id'], photos['width'], photos['height'], photos['url'], photos['photographer'],
-        photos['photographer_url'], photos['photographer_id'], photos['avg_color'], Src.fromJson(photos['src']));
+        photos['photographer_url'], photos['photographer_id'], photos['avg_color'], Src.fromJson(photos['src']), photos['alt']);
   }
 
 }
 
 class Src{
+<<<<<<< Updated upstream
  String? portrait;
  Src(this.portrait);
  factory Src.fromJson(Map<String,dynamic> src){
    return Src(src['portrait']);
  }
+=======
+  String? portrait;
+  String? original;
+  String? landscape;
+  Src(this.portrait, this.original, this.landscape);
+  factory Src.fromJson(Map<String,dynamic> src){
+    return Src(src['portrait'], src['original'], src['landscape']);
+  }
+>>>>>>> Stashed changes
 }
