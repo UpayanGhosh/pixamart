@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pixamart/front_end/widget/animated_search_bar.dart';
-import 'package:pixamart/private/api_key.dart';
 import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
@@ -85,62 +85,84 @@ class _SearchState extends State<Search> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(16, 0, 0, 22),
             child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){print("hello");}),
           ),
-          Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-                FutureBuilder(
-                future: getSearchWallpapers(widget.searchQuery.text),
-                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                  if(snapshot.hasData) {
-                    List<dynamic> photoList = snapshot.data!;
-                    return Container(
-                      height: MediaQuery.of(context).size.height / 1.39,
-                      color: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: GridView.count(
-                        controller: scrollController,
-                        physics: BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        childAspectRatio: 0.6,
-                        scrollDirection: Axis.vertical,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        children: photoList.map((dynamic photo) => GridTile(child: ClipRRect(borderRadius: BorderRadius.circular(16),child: GestureDetector(
-                          onTap: (){
-                            Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                          },
-                          child: Hero(
-                              tag:photo.src.portrait,
-                              child: Image.network('${photo.src.portrait}',fit: BoxFit.cover,)),
-                        )))).toList(),
+          FutureBuilder(
+          future: getSearchWallpapers(widget.searchQuery.text),
+          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if(snapshot.hasData) {
+              List<dynamic> photos = snapshot.data!;
+              return Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Container(
+                  height: MediaQuery.of(context).size.height / 1.44,
+                  color: Colors.black,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: GridView.count(
+                    controller: scrollController,
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    childAspectRatio: 0.6,
+                    scrollDirection: Axis.vertical,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    children: photoList.map((dynamic photo) => GridTile(child: ClipRRect(borderRadius: BorderRadius.circular(16),
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                      children: [
+                        GestureDetector(
+                        onTap: (){
+                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
+                        },
+                        child: Hero(
+                          tag:photo.src.portrait,
+                          child: Image.network('${photo.src.portrait}', fit: BoxFit.cover,),
+                          ),
                       ),
-                    );
-                  }
-                  else if(snapshot.hasError){
-                    return Center(child: Text('Failed to Load Wallpapers'));
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    scrollController.animateTo(-170, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: Icon(Icons.rocket),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                              child: Icon(Icons.heart_broken),
+                            onTap: () {
+                                print('object'); // Todo add to favourites code
+                            },
+                          ), //Todo change favourite icon
+                        ),
+                      ],
+                    ),
+                    ),
+                    ),
+                    ).toList(),
                   ),
-                  style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+                ),
+                  Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      scrollController.animateTo(-170, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
+                    },
+                    child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
+                        height: 60,
+                        width: 60,
+                        fit: BoxFit.fill),
+                    style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+                ),
+                ],
+              );
+            }
+            else if(snapshot.hasError){
+              return Center(child: Text('Failed to Load Wallpapers'));
+              //Todo Lottie asset for server down and msg
+            }
+            return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+            height: 200,
+            width: 200,));
+          // Todo change lottie asset
+          },
               ),
-            ],
-          ),
-
         ],
       ),
     );

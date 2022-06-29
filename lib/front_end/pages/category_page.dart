@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
-import 'package:pixamart/private/api_key.dart';
 import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
@@ -98,7 +98,7 @@ class _CategoryState extends State<Category> {
                   future: getSearchWallpapers(widget.categoryName),
                   builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                     if (snapshot.hasData) {
-                      List<dynamic> photoList = snapshot.data!;
+                      List<dynamic> photos = snapshot.data!;
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: GridView.count(
@@ -114,24 +114,43 @@ class _CategoryState extends State<Category> {
                               .map((dynamic photo) => GridTile(
                                   child: ClipRRect(
                                       borderRadius: BorderRadius.circular(16),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                                          },
-                                        child: Hero(
+                                      child: Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
+                                            },
+                                          child: Hero(
                                             tag: photo.src.portrait,
                                             child: Image.network(
                                               '${photo.src.portrait}',
                                               fit: BoxFit.cover,
-                                            )),
-                                      ))))
-                              .toList(),
+                                            ),
+                                          ),
+                                        ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              print('object'); // Todo Add to favourites code
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Icon(Icons.heart_broken), // Todo change favourites icon
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                  ),
+                          ),
+                          ).toList(),
                         ),
                       );
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Failed to Load Wallpapers'));
                     }
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                      height: 300,
+                      width: 300,));
                   },
                 ),
                   Padding(
@@ -140,12 +159,12 @@ class _CategoryState extends State<Category> {
                       onPressed: () {
                         scrollController.animateTo(-150, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Icon(Icons.rocket),
-                      ), style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
-                  ),
-                ],
+                      child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
+                          height: 60,
+                          width: 60,
+                          fit: BoxFit.fill),
+                       style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+                  ),],
               ),
             ),
           ],

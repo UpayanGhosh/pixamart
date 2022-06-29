@@ -18,6 +18,7 @@ class Photos{
 }
 
 class Src{
+<<<<<<< Updated upstream
  String? portrait;
  String? original;
  String? landscape;
@@ -25,4 +26,13 @@ class Src{
  factory Src.fromJson(Map<String,dynamic> src){
    return Src(src['portrait'], src['original'], src['landscape']);
  }
+=======
+  String? portrait;
+  String? original;
+  String? landscape;
+  Src(this.portrait, this.original, this.landscape);
+  factory Src.fromJson(Map<String,dynamic> src){
+    return Src(src['portrait'], src['original'], src['landscape']);
+  }
+>>>>>>> Stashed changes
 }
