@@ -10,15 +10,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ImageView extends StatefulWidget {
-<<<<<<< Updated upstream
-  final String imgUrl;
-  ImageView({required this.imgUrl});
-=======
   final String imgShowUrl;
   final String imgDownloadUrl;
   final String alt;
   const ImageView({required this.imgShowUrl, required this.imgDownloadUrl, required this.alt, Key? key}) : super(key: key);
->>>>>>> Stashed changes
 
   @override
   State<ImageView> createState() => _ImageViewState();
@@ -67,17 +62,6 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: <Widget>[
-          Hero(
-            tag: widget.imgUrl,
-            child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Image.network(widget.imgUrl,fit: BoxFit.cover,)),
-          ),
-<<<<<<< Updated upstream
           SafeArea(child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -96,31 +80,30 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
                         Colors.transparent,
                       ])
                   ),
-                  child: Center(child: Text("Set as Homescreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
                 ),
               ),
-              GestureDetector(
-                onTap: (){
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height / 40,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(onPressed: () {
+                  setWallpaper('homescreen');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper will be set Shortly!')));
+                }, child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0,14,0,0),
+                  child: Text('Set as Homescreen', style: TextStyle(color: Colors.black87, fontFamily: 'Raunchies', fontSize: 20),),
+                ), style: ElevatedButton.styleFrom(primary: Colors.white, shape: StadiumBorder()),),
+                ElevatedButton(onPressed: () {
                   setWallpaper('lockscreen');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper Set Successfully')));
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 40),
-                  height: 65,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(colors: [
-                        Colors.transparent,
-                        Colors.blueAccent,
-                      ])
-                  ),
-                  child: Center(child: Text("Set as Lockscreen",style: TextStyle(fontWeight: FontWeight.bold, fontSize:17, color: Colors.white),textAlign: TextAlign.center,)),
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper will be set Shortly')));
+                }, child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0,14,0,0),
+                  child: Text('Set as Lockscreen', style: TextStyle(fontFamily: 'Raunchies', fontSize: 20)),
                 ),
               ),
             ],
           ),
-=======
         ],
       ),
       floatingActionButton: SpeedDial(
@@ -167,38 +150,10 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
               saveToGallery();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper saved to gallery Successfully'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
             }
->>>>>>> Stashed changes
           ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-<<<<<<< Updated upstream
-
-  _save() async {
-    //await _askPermission();
-    var response = await Dio().get(widget.imgUrl,
-        options: Options(responseType: ResponseType.bytes));
-    final result =
-    await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
-  }
-
-  Future<void>setWallpaper(String place) async{
-    Navigator.pop(context);
-    if(place == 'homescreen') {
-    int location = WallpaperManager.HOME_SCREEN;
-    var file =  await DefaultCacheManager().getSingleFile(widget.imgUrl);  //image file
-    await WallpaperManager.setWallpaperFromFile(file.path, location);
-    //provide image path
-    }// Wrap with try catch for error management.
-    else if(place == 'lockscreen') {
-      int location = WallpaperManager.LOCK_SCREEN;
-      var file =  await DefaultCacheManager().getSingleFile(widget.imgUrl);  //image file
-      await WallpaperManager.setWallpaperFromFile(file.path, location);
-    }
-    _save();
-  }
-=======
->>>>>>> Stashed changes
 }

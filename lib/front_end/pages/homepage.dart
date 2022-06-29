@@ -10,15 +10,11 @@ import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/Drawer.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
-import 'package:pixamart/private.dart';
+import 'package:pixamart/private/api_key.dart';
+import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/front_end/widget/categories.dart';
-<<<<<<< Updated upstream
-
-import '../widget/category_tile.dart';
-=======
 import 'package:pixamart/front_end/widget/category_tile.dart';
 import 'package:rive/rive.dart';
->>>>>>> Stashed changes
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,26 +25,61 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<CategoriesModel> categories = [];
+  late int page;
+  late ScrollController scrollController;
+  List<dynamic> photoList = [];
+  late double currentMaxScrollExtent;
 
-  Future<List<dynamic>> getTrendingWallpapers() async {
+  Future<List<dynamic>> getPexelsCuratedWallpapers() async {
     Response url = await get(
-        Uri.parse("https://api.pexels.com/v1/curated?per_page=80"),
+        Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
         headers: {"Authorization": getPexelsApiKey()});
     if (url.statusCode == 200) {
-      dynamic body = jsonDecode(url.body);
-      List<dynamic> photos =
-          body['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
-      return photos;
+      Map<String, dynamic> curated = jsonDecode(url.body);
+      List<dynamic> photos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+      photoList.addAll(photos);
+      scrollController.addListener(() async {
+        if (scrollController.offset >= scrollController.position.maxScrollExtent && !scrollController.position.outOfRange) {
+          if(currentMaxScrollExtent < scrollController.position.maxScrollExtent) {
+            currentMaxScrollExtent = scrollController.position.maxScrollExtent;
+            Response url = await get(
+                Uri.parse('https://api.pexels.com/v1/curated/?page=$page&per_page=80'),
+                headers: {"Authorization": getPexelsApiKey()});
+            page++;
+            if (url.statusCode == 200) {
+              Map<String, dynamic> curated = jsonDecode(url.body);
+              List<dynamic> newPhotos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+              setState(() {
+                photoList.addAll(newPhotos);
+                photoList.reversed;
+              });
+            } else {
+              throw Exception('Failed to Fetch Curated');
+            }
+          }
+        }
+      });
+      return photoList;
     } else {
-      throw Exception('Failed to Fetch Photos');
+      swapKeys();
+      return photoList;
+      //throw Exception('Failed to Fetch Curated');
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getTrendingWallpapers();
+    page = 2;
     categories = getCategory();
+    scrollController = ScrollController();
+    currentMaxScrollExtent = 0.0;
+  }
+
+  @override
+  void dispose() {
+    photoList.clear();
+    super.dispose();
   }
 
   @override
@@ -59,100 +90,27 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: AppTitle(),
+        title: AppTitle(padLeft: 0.0, padTop: MediaQuery.of(context).size.height / 16, padRight: 0.0, padBottom: 0.0,),
       ),
       body: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [
           SingleChildScrollView(
-<<<<<<< Updated upstream
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
-                    child: Row(
-                      children: [
-                        SearchBar(),
-                        Container(
-                          height: 80,
-                          child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              padding: EdgeInsets.symmetric(horizontal: 4),
-                              itemCount: categories.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return CategoryTile(
-                                  title: categories[index].categoriesName,
-                                  imgUrl: categories[index].imgUrl,
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height / 3.9,
-            child: FutureBuilder(
-              future: getTrendingWallpapers(),
-              builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                if (snapshot.hasData) {
-                  List<dynamic> photos = snapshot.data!;
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: GridView.count(
-=======
-            scrollDirection: Axis.horizontal,
-            physics: BouncingScrollPhysics(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SearchBar(),
-                Container(
-                  height: 50,
-                  child: ListView.builder(
->>>>>>> Stashed changes
                       physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      itemCount: categories.length,
                       shrinkWrap: true,
-                      childAspectRatio: 0.6,
-                      scrollDirection: Axis.vertical,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      children: photos
-                          .map((dynamic photos) => GridTile(
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(context, '/imageView', arguments: {'imgUrl': photos.src.portrait});
-                                      //Navigator.push(context, MaterialPageRoute(builder: (context) => ImageView(imgUrl: photos.src.portrait)));
-                                    },
-                                    child: Hero(
-                                        tag: photos.src.portrait,
-                                        child: Image.network(
-                                          '${photos.src.portrait}',
-                                          fit: BoxFit.cover,
-                                        )),
-                                  ))))
-                          .toList(),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Failed to Load Wallpapers'));
-                }
-                return Center(child: CircularProgressIndicator());
-              },
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return CategoryTile(
+                          title: categories[index].categoriesName,
+                          imgUrl: categories[index].imgUrl,
+                        );
+                      }),
+                ),
+              ],
             ),
           ),
-<<<<<<< Updated upstream
-=======
           FutureBuilder(
             future: getPexelsCuratedWallpapers(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -230,7 +188,6 @@ class _HomePageState extends State<HomePage> {
               // Todo change lottie asset
             },
           ),
->>>>>>> Stashed changes
         ],
       ),
     );

@@ -1,17 +1,7 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:pixamart/front_end/pages/homepage.dart';
-import 'package:pixamart/front_end/widget/Drawer.dart';
-import 'package:pixamart/front_end/widget/curved_navigation_bar.dart';
-import 'package:pixamart/routing/route_generator.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:rive/rive.dart';
+import 'homepage.dart';
 
-void main() {
-  runApp(
-    SplashScreenPage(),
-  );
-}
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -39,7 +29,6 @@ class SplashScreen extends StatelessWidget {
         duration: 1000,
         backgroundColor: Colors.black,
         splashTransition: SplashTransition.fadeTransition,
-        nextScreen: Navigation_bar()
-    );
+        nextScreen: HomePage());
   }
-  }
+}

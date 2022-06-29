@@ -20,9 +20,11 @@ class Photos{
 class Src{
 <<<<<<< Updated upstream
  String? portrait;
- Src(this.portrait);
+ String? original;
+ String? landscape;
+ Src(this.portrait, this.original, this.landscape);
  factory Src.fromJson(Map<String,dynamic> src){
-   return Src(src['portrait']);
+   return Src(src['portrait'], src['original'], src['landscape']);
  }
 =======
   String? portrait;
