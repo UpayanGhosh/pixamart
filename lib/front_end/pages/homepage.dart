@@ -2,19 +2,16 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pixamart/backend/model/categories_model.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/Drawer.dart';
 import 'package:pixamart/front_end/widget/search_bar.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
 import 'package:pixamart/private/api_key.dart';
 import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/front_end/widget/categories.dart';
 import 'package:pixamart/front_end/widget/category_tile.dart';
-import 'package:rive/rive.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -96,6 +93,16 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.all(0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SearchBar(),
+                Container(
+                  height: 50,
+                  child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       padding: EdgeInsets.symmetric(horizontal: 4),
                       itemCount: categories.length,
@@ -111,87 +118,66 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          FutureBuilder(
-            future: getPexelsCuratedWallpapers(),
-            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-              if (snapshot.hasData) {
-                List<dynamic> photos = snapshot.data!;
-                return Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [Container(
-                    height: MediaQuery.of(context).size.height / 1.40,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: GridView.count(
-                      physics: BouncingScrollPhysics(),
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      childAspectRatio: 0.6,
-                      scrollDirection: Axis.vertical,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      children: photoList.map((dynamic photo) => GridTile(
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  GestureDetector(
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              FutureBuilder(
+                future: getPexelsCuratedWallpapers(),
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<dynamic> photoList = snapshot.data!;
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 1.39,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: GridView.count(
+                        physics: BouncingScrollPhysics(),
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        childAspectRatio: 0.6,
+                        scrollDirection: Axis.vertical,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        children: photoList.map((dynamic photo) => GridTile(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: GestureDetector(
                                   onTap: () {
                                     Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                                   },
                                   child: Hero(
-                                    tag: photo.src.portrait,
-                                    child: Image.network(
-                                      '${photo.src.portrait}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      print('object'); // Todo Add to favourites code
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.heart_broken), // Todo change favourite icon
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ),
+                                      tag: photo.src.portrait,
+                                      child: Image.network(
+                                        '${photo.src.portrait}',
+                                        fit: BoxFit.cover,
+                                      )),
+                                ))))
+                            .toList(),
                       ),
-                      ).toList(),
-                    ),
-                  ),Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        scrollController.animateTo(-170, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
-                      },
-                      child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.fill),
-                      style: ElevatedButton.styleFrom(primary: Colors.black, shape: CircleBorder()),),
-                  ),]
-                );
-              } else if (snapshot.hasError) {
-                return Column(
-                  children: [
-                    Center(child: Lottie.asset('assets/lottie/8lf30_editor_6akqllok.json'),),
-                  ],
-                );
-                //Todo change lottie asset and show server down msg
-              }
-              return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',),);
-              // Todo change lottie asset
-            },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Failed to Load Wallpapers'));
+                  }
+                  return Center(child: Text('Hello'));
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: ElevatedButton(
+                  onPressed: () {
+                    scrollController.animateTo(-150, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
+                  },
+                  child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
+                      height: 60,
+                      width: 60,
+                      fit: BoxFit.fill),
+                  style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 }
-
 

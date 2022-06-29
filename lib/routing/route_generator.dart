@@ -10,7 +10,7 @@ class RouteGenerator {
     switch(settings.name) {
       case '/':
         final args = settings.arguments;
-        return MaterialPageRoute(builder: (context) => SplashScreenPage());
+        return MaterialPageRoute(builder: (context) => SplashScreen());
       case '/category':
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => Category(categoryName: args['categoryName'],));

@@ -48,11 +48,11 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
         location = WallpaperManager.LOCK_SCREEN;
       }
       else {
-        location = WallpaperManager.BOTH_SCREEN;
+        location = WallpaperManager.HOME_SCREEN;
+        location = WallpaperManager.LOCK_SCREEN;
       }
       //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
       await WallpaperManager.setWallpaperFromFile(filePath, location);
-      //print('Wallpaper set');
     } else {
       Permission.storage.request();
     }
@@ -62,47 +62,15 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          SafeArea(child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: (){
-                  setWallpaper('homescreen');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper Set Successfully')));
-                },
-                child: Container(
-                  height: 65,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(colors: [
-                        Colors.blueAccent,
-                        Colors.transparent,
-                      ])
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height / 40,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(onPressed: () {
-                  setWallpaper('homescreen');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper will be set Shortly!')));
-                }, child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0,14,0,0),
-                  child: Text('Set as Homescreen', style: TextStyle(color: Colors.black87, fontFamily: 'Raunchies', fontSize: 20),),
-                ), style: ElevatedButton.styleFrom(primary: Colors.white, shape: StadiumBorder()),),
-                ElevatedButton(onPressed: () {
-                  setWallpaper('lockscreen');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper will be set Shortly')));
-                }, child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0,14,0,0),
-                  child: Text('Set as Lockscreen', style: TextStyle(fontFamily: 'Raunchies', fontSize: 20)),
-                ),
-              ),
-            ],
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          Hero(
+            tag: widget.imgShowUrl,
+            child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Image.network(widget.imgShowUrl,fit: BoxFit.cover,)),
           ),
         ],
       ),
@@ -115,41 +83,40 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
         spaceBetweenChildren: 12,
         children: [
           SpeedDialChild(
-            child: Icon(Icons.add_to_home_screen),
-            backgroundColor: Colors.white,
-            label: 'Homescreen',
+              child: Icon(Icons.add_to_home_screen),
+              backgroundColor: Colors.white,
+              label: 'Homescreen',
               onTap: () {
                 setWallpaper('homescreen');
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),));
               }
           ),
           SpeedDialChild(
-            child: Icon(Icons.lock),
+              child: Icon(Icons.lock),
               backgroundColor: Colors.white,
-            label: 'Lockscreen',
-            onTap: () {
-              setWallpaper('lockscreen');
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-            }
+              label: 'Lockscreen',
+              onTap: () {
+                setWallpaper('lockscreen');
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+              }
           ),
           SpeedDialChild(
-            child: Icon(Icons.now_wallpaper),
+              child: Icon(Icons.now_wallpaper),
               backgroundColor: Colors.white,
-            label: 'Both',
-            onTap: () {
-              setWallpaper('bothscreen');
-              /*setWallpaper('lockscreen');*/
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-            }
+              label: 'Both',
+              onTap: () {
+                setWallpaper('bothscreen');
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+              }
           ),
           SpeedDialChild(
-            child: Icon(Icons.download),
+              child: Icon(Icons.download),
               backgroundColor: Colors.white,
-            label: 'Save',
-            onTap: () {
-              saveToGallery();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper saved to gallery Successfully'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-            }
+              label: 'Save',
+              onTap: () {
+                saveToGallery();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper saved to gallery Successfully'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+              }
           ),
         ],
       ),

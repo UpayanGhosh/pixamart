@@ -9,6 +9,8 @@ import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
 
+import '../../private/api_key.dart';
+
 class Category extends StatefulWidget {
   final String categoryName;
   const Category({Key? key, required this.categoryName}) : super(key: key);
@@ -164,7 +166,8 @@ class _CategoryState extends State<Category> {
                           width: 60,
                           fit: BoxFit.fill),
                        style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
-                  ),],
+                  ),
+                ],
               ),
             ),
           ],

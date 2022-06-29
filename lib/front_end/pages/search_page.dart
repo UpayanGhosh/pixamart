@@ -9,6 +9,8 @@ import 'package:pixamart/private/get_pexels_api_key.dart';
 import 'package:pixamart/backend/model/wallpaper_model.dart';
 import 'package:pixamart/front_end/widget/app_title.dart';
 
+import '../../private/api_key.dart';
+
 class Search extends StatefulWidget {
   final TextEditingController searchQuery;
   const Search({Key? key, required this.searchQuery}) : super(key: key);
