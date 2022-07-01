@@ -152,29 +152,43 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.vertical,
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+                        mainAxisSpacing: 0,
                         children: photoList
                             .map((dynamic photo) => GridTile(
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/imageView',
-                                            arguments: {
-                                              'imgShowUrl': photo.src.portrait,
-                                              'imgDownloadUrl':
-                                                  photo.src.original,
-                                              'alt': photo.alt
-                                            });
-                                      },
-                                      child: Hero(
-                                          tag: photo.src.portrait,
-                                          child: Image.network(
-                                            '${photo.src.portrait}',
-                                            fit: BoxFit.cover,
-                                          )),
-                                    ))))
+                                child: Stack(
+                                  alignment: Alignment.bottomRight,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, '/imageView',
+                                              arguments: {
+                                                'imgShowUrl': photo.src.portrait,
+                                                'imgDownloadUrl':
+                                                    photo.src.original,
+                                                'alt': photo.alt
+                                              });
+                                        },
+                                        child: Hero(
+                                            tag: photo.src.portrait,
+                                            child: Image.network(
+                                              '${photo.src.portrait}',
+                                              fit: BoxFit.cover,
+                                            )),
+                                      )),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        child: Icon(Icons.heart_broken),
+                                        onTap: () {
+                                          print('object'); // Todo add to favourites code
+                                        },
+                                      ), //Todo change favourite icon
+                                    ),
+                                ],
+                                )))
                             .toList(),
                       ),
                     ),

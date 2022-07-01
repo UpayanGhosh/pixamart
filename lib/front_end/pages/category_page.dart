@@ -89,7 +89,7 @@ class _CategoryState extends State<Category> {
       ),
       body: Container(
         child: Column(
-          children: <Widget>[
+          children: [
             SearchBar(),
             SizedBox(
               height: MediaQuery.of(context).size.height - 185,
@@ -114,34 +114,34 @@ class _CategoryState extends State<Category> {
                           mainAxisSpacing: 10,
                           children: photoList
                               .map((dynamic photo) => GridTile(
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: Stack(
-                                        alignment: Alignment.topRight,
-                                        children: [
-                                          GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                                            },
-                                          child: Hero(
-                                            tag: photo.src.portrait,
-                                            child: Image.network(
-                                              '${photo.src.portrait}',
-                                              fit: BoxFit.cover,
-                                            ),
+                                  child: Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
+                                          },
+                                        child: Hero(
+                                          tag: photo.src.portrait,
+                                          child: Image.network(
+                                            '${photo.src.portrait}',
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              print('object'); // Todo Add to favourites code
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Icon(Icons.heart_broken), // Todo change favourites icon
-                                            ),
                                           ),
-                                        ],
+                                    ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print('object'); // Todo Add to favourites code
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(Icons.heart_broken), // Todo change favourites icon
+                                        ),
                                       ),
+                                    ],
                                   ),
                           ),
                           ).toList(),
