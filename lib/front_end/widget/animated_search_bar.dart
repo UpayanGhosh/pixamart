@@ -127,11 +127,10 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       child: Container(
                         child: GestureDetector(
                           child: Lottie.asset('assets/lottie/lf30_editor_in1ne4w9.json',
-                          height: 45,
-                          width: 45,
+                          height: MediaQuery.of(context).size.height / 20,
+                          width: MediaQuery.of(context).size.height / 20,
                           fit: BoxFit.fill),
                           onTap: (){
-                            print("object");
                             unfocusKeyboard();
                             },
                           ),
