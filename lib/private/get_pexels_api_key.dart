@@ -1,4 +1,4 @@
-import 'package:pixamart/private/api_key.dart';
+import 'package:PixaMart/private/api_key.dart';
 
 getPexelsApiKey() {
   return currentPexelsApiKey;

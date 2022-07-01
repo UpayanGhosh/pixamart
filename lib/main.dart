@@ -1,12 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:pixamart/front_end/pages/homepage.dart';
-import 'package:pixamart/front_end/widget/Drawer.dart';
-import 'package:pixamart/front_end/widget/curved_navigation_bar.dart';
-import 'package:pixamart/routing/route_generator.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:rive/rive.dart';
+import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
+import 'package:PixaMart/routing/route_generator.dart';
 
 void main() {
   runApp(
@@ -14,7 +9,7 @@ void main() {
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.black),
-      title: 'Pixa Mart',
+      title: 'PixaMart',
       onGenerateRoute: RouteGenerator.generateRoute,
     ),
   );

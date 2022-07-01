@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pixamart/front_end/widget/animated_search_bar.dart';
-import 'package:pixamart/private/get_pexels_api_key.dart';
-import 'package:pixamart/backend/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/app_title.dart';
+import 'package:PixaMart/front_end/widget/animated_search_bar.dart';
+import 'package:PixaMart/private/get_pexels_api_key.dart';
+import 'package:PixaMart/backend/model/wallpaper_model.dart';
+import 'package:PixaMart/front_end/widget/app_title.dart';
 
 import '../../private/api_key.dart';
 

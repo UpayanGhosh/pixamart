@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pixamart/front_end/pages/homepage.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
