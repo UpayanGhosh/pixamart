@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pixamart/front_end/pages/homepage.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
@@ -26,6 +27,7 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
     Navigator.pop(context);
     var response = await dioBrando.get(widget.imgDownloadUrl, options: Options(responseType: ResponseType.bytes,),);
     final result = await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper saved to gallery Successfully'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
     //print('hi');
   }
 
@@ -34,7 +36,6 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
       Permission.storage,
     ].request();
     if(status[Permission.storage]!.isGranted) {
-      Navigator.pop(context);
       var dir = await getExternalStorageDirectory();
       //print(dir);
       String filePath = '${dir?.path}/${widget.alt}.jpg';
@@ -48,11 +49,13 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
         location = WallpaperManager.LOCK_SCREEN;
       }
       else {
-        location = WallpaperManager.HOME_SCREEN;
-        location = WallpaperManager.LOCK_SCREEN;
+        location = WallpaperManager.BOTH_SCREEN;
       }
       //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
       await WallpaperManager.setWallpaperFromFile(filePath, location);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),));
+      //Todo Pop an Alert Dialogue saying Wait until Wallpaper is set
+      Navigator.pop(context);
     } else {
       Permission.storage.request();
     }
@@ -88,7 +91,6 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
               label: 'Homescreen',
               onTap: () {
                 setWallpaper('homescreen');
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Homescreen Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),));
               }
           ),
           SpeedDialChild(
@@ -97,7 +99,6 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
               label: 'Lockscreen',
               onTap: () {
                 setWallpaper('lockscreen');
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lockscreen Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
               }
           ),
           SpeedDialChild(
@@ -106,7 +107,6 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
               label: 'Both',
               onTap: () {
                 setWallpaper('bothscreen');
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper Will Set Shortly'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
               }
           ),
           SpeedDialChild(
@@ -115,7 +115,6 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
               label: 'Save',
               onTap: () {
                 saveToGallery();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper saved to gallery Successfully'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
               }
           ),
         ],
