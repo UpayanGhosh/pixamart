@@ -118,62 +118,64 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              FutureBuilder(
-                future: getPexelsCuratedWallpapers(),
-                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                  if (snapshot.hasData) {
-                    List<dynamic> photoList = snapshot.data!;
-                    return Container(
-                      height: MediaQuery.of(context).size.height / 1.39,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: GridView.count(
-                        physics: BouncingScrollPhysics(),
-                        controller: scrollController,
-                        shrinkWrap: true,
-                        childAspectRatio: 0.6,
-                        scrollDirection: Axis.vertical,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        children: photoList.map((dynamic photo) => GridTile(
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                                  },
-                                  child: Hero(
-                                      tag: photo.src.portrait,
-                                      child: Image.network(
-                                        '${photo.src.portrait}',
-                                        fit: BoxFit.cover,
-                                      )),
-                                ))))
-                            .toList(),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Failed to Load Wallpapers'));
-                  }
-                  return Center(child: Text('Hello'));
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    scrollController.animateTo(-150, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
-                  },
-                  child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
-                      height: 60,
-                      width: 60,
-                      fit: BoxFit.fill),
-                  style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
-              ),
-            ],
+          FutureBuilder(
+            future: getPexelsCuratedWallpapers(),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                List<dynamic> photoList = snapshot.data!;
+                return Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                    height: MediaQuery.of(context).size.height - 225,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: GridView.count(
+                      physics: BouncingScrollPhysics(),
+                      controller: scrollController,
+                      shrinkWrap: true,
+                      childAspectRatio: 0.6,
+                      scrollDirection: Axis.vertical,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      children: photoList.map((dynamic photo) => GridTile(
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
+                                },
+                                child: Hero(
+                                    tag: photo.src.portrait,
+                                    child: Image.network(
+                                      '${photo.src.portrait}',
+                                      fit: BoxFit.cover,
+                                    )),
+                              ))))
+                          .toList(),
+                    ),
+                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          scrollController.animateTo(-170, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
+                        },
+                        child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
+                            height: 60,
+                            width: 60,
+                            fit: BoxFit.fill),
+                        style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+                    ),
+              ],
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Failed to Load Wallpapers'));
+              }
+              return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                height: 200,
+                width: 200, fit: BoxFit.cover));
+            },
           ),
         ],
       ),
