@@ -75,6 +75,9 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
                 width: MediaQuery.of(context).size.width,
                 child: Image.network(widget.imgShowUrl,fit: BoxFit.cover,)),
           ),
+          AlertDialog(
+            title: Text('Wait'),
+          ),
         ],
       ),
       floatingActionButton: SpeedDial(
