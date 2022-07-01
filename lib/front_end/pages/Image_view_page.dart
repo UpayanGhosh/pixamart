@@ -77,6 +77,7 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
           ),
           AlertDialog(
             title: Text('Wait'),
+            // Todo Make the user wait until the wallpaper downloads
           ),
         ],
       ),
