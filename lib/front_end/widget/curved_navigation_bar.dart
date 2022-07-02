@@ -1,8 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:pixamart/front_end/pages/AccountPage.dart';
-import 'package:pixamart/front_end/pages/Favourites.dart';
-import 'package:pixamart/front_end/pages/homepage.dart';
+import 'package:PixaMart/front_end/pages/AccountPage.dart';
+import 'package:PixaMart/front_end/pages/Favourites.dart';
+import 'package:PixaMart/front_end/pages/homepage.dart';
 class Navigation_bar extends StatefulWidget {
   const Navigation_bar({Key? key}) : super(key: key);
 

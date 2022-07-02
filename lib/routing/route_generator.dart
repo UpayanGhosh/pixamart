@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pixamart/front_end/pages/Image_view_page.dart';
-import 'package:pixamart/front_end/pages/search_page.dart';
-import 'package:pixamart/main.dart';
-import 'package:pixamart/front_end/pages/category_page.dart';
-import 'package:pixamart/front_end/pages/homepage.dart';
+import 'package:PixaMart/front_end/pages/Image_view_page.dart';
+import 'package:PixaMart/front_end/pages/search_page.dart';
+import 'package:PixaMart/main.dart';
+import 'package:PixaMart/front_end/pages/category_page.dart';
+import 'package:PixaMart/front_end/pages/homepage.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

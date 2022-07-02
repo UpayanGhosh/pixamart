@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pixamart/front_end/widget/animated_search_bar.dart';
-import 'package:pixamart/private/get_pexels_api_key.dart';
-import 'package:pixamart/backend/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/app_title.dart';
+import 'package:PixaMart/front_end/widget/animated_search_bar.dart';
+import 'package:PixaMart/private/get_pexels_api_key.dart';
+import 'package:PixaMart/backend/model/wallpaper_model.dart';
+import 'package:PixaMart/front_end/widget/app_title.dart';
 
 import '../../private/api_key.dart';
 
@@ -99,7 +99,7 @@ class _SearchState extends State<Search> {
                 alignment: Alignment.bottomRight,
                 children: [
                   Container(
-                  height: MediaQuery.of(context).size.height / 1.44,
+                  height: MediaQuery.of(context).size.height - 240,
                   color: Colors.black,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: GridView.count(
@@ -110,12 +110,12 @@ class _SearchState extends State<Search> {
                     scrollDirection: Axis.vertical,
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    children: photoList.map((dynamic photo) => GridTile(child: ClipRRect(borderRadius: BorderRadius.circular(16),
-                      child: Stack(
-                        alignment: Alignment.topRight,
+                    mainAxisSpacing: 0,
+                    children: photoList.map((dynamic photo) => GridTile(child: Stack(
+                      alignment: Alignment.bottomRight,
                       children: [
-                        GestureDetector(
+                        ClipRRect(borderRadius: BorderRadius.circular(16),
+                        child: GestureDetector(
                         onTap: (){
                           Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                         },
@@ -123,18 +123,18 @@ class _SearchState extends State<Search> {
                           tag:photo.src.portrait,
                           child: Image.network('${photo.src.portrait}', fit: BoxFit.cover,),
                           ),
+                        ),
                       ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
-                              child: Icon(Icons.heart_broken),
+                            child: Icon(Icons.heart_broken),
                             onTap: () {
-                                print('object'); // Todo add to favourites code
+                              print('object'); // Todo add to favourites code
                             },
                           ), //Todo change favourite icon
                         ),
                       ],
-                    ),
                     ),
                     ),
                     ).toList(),

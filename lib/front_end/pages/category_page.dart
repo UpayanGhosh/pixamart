@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pixamart/front_end/widget/search_bar.dart';
-import 'package:pixamart/private/get_pexels_api_key.dart';
-import 'package:pixamart/backend/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/app_title.dart';
+import 'package:PixaMart/front_end/widget/search_bar.dart';
+import 'package:PixaMart/private/get_pexels_api_key.dart';
+import 'package:PixaMart/backend/model/wallpaper_model.dart';
+import 'package:PixaMart/front_end/widget/app_title.dart';
 
 import '../../private/api_key.dart';
 
@@ -89,7 +89,7 @@ class _CategoryState extends State<Category> {
       ),
       body: Container(
         child: Column(
-          children: <Widget>[
+          children: [
             SearchBar(),
             SizedBox(
               height: MediaQuery.of(context).size.height - 185,
@@ -114,34 +114,34 @@ class _CategoryState extends State<Category> {
                           mainAxisSpacing: 10,
                           children: photoList
                               .map((dynamic photo) => GridTile(
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: Stack(
-                                        alignment: Alignment.topRight,
-                                        children: [
-                                          GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                                            },
-                                          child: Hero(
-                                            tag: photo.src.portrait,
-                                            child: Image.network(
-                                              '${photo.src.portrait}',
-                                              fit: BoxFit.cover,
-                                            ),
+                                  child: Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
+                                          },
+                                        child: Hero(
+                                          tag: photo.src.portrait,
+                                          child: Image.network(
+                                            '${photo.src.portrait}',
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              print('object'); // Todo Add to favourites code
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Icon(Icons.heart_broken), // Todo change favourites icon
-                                            ),
                                           ),
-                                        ],
+                                    ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print('object'); // Todo Add to favourites code
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(Icons.heart_broken), // Todo change favourites icon
+                                        ),
                                       ),
+                                    ],
                                   ),
                           ),
                           ).toList(),

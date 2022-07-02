@@ -4,14 +4,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pixamart/backend/model/categories_model.dart';
-import 'package:pixamart/backend/model/wallpaper_model.dart';
-import 'package:pixamart/front_end/widget/search_bar.dart';
-import 'package:pixamart/front_end/widget/app_title.dart';
-import 'package:pixamart/private/api_key.dart';
-import 'package:pixamart/private/get_pexels_api_key.dart';
-import 'package:pixamart/front_end/widget/categories.dart';
-import 'package:pixamart/front_end/widget/category_tile.dart';
+import 'package:PixaMart/backend/model/categories_model.dart';
+import 'package:PixaMart/backend/model/wallpaper_model.dart';
+import 'package:PixaMart/front_end/widget/search_bar.dart';
+import 'package:PixaMart/front_end/widget/app_title.dart';
+import 'package:PixaMart/private/api_key.dart';
+import 'package:PixaMart/private/get_pexels_api_key.dart';
+import 'package:PixaMart/front_end/widget/categories.dart';
+import 'package:PixaMart/front_end/widget/category_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -33,19 +33,27 @@ class _HomePageState extends State<HomePage> {
         headers: {"Authorization": getPexelsApiKey()});
     if (url.statusCode == 200) {
       Map<String, dynamic> curated = jsonDecode(url.body);
-      List<dynamic> photos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+      List<dynamic> photos = curated['photos']
+          .map((dynamic item) => Photos.fromJson(item))
+          .toList();
       photoList.addAll(photos);
       scrollController.addListener(() async {
-        if (scrollController.offset >= scrollController.position.maxScrollExtent && !scrollController.position.outOfRange) {
-          if(currentMaxScrollExtent < scrollController.position.maxScrollExtent) {
+        if (scrollController.offset >=
+                scrollController.position.maxScrollExtent &&
+            !scrollController.position.outOfRange) {
+          if (currentMaxScrollExtent <
+              scrollController.position.maxScrollExtent) {
             currentMaxScrollExtent = scrollController.position.maxScrollExtent;
             Response url = await get(
-                Uri.parse('https://api.pexels.com/v1/curated/?page=$page&per_page=80'),
+                Uri.parse(
+                    'https://api.pexels.com/v1/curated/?page=$page&per_page=80'),
                 headers: {"Authorization": getPexelsApiKey()});
             page++;
             if (url.statusCode == 200) {
               Map<String, dynamic> curated = jsonDecode(url.body);
-              List<dynamic> newPhotos = curated['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+              List<dynamic> newPhotos = curated['photos']
+                  .map((dynamic item) => Photos.fromJson(item))
+                  .toList();
               setState(() {
                 photoList.addAll(newPhotos);
                 photoList.reversed;
@@ -87,7 +95,12 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: AppTitle(padLeft: 0.0, padTop: MediaQuery.of(context).size.height / 16, padRight: 0.0, padBottom: 0.0,),
+        title: AppTitle(
+          padLeft: 0.0,
+          padTop: MediaQuery.of(context).size.height / 16,
+          padRight: 0.0,
+          padBottom: 0.0,
+        ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -127,54 +140,85 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.bottomRight,
                   children: [
                     Container(
-                    height: MediaQuery.of(context).size.height - 225,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: GridView.count(
-                      physics: BouncingScrollPhysics(),
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      childAspectRatio: 0.6,
-                      scrollDirection: Axis.vertical,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      children: photoList.map((dynamic photo) => GridTile(
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                                },
-                                child: Hero(
-                                    tag: photo.src.portrait,
-                                    child: Image.network(
-                                      '${photo.src.portrait}',
-                                      fit: BoxFit.cover,
-                                    )),
-                              ))))
-                          .toList(),
+                      height: MediaQuery.of(context).size.height - 230,
+                      decoration: BoxDecoration(
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: GridView.count(
+                        physics: BouncingScrollPhysics(),
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        childAspectRatio: 0.6,
+                        scrollDirection: Axis.vertical,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 0,
+                        children: photoList
+                            .map((dynamic photo) => GridTile(
+                                child: Stack(
+                                  alignment: Alignment.bottomRight,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, '/imageView',
+                                              arguments: {
+                                                'imgShowUrl': photo.src.portrait,
+                                                'imgDownloadUrl':
+                                                    photo.src.original,
+                                                'alt': photo.alt
+                                              });
+                                        },
+                                        child: Hero(
+                                            tag: photo.src.portrait,
+                                            child: Image.network(
+                                              '${photo.src.portrait}',
+                                              fit: BoxFit.cover,
+                                            )),
+                                      )),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        child: Icon(Icons.heart_broken),
+                                        onTap: () {
+                                          print('object'); // Todo add to favourites code
+                                        },
+                                      ), //Todo change favourite icon
+                                    ),
+                                ],
+                                )))
+                            .toList(),
+                      ),
                     ),
-                  ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
                       child: ElevatedButton(
                         onPressed: () {
-                          scrollController.animateTo(-170, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
+                          scrollController.animateTo(-170,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves
+                                  .easeOutSine); // easeinexpo, easeoutsine
                         },
-                        child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
+                        child: Lottie.asset(
+                            'assets/lottie/81045-rocket-launch.json',
                             height: 60,
                             width: 60,
                             fit: BoxFit.fill),
-                        style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.black54, shape: CircleBorder()),
+                      ),
                     ),
-              ],
+                  ],
                 );
               } else if (snapshot.hasError) {
                 return Center(child: Text('Failed to Load Wallpapers'));
               }
-              return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
-                height: 200,
-                width: 200, fit: BoxFit.cover));
+              return Center(
+                  child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                      height: 200, width: 200, fit: BoxFit.cover));
             },
           ),
         ],
@@ -182,4 +226,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
