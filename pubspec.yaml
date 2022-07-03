@@ -44,6 +44,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   get: ^4.6.5
+  liquid_progress_indicator_ns: ^1.0.0
 
 dev_dependencies:
   flutter_test:

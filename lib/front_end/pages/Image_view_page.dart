@@ -6,53 +6,93 @@ import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:get/get.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
   final String imgDownloadUrl;
   final String alt;
-  const ImageView({required this.imgShowUrl, required this.imgDownloadUrl, required this.alt, Key? key}) : super(key: key);
+  const ImageView(
+      {required this.imgShowUrl,
+      required this.imgDownloadUrl,
+      required this.alt,
+      Key? key})
+      : super(key: key);
 
   @override
   State<ImageView> createState() => _ImageViewState();
 }
 
-class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMixin{
+class _ImageViewState extends State<ImageView>
+    with SingleTickerProviderStateMixin {
   late Dio dioBrando;
+  late Rx<String> dialogue;
+  late double opacity;
+  late double progressValue;
+
+  @override
+  void initState() {
+    super.initState();
+    dialogue = 'Downloading'.obs;
+    opacity = 0.0;
+    progressValue = 0;
+  }
 
   saveToGallery() async {
     Navigator.pop(context);
-    var response = await dioBrando.get(widget.imgDownloadUrl, options: Options(responseType: ResponseType.bytes,),);
-    final result = await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallpaper saved to gallery Successfully'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-    //print('hi');
+    var response = await dioBrando.get(
+      widget.imgDownloadUrl,
+      options: Options(
+        responseType: ResponseType.bytes,
+      ),
+    );
+    final result =
+        await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Wallpaper saved to gallery Successfully'),
+        behavior: SnackBarBehavior.floating,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
   }
 
-  Future<void>setWallpaper(String place) async {
+  Future<void> setWallpaper(String place) async {
     Map<Permission, PermissionStatus> status = await [
       Permission.storage,
     ].request();
-    if(status[Permission.storage]!.isGranted) {
+    if (status[Permission.storage]!.isGranted) {
       var dir = await getExternalStorageDirectory();
       //print(dir);
       String filePath = '${dir?.path}/${widget.alt}.jpg';
-      await Dio().download(widget.imgDownloadUrl, filePath);
+      await Dio().download(widget.imgDownloadUrl, filePath).then((value) {
+        dialogue = 'Setting as Wallpaper'.obs;
+        progressValue = 0.4;
+        setState(() {});
+      });
       //print('Download Complete');
       int location;
-      if(place == 'homescreen') {
+      if (place == 'homescreen') {
         location = WallpaperManager.HOME_SCREEN;
-      }
-      else if(place == 'lockscreen'){
+      } else if (place == 'lockscreen') {
         location = WallpaperManager.LOCK_SCREEN;
-      }
-      else {
+      } else {
         location = WallpaperManager.BOTH_SCREEN;
       }
       //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
       await WallpaperManager.setWallpaperFromFile(filePath, location);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ));
+      setState(() {
+        progressValue = 1.0;
+        opacity = 0.0;
+      });
+      await Future.delayed(Duration(milliseconds: 1000));
       //Todo Pop an Alert Dialogue saying Wait until Wallpaper is set
       Navigator.pop(context);
     } else {
@@ -60,23 +100,41 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
-        children: <Widget>[
+        children: [
           Hero(
             tag: widget.imgShowUrl,
             child: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                child: Image.network(widget.imgShowUrl,fit: BoxFit.cover,)),
+                child: Image.network(
+                  widget.imgShowUrl,
+                  fit: BoxFit.cover,
+                )),
           ),
-          AlertDialog(
-            title: Text('Wait'),
-            // Todo Make the user wait until the wallpaper downloads
+          AnimatedOpacity(
+            opacity: opacity,
+            duration: Duration(milliseconds: 400),
+            child: AlertDialog(
+              title: Obx(() => Text('${dialogue}')),
+              content: Container(
+                height: MediaQuery.of(context).size.height / 13,
+                width: MediaQuery.of(context).size.width / 2,
+                child: LiquidLinearProgressIndicator(
+                  borderColor: Colors.transparent,
+                  value: progressValue,
+                  borderRadius: 30,
+                  borderWidth: 0,
+                  direction: Axis.horizontal,
+                  center: Text('${progressValue * 100}%', style: TextStyle(color: Colors.white),),
+                ),
+              ),
+              // Todo Make the user wait until the wallpaper downloads
+            ),
           ),
         ],
       ),
@@ -94,32 +152,36 @@ class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMix
               label: 'Homescreen',
               onTap: () {
                 setWallpaper('homescreen');
-              }
-          ),
+                opacity = 1.0;
+                setState(() {});
+              }),
           SpeedDialChild(
               child: Icon(Icons.lock),
               backgroundColor: Colors.white,
               label: 'Lockscreen',
               onTap: () {
                 setWallpaper('lockscreen');
-              }
-          ),
+                opacity = 1.0;
+                setState(() {});
+              }),
           SpeedDialChild(
               child: Icon(Icons.now_wallpaper),
               backgroundColor: Colors.white,
               label: 'Both',
               onTap: () {
                 setWallpaper('bothscreen');
-              }
-          ),
+                opacity = 1.0;
+                setState(() {});
+              }),
           SpeedDialChild(
               child: Icon(Icons.download),
               backgroundColor: Colors.white,
               label: 'Save',
               onTap: () {
                 saveToGallery();
-              }
-          ),
+                opacity = 1.0;
+                setState(() {});
+              }),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
