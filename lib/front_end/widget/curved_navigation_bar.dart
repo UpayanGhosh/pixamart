@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/AccountPage.dart';
-import 'package:PixaMart/front_end/pages/Favourites.dart';
+import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:PixaMart/front_end/pages/homepage.dart';
 class Navigation_bar extends StatefulWidget {
   const Navigation_bar({Key? key}) : super(key: key);
@@ -12,13 +12,14 @@ class Navigation_bar extends StatefulWidget {
 
 class _Navigation_barState extends State<Navigation_bar> {
   GlobalKey<CurvedNavigationBarState> _NavKey = GlobalKey();
-  var PagesAll = [HomePage(),FavouritesPage(),AccountPage()];
-  var myindex = 0;
+  var pagesAll = [HomePage(),FavouritesPage(),AccountPage()];
+  int myIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.black,
         color: Colors.black,
@@ -31,11 +32,10 @@ class _Navigation_barState extends State<Navigation_bar> {
         buttonBackgroundColor: Colors.white,
         onTap: (index){
             setState((){
-              myindex = index;
+              myIndex = index;
             });
         },
       ),
-      body: PagesAll[myindex],
     );
   }
 }

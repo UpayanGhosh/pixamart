@@ -1,6 +1,6 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'homepage.dart';
+import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -29,6 +29,7 @@ class SplashScreen extends StatelessWidget {
         duration: 1000,
         backgroundColor: Colors.black,
         splashTransition: SplashTransition.fadeTransition,
-        nextScreen: HomePage());
+        nextScreen: Navigation_bar()
+    );
   }
 }
