@@ -45,6 +45,9 @@ dependencies:
   hive_flutter: ^1.1.0
   get: ^4.6.5
   liquid_progress_indicator_ns: ^1.0.0
+  flutter_screenutil: ^5.5.3+2
+  line_awesome_flutter: ^2.0.0
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:

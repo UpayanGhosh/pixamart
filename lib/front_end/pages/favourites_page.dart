@@ -73,7 +73,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
-                            child: Icon(Icons.heart_broken),
+                            child: Icon(Icons.favorite_rounded,color: Colors.pink,),
                             onTap: () {
                               Favourites lastDeleted = Favourites(favourites.imgShowUrl, favourites.imgDownloadUrl, favourites.alt);
                               favouritesBox.deleteAt(index);
@@ -161,7 +161,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        child: Icon(Icons.heart_broken),
+                        child: Icon(Icons.favorite_rounded,color: Colors.pink,),
                         onTap: () {
                           Favourites lastDeleted = Favourites(favourites.imgShowUrl, favourites.imgDownloadUrl, favourites.alt);
                           favouritesBox.deleteAt(index);

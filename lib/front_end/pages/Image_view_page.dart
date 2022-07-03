@@ -120,9 +120,10 @@ class _ImageViewState extends State<ImageView>
             opacity: opacity,
             duration: Duration(milliseconds: 400),
             child: AlertDialog(
-              title: Obx(() => Text('${dialogue}')),
+              backgroundColor: Colors.transparent,
+              title: Obx(() => Text('${dialogue}',style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)),
               content: Container(
-                height: MediaQuery.of(context).size.height / 13,
+                height: MediaQuery.of(context).size.height / 26,
                 width: MediaQuery.of(context).size.width / 2,
                 child: LiquidLinearProgressIndicator(
                   borderColor: Colors.transparent,

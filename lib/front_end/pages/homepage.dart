@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -14,6 +15,8 @@ import 'package:PixaMart/private/get_pexels_api_key.dart';
 import 'package:PixaMart/front_end/widget/categories.dart';
 import 'package:PixaMart/front_end/widget/category_tile.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
+
+import 'constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -150,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                           alignment: Alignment.bottomRight,
                           children: [
                             Container(
-                              height: MediaQuery.of(context).size.height - 230,
+                              height: MediaQuery.of(context).size.height - 236,
                               decoration: BoxDecoration(),
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: GridView.count(
@@ -191,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: GestureDetector(
-                                            child: Icon(Icons.heart_broken),
+                                            child: Icon(Icons.favorite_outline_rounded,color: Colors.pink,),
                                             onTap: () {
                                               Favourites favourites = Favourites(photo.src.portrait, photo.src.original, photo.alt);
                                               Hive.box('favourites').add(favourites);
@@ -236,9 +239,11 @@ class _HomePageState extends State<HomePage> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Failed to Load Wallpapers'));
                       }
-                      return Center(
-                          child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
-                              height: 200, width: 200, fit: BoxFit.cover));
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(0, 150, 75, 0),
+                        child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                            height: 200, width: 200, fit: BoxFit.cover),
+                      );
                     },
                   ),
                 ],
