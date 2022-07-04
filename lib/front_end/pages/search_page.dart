@@ -115,6 +115,19 @@ class _SearchPageState extends State<SearchPage> {
       //throw Exception('Failed to Fetch Photos');
     }
   }
+
+  addToLiked({required String imgShowUrl, required String imgDownloadUrl, required String alt}) {
+    Favourites favourites = Favourites(imgShowUrl, imgDownloadUrl, alt);
+    Hive.box('favourites').add(favourites);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      label: 'Undo',
+      onPressed: () {
+        Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+      },
+    ),));
+    // Todo Add to favourites code
+  }
+
   @override
   void initState() {
     getSearchWallpapers(widget.searchQuery.text);
@@ -142,13 +155,13 @@ class _SearchPageState extends State<SearchPage> {
               backgroundColor: Colors.black,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0, padTop: MediaQuery.of(context).size.height / 16, padRight: 0, padBottom: 0),
+                title: AppTitle(padLeft: 0, padTop: MediaQuery.of(context).size.height - 750, padRight: MediaQuery.of(context).size.width - 342, padBottom: 0),
               ),
               body: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 0, 22),
-                    child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){print("hello");}),
+                    child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){}),
                   ),
                   FutureBuilder(
                     future: getSearchWallpapers(widget.searchQuery.text),
@@ -176,6 +189,9 @@ class _SearchPageState extends State<SearchPage> {
                                   children: [
                                     ClipRRect(borderRadius: BorderRadius.circular(16),
                                       child: GestureDetector(
+                                        onDoubleTap: () {
+                                          addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
+                                        },
                                         onTap: (){
                                           Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                                         },
@@ -188,19 +204,11 @@ class _SearchPageState extends State<SearchPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
-                                        child: Icon(Icons.heart_broken),
+                                        child: Icon(Icons.favorite_outline_rounded,color: Colors.red),
                                         onTap: () {
-                                          Favourites favourites = Favourites(photo.src.portrait, photo.src.original, photo.alt);
-                                          Hive.box('favourites').add(favourites);
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
-                                            label: 'Undo',
-                                            onPressed: () {
-                                              Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
-                                            },
-                                          ),));
-                                          // Todo add to favourites code
+                                          addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                         },
-                                      ), //Todo change favourite icon
+                                      ),  
                                     ),
                                   ],
                                 ),
@@ -227,7 +235,9 @@ class _SearchPageState extends State<SearchPage> {
                         return Center(child: Text('Failed to Load Wallpapers'));
                         //Todo Lottie asset for server down and msg
                       }
-                      return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                      return Container(
+                          margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height - 653, 0, 0),
+                          child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
                         height: 200,
                         width: 200,));
                       // Todo change lottie asset

@@ -113,6 +113,18 @@ class _CategoryPageState extends State<CategoryPage> {
     }
   }
 
+  addToLiked({required String imgShowUrl, required String imgDownloadUrl, required String alt}) {
+    Favourites favourites = Favourites(imgShowUrl, imgDownloadUrl, alt);
+    Hive.box('favourites').add(favourites);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      label: 'Undo',
+      onPressed: () {
+        Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+      },
+    ),));
+    // Todo Add to favourites code
+  }
+
   @override
   void initState() {
     favouritesBox = Hive.openBox('favourites');
@@ -134,6 +146,8 @@ class _CategoryPageState extends State<CategoryPage> {
     return FutureBuilder(
       future: favouritesBox,
       builder: (context, snapshot) {
+        print(MediaQuery.of(context).size.height);
+        print(MediaQuery.of(context).size.width);
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -143,7 +157,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 centerTitle: true,
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0.0, padTop: 60.0, padRight: 0.0, padBottom: 15.0,),
+                title: AppTitle(padLeft: 0.0, padTop: MediaQuery.of(context).size.height - 750, padRight: MediaQuery.of(context).size.width - 342, padBottom: 0),
               ),
               body: Container(
                 child: Column(
@@ -178,6 +192,9 @@ class _CategoryPageState extends State<CategoryPage> {
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(16),
                                             child: GestureDetector(
+                                              onDoubleTap: () {
+                                                addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
+                                              },
                                               onTap: () {
                                                 Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                                               },
@@ -192,19 +209,11 @@ class _CategoryPageState extends State<CategoryPage> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              Favourites favourites = Favourites(photo.src.portrait, photo.src.original, photo.alt);
-                                              Hive.box('favourites').add(favourites);
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
-                                                label: 'Undo',
-                                                onPressed: () {
-                                                  Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
-                                                },
-                                              ),));
-                                              // Todo Add to favourites code
+                                              addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.all(8.0),
-                                              child: Icon(Icons.heart_broken), // Todo change favourites icon
+                                              child: Icon(Icons.favorite_outline_rounded,color: Colors.red),
                                             ),
                                           ),
                                         ],
@@ -217,8 +226,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                 return Center(child: Text('Failed to Load Wallpapers'));
                               }
                               return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
-                                height: 300,
-                                width: 300,));
+                                height: 200,
+                                width: 200,));
                             },
                           ),
                           Padding(
