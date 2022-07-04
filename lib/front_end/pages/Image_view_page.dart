@@ -110,6 +110,7 @@ class _ImageViewState extends State<ImageView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
