@@ -1,4 +1,5 @@
 // When user searches something he/she lands on this page
+//This is a comment
 
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
