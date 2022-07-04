@@ -48,6 +48,7 @@ dependencies:
   flutter_screenutil: ^5.5.3+2
   line_awesome_flutter: ^2.0.0
   google_fonts: ^3.0.1
+  simple_animations: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,7 @@ flutter:
     - assets/rive/intro.riv
     - assets/rive/pull-to-refresh_community_demo.riv
     - assets/rive/App_intro.riv
+    - assets/rive/Welcome.riv
     - assets/lottie/73969-rocket-flying.json
     - assets/lottie/89628-rocket-no-blackground.json
     - assets/lottie/lf30_editor_y3gijqdm.json
