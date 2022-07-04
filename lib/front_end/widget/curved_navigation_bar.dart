@@ -22,6 +22,7 @@ class _Navigation_barState extends State<Navigation_bar> {
       resizeToAvoidBottomInset: false,
       body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
+        height: MediaQuery.of(context).size.height / 16.05,
         backgroundColor: Colors.black,
         color: Colors.black,
         key: _NavKey,
