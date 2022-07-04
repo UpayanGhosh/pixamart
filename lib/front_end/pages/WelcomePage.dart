@@ -13,7 +13,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color:  Colors.blueGrey,
+        color:  Colors.black87,
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
@@ -42,7 +42,7 @@ class WelcomePage extends StatelessWidget {
               ],
             ),
             FadeAnimation(1.4, Container(
-              height: MediaQuery.of(context).size.height / 2.045,
+              height: MediaQuery.of(context).size.height / 2.15,
               width: MediaQuery.of(context).size.height / 2,
               margin: EdgeInsets.fromLTRB(0, 0, 0, 50),
               child: RiveAnimation.asset('assets/rive/Welcome.riv',fit: BoxFit.fitHeight,),

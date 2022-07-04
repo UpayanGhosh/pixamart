@@ -1,3 +1,5 @@
+import 'package:PixaMart/front_end/pages/homepage.dart';
+import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../animation/FadeAnimation.dart';
@@ -67,7 +69,10 @@ class SignupPage extends StatelessWidget {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 60,
-                  onPressed: () {},
+                  onPressed: () {
+                    MaterialPageRoute(builder: (context) => Navigation_bar());
+
+                  },
                   color: Colors.blueAccent,
                   elevation: 0,
                   shape: RoundedRectangleBorder(

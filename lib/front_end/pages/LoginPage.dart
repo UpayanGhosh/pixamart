@@ -1,4 +1,7 @@
+import 'package:PixaMart/front_end/pages/homepage.dart';
+import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../animation/FadeAnimation.dart';
 
@@ -74,7 +77,10 @@ class LoginPage extends StatelessWidget {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () {},
+                        onPressed: () {
+                          print('hello');
+                          MaterialPageRoute(builder: (context) => Navigation_bar());
+                        },
                         color: Colors.blueAccent,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -108,12 +114,7 @@ class LoginPage extends StatelessWidget {
             ),
             FadeAnimation(1.2, Container(
               height: MediaQuery.of(context).size.height / 3,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/background.png'),
-                      fit: BoxFit.cover
-                  )
-              ),
+              child: Lottie.asset('assets/lottie/lf30_editor_v2sd4e12.json'),
             ))
           ],
         ),

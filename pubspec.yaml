@@ -94,6 +94,7 @@ flutter:
     - assets/lottie/lf20_4cntnmut.json
     - assets/lottie/lf30_editor_wqxr1uwq.json
     - assets/lottie/lf30_editor_6akqllok.json
+    - assets/lottie/lf30_editor_v2sd4e12.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
