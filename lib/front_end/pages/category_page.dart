@@ -157,14 +157,14 @@ class _CategoryPageState extends State<CategoryPage> {
                 centerTitle: true,
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0.0, padTop: MediaQuery.of(context).size.height - 750, padRight: MediaQuery.of(context).size.width - 342, padBottom: 0),
+                title: AppTitle(padLeft: 0.0, padTop: 50, padRight: MediaQuery.of(context).size.width - 342, padBottom: 0),
               ),
               body: Container(
                 child: Column(
                   children: [
                     SearchBar(),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height - 230,
+                      height: MediaQuery.of(context).size.height - 252,
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [

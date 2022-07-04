@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.transparent,
                 title: AppTitle(
                   padLeft: MediaQuery.of(context).size.width - 377,
-                  padTop: MediaQuery.of(context).size.height - 750,
+                  padTop: 50,
                   padRight: 0,
                   padBottom: 0.0,
                 ),
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         SearchBar(),
                         Container(
-                          height: MediaQuery.of(context).size.height - 753,
+                          height: 50,
                           child: ListView.builder(
                               physics: BouncingScrollPhysics(),
                               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width - 388),
@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                           alignment: Alignment.bottomRight,
                           children: [
                             Container(
-                              height: MediaQuery.of(context).size.height - 230,
+                              height: MediaQuery.of(context).size.height - 243,
                               decoration: BoxDecoration(),
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: GridView.count(

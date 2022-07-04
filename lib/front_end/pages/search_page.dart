@@ -155,7 +155,7 @@ class _SearchPageState extends State<SearchPage> {
               backgroundColor: Colors.black,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0, padTop: MediaQuery.of(context).size.height - 750, padRight: MediaQuery.of(context).size.width - 342, padBottom: 0),
+                title: AppTitle(padLeft: 0, padTop: 50, padRight: MediaQuery.of(context).size.width - 342, padBottom: 0),
               ),
               body: Column(
                 children: [
@@ -172,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
                           alignment: Alignment.bottomRight,
                           children: [
                             Container(
-                              height: MediaQuery.of(context).size.height - 252,
+                              height: MediaQuery.of(context).size.height - 262,
                               color: Colors.black,
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: GridView.count(

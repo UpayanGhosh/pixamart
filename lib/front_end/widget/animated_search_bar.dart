@@ -72,7 +72,7 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70.0,
+      height: MediaQuery.of(context).size.height - 755,
       alignment: widget.rtl ? Alignment.centerRight : Alignment(-1.0, 0.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: widget.animationDurationInMilli),
@@ -95,14 +95,13 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
           children: [
             AnimatedPositioned(
               duration: Duration(milliseconds: widget.animationDurationInMilli),
-              top: MediaQuery.of(context).size.height - 801,
-              right: MediaQuery.of(context).size.width - 385,
+              top: 3,
+              right: 8,
               curve: Curves.easeOut,
               child: AnimatedOpacity(
                 opacity: (toggle == 0) ? 0.0 : 1.0,
                 duration: Duration(milliseconds: 200),
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   decoration: BoxDecoration(
                     color: widget.color,
                     borderRadius: BorderRadius.circular(30.0),
@@ -123,7 +122,6 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                         }
                       },
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: GestureDetector(
                           child: Lottie.asset('assets/lottie/lf30_editor_in1ne4w9.json',
                           height: MediaQuery.of(context).size.height / 20,
