@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         brightness: Brightness.light,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blueGrey,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Colors.black,
+        color: Colors.blueGrey,
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: Column(
@@ -36,9 +36,10 @@ class LoginPage extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       FadeAnimation(1, Text("Login", style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 40,
                           fontWeight: FontWeight.bold,
                         color: Colors.white,
+                          fontFamily: 'medio'
                       ),)),
                       SizedBox(height: 20,),
                       FadeAnimation(1.2, Text("Login to your account", style: TextStyle(
@@ -83,6 +84,7 @@ class LoginPage extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18,
                           color: Colors.white,
+                            fontFamily: 'medio'
                         ),),
                       ),
                     ),
@@ -96,6 +98,7 @@ class LoginPage extends StatelessWidget {
                         child: Text("Sign up", style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 18,
                           color: Colors.white,
+                            fontFamily: 'medio'
                         ),),
                       ),
                     ],
@@ -133,10 +136,10 @@ class LoginPage extends StatelessWidget {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)
+                borderSide: BorderSide(color: Colors.white)
             ),
             border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)
+                borderSide: BorderSide(color: Colors.white)
             ),
           ),
         ),

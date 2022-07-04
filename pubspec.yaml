@@ -110,6 +110,18 @@ flutter:
     - family: Raunchies
       fonts:
         - asset: fonts/RaunchiesDemoRegular.ttf
+    - family: Voga-Medium
+      fonts:
+        - asset: fonts/Voga-Medium.otf
+    - family: Lovelyn Free Personal Use
+      fonts:
+        - asset: fonts/Lovelyn Free Personal Use.ttf
+    - family: medio
+      fonts:
+        - asset: fonts/medio.otf
+    - family: Wallington
+      fonts:
+        - asset: fonts/Wallington-Pro.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

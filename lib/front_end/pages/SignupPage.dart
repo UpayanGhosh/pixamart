@@ -13,7 +13,7 @@ class SignupPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         brightness: Brightness.light,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blueGrey,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -23,7 +23,7 @@ class SignupPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Colors.black,
+          color: Colors.blueGrey,
           padding: EdgeInsets.symmetric(horizontal: 40),
           height: MediaQuery.of(context).size.height - 50,
           width: double.infinity,
@@ -33,9 +33,10 @@ class SignupPage extends StatelessWidget {
               Column(
                 children: <Widget>[
                   FadeAnimation(1, Text("Sign up", style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 40,
                       fontWeight: FontWeight.bold,
                     color: Colors.white,
+                      fontFamily: 'medio'
                   ),)),
                   SizedBox(height: 20,),
                   FadeAnimation(1.2, Text("Create an account, It's free", style: TextStyle(

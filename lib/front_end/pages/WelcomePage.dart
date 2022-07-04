@@ -13,7 +13,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color:  Colors.black,
+        color:  Colors.blueGrey,
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
@@ -25,20 +25,24 @@ class WelcomePage extends StatelessWidget {
               children: <Widget>[
                 FadeAnimation(1, Text("Welcome", style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 30,
+                    fontSize: 60,
                   color: Colors.white,
+                  fontFamily: 'medio'
                 ),)),
                 SizedBox(height: 20,),
-                FadeAnimation(1.2, Text("Automatic identity verification which enables you to verify your identity",
+                FadeAnimation(1.2, Text("Automatic identity verification which \n enables us to verify your identity",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 15
+                      fontSize: 15,
+                      fontFamily: 'Wallington-Pro'
+
+
                   ),)),
               ],
             ),
             FadeAnimation(1.4, Container(
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height / 2.045,
               width: MediaQuery.of(context).size.height / 2,
               margin: EdgeInsets.fromLTRB(0, 0, 0, 50),
               child: RiveAnimation.asset('assets/rive/Welcome.riv',fit: BoxFit.fitHeight,),
