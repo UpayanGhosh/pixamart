@@ -208,7 +208,7 @@ class _SearchPageState extends State<SearchPage> {
                                         onTap: () {
                                           addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                         },
-                                      ),  
+                                      ),
                                     ),
                                   ],
                                 ),
