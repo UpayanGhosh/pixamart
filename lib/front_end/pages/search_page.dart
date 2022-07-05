@@ -236,6 +236,7 @@ class _SearchPageState extends State<SearchPage> {
                       }
                       return Container(
                           margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height / 6.5, 0, 0),
+
                           child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
                         height: MediaQuery.of(context).size.height / 4,
                         width: MediaQuery.of(context).size.width / 1.96,));
