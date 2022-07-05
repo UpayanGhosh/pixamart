@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:PixaMart/front_end/pages/Image_view_page.dart';
+import 'package:PixaMart/front_end/pages/image_view_page.dart';
 import 'package:PixaMart/front_end/pages/search_page.dart';
 import 'package:PixaMart/front_end/pages/category_page.dart';
 import 'package:PixaMart/front_end/pages/splash_screen.dart';

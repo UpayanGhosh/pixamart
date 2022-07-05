@@ -22,7 +22,6 @@ class ProfileListItem extends StatelessWidget {
               Icon(this.icon),
               SizedBox(width: 16,),
               Text(this.text),
-
             ],
           )
       ),

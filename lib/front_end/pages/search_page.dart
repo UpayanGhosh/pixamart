@@ -13,7 +13,7 @@ import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:PixaMart/private/api_key.dart';
-import 'AccountPage.dart';
+import 'account_page.dart';
 import 'favourites_page.dart';
 
 class SearchPageNavigation extends StatefulWidget {

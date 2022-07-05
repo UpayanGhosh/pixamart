@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../animation/FadeAnimation.dart';
-import 'LoginPage.dart';
-import 'SignupPage.dart';
+import 'login_page.dart';
+import 'signup_page.dart';
 
 
 class WelcomePage extends StatelessWidget {
