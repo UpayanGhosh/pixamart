@@ -1,57 +1,32 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
-import '../pages/constants.dart';
 class ProfileListItem extends StatelessWidget {
-  final IconData icon;
   final String text;
-  final bool hasNavigation;
+  final IconData icon;
 
-  const ProfileListItem({
-    Key? key,
-    required this.icon,
-    required this.text,
-    this.hasNavigation = true,
-  }) : super(key: key);
+  const ProfileListItem({Key? key,required this.text, required this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: kSpacingUnit.w * 5.5,
-      margin: EdgeInsets.symmetric(
-        horizontal: kSpacingUnit.w * 4,
-      ).copyWith(
-        bottom: kSpacingUnit.w * 2,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: kSpacingUnit.w * 2,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-        color: Colors.blueAccent,
-      ),
-      child: Row(
-        children: <Widget>[
-          Icon(
-            this.icon,
-            size: kSpacingUnit.w * 2.5,
-          ),
-          SizedBox(width: kSpacingUnit.w * 1.5),
-          Text(
-            this.text,
-            style: kTitleTextStyle.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Spacer(),
-          if (this.hasNavigation)
-            Icon(
-              LineAwesomeIcons.angle_right,
-              size: kSpacingUnit.w * 2.5,
-            ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+          onPressed: (){},
+          style: ElevatedButton.styleFrom(primary: Colors.blueAccent,elevation: 0,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),padding: EdgeInsets.all(10)),
+          child:Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(this.icon),
+              SizedBox(width: 16,),
+              Text(this.text),
+
+            ],
+          )
       ),
     );
   }
 }
+

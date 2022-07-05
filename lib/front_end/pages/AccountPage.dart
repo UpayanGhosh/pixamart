@@ -108,7 +108,7 @@ class AccountPage extends StatelessWidget {
                   header,
                   Expanded(
                     child: ListView(
-                      children: <Widget>[
+                      children: const <Widget>[
                         ProfileListItem(
                           icon: LineAwesomeIcons.donate,
                           text: 'Help Creator',
@@ -128,7 +128,7 @@ class AccountPage extends StatelessWidget {
                         ProfileListItem(
                           icon: LineAwesomeIcons.alternate_sign_out,
                           text: 'Logout',
-                          hasNavigation: false,
+                          //hasNavigation: false,
                         ),
                       ],
                     ),

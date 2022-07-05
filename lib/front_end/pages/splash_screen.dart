@@ -38,7 +38,7 @@ class SplashScreen extends StatelessWidget {
         duration: 1000,
         backgroundColor: Colors.black,
         splashTransition: SplashTransition.fadeTransition,
-        nextScreen: Navigation_bar()
+        nextScreen: WelcomePage()
     );
   }
 }
