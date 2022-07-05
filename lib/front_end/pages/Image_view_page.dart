@@ -28,7 +28,6 @@ class ImageView extends StatefulWidget {
 
 class _ImageViewState extends State<ImageView>
     with SingleTickerProviderStateMixin {
-  late Dio dioBrando;
   late Rx<String> dialogue;
   late double opacity;
   late double progressValue;
@@ -42,8 +41,8 @@ class _ImageViewState extends State<ImageView>
   }
 
   saveToGallery() async {
-    Navigator.pop(context);
-    var response = await dioBrando.get(
+    opacity = 1.0;
+    var response = await Dio().get(
       widget.imgDownloadUrl,
       options: Options(
         responseType: ResponseType.bytes,
@@ -54,8 +53,14 @@ class _ImageViewState extends State<ImageView>
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Wallpaper saved to gallery Successfully'),
         behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+    progressValue = 1.0;
+    setState(() {});
+    await Future.delayed(Duration(milliseconds: 500));
+    opacity = 1.0;
+    setState(() {});
+    await Future.delayed(Duration(milliseconds: 500));
+    Navigator.pop(context);
   }
 
   Future<void> setWallpaper(String place) async {
@@ -63,8 +68,8 @@ class _ImageViewState extends State<ImageView>
       Permission.storage,
     ].request();
     if (status[Permission.storage]!.isGranted) {
+      opacity = 1.0;
       var dir = await getExternalStorageDirectory();
-      //print(dir);
       String filePath = '${dir?.path}/${widget.alt}.jpg';
       await Dio().download(widget.imgDownloadUrl, filePath).then((value) {
         dialogue = 'Setting as Wallpaper'.obs;
@@ -78,6 +83,7 @@ class _ImageViewState extends State<ImageView>
       } else if (place == 'lockscreen') {
         location = WallpaperManager.LOCK_SCREEN;
       } else {
+        print('Hello');
         location = WallpaperManager.BOTH_SCREEN;
       }
       //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
@@ -88,11 +94,12 @@ class _ImageViewState extends State<ImageView>
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ));
-      setState(() {
-        progressValue = 1.0;
-        opacity = 0.0;
-      });
-      await Future.delayed(Duration(milliseconds: 1000));
+      progressValue = 1.0;
+      setState(() {});
+      await Future.delayed(Duration(milliseconds: 500));
+      opacity = 0.0;
+      setState(() {});
+      await Future.delayed(Duration(milliseconds: 500));
       //Todo Pop an Alert Dialogue saying Wait until Wallpaper is set
       Navigator.pop(context);
     } else {
@@ -103,6 +110,7 @@ class _ImageViewState extends State<ImageView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -153,7 +161,6 @@ class _ImageViewState extends State<ImageView>
               label: 'Homescreen',
               onTap: () {
                 setWallpaper('homescreen');
-                opacity = 1.0;
                 setState(() {});
               }),
           SpeedDialChild(
@@ -162,7 +169,6 @@ class _ImageViewState extends State<ImageView>
               label: 'Lockscreen',
               onTap: () {
                 setWallpaper('lockscreen');
-                opacity = 1.0;
                 setState(() {});
               }),
           SpeedDialChild(
@@ -171,7 +177,6 @@ class _ImageViewState extends State<ImageView>
               label: 'Both',
               onTap: () {
                 setWallpaper('bothscreen');
-                opacity = 1.0;
                 setState(() {});
               }),
           SpeedDialChild(
@@ -180,7 +185,6 @@ class _ImageViewState extends State<ImageView>
               label: 'Save',
               onTap: () {
                 saveToGallery();
-                opacity = 1.0;
                 setState(() {});
               }),
         ],

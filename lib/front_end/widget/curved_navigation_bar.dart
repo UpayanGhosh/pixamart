@@ -1,4 +1,3 @@
-import 'package:PixaMart/front_end/pages/WelcomePage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/AccountPage.dart';
@@ -22,19 +21,20 @@ class _Navigation_barState extends State<Navigation_bar> {
       resizeToAvoidBottomInset: false,
       body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
+        height: MediaQuery.of(context).size.height / 16.05,
         backgroundColor: Colors.black,
         color: Colors.black,
         key: _NavKey,
-          items: [
-            Icon(Icons.home_outlined,color: Colors.blue,),
-            Icon(Icons.favorite_outline,color: Colors.blue,),
-            Icon(Icons.account_circle_outlined,color: Colors.blue,),
-          ],
+        items: [
+          Icon(Icons.home_outlined,color: Colors.blue,),
+          Icon(Icons.favorite_outline,color: Colors.blue,),
+          Icon(Icons.account_circle_outlined,color: Colors.blue,),
+        ],
         buttonBackgroundColor: Colors.white,
         onTap: (index){
-            setState((){
-              myIndex = index;
-            });
+          setState((){
+            myIndex = index;
+          });
         },
       ),
     );

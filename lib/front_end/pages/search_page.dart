@@ -1,12 +1,13 @@
 // When user searches something he/she lands on this page
+//This is a comment
 
 import 'dart:convert';
+import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:PixaMart/front_end/widget/animated_search_bar.dart';
 import 'package:PixaMart/private/get_pexels_api_key.dart';
 import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
@@ -42,6 +43,7 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
       resizeToAvoidBottomInset: false,
       body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
+        height: MediaQuery.of(context).size.height / 16.05,
         backgroundColor: Colors.black,
         color: Colors.black,
         buttonBackgroundColor: Colors.white,
@@ -115,6 +117,19 @@ class _SearchPageState extends State<SearchPage> {
       //throw Exception('Failed to Fetch Photos');
     }
   }
+
+  addToLiked({required String imgShowUrl, required String imgDownloadUrl, required String alt}) {
+    Favourites favourites = Favourites(imgShowUrl, imgDownloadUrl, alt);
+    Hive.box('favourites').add(favourites);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      label: 'Undo',
+      onPressed: () {
+        Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+      },
+    ),));
+    // Todo Add to favourites code
+  }
+
   @override
   void initState() {
     getSearchWallpapers(widget.searchQuery.text);
@@ -142,14 +157,11 @@ class _SearchPageState extends State<SearchPage> {
               backgroundColor: Colors.black,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0, padTop: MediaQuery.of(context).size.height / 16, padRight: 0, padBottom: 0),
+                title: AppTitle(padLeft: 0, padTop: MediaQuery.of(context).size.height / 15, padRight: MediaQuery.of(context).size.width / 10, padBottom: 0),
               ),
               body: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 0, 22),
-                    child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.525, searchQuery: searchController, textController: searchController, onSuffixTap:(){print("hello");}),
-                  ),
+                  SearchBar(),
                   FutureBuilder(
                     future: getSearchWallpapers(widget.searchQuery.text),
                     builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -159,23 +171,26 @@ class _SearchPageState extends State<SearchPage> {
                           alignment: Alignment.bottomRight,
                           children: [
                             Container(
-                              height: MediaQuery.of(context).size.height - 252,
+                              height: MediaQuery.of(context).size.height / 1.40,
                               color: Colors.black,
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: GridView.count(
                                 controller: scrollController,
                                 physics: BouncingScrollPhysics(),
                                 shrinkWrap: true,
-                                childAspectRatio: 0.6,
+                                childAspectRatio: 0.61,
                                 scrollDirection: Axis.vertical,
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 10,
+                                crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
                                 mainAxisSpacing: 0,
                                 children: photoList.map((dynamic photo) => GridTile(child: Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
                                     ClipRRect(borderRadius: BorderRadius.circular(16),
                                       child: GestureDetector(
+                                        onDoubleTap: () {
+                                          addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
+                                        },
                                         onTap: (){
                                           Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
                                         },
@@ -188,19 +203,11 @@ class _SearchPageState extends State<SearchPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
-                                        child: Icon(Icons.heart_broken),
+                                        child: Icon(Icons.favorite_outline_rounded,color: Colors.red),
                                         onTap: () {
-                                          Favourites favourites = Favourites(photo.src.portrait, photo.src.original, photo.alt);
-                                          Hive.box('favourites').add(favourites);
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
-                                            label: 'Undo',
-                                            onPressed: () {
-                                              Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
-                                            },
-                                          ),));
-                                          // Todo add to favourites code
+                                          addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                         },
-                                      ), //Todo change favourite icon
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -209,14 +216,14 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5, vertical: MediaQuery.of(context).size.height / 50.15),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  scrollController.animateTo(-170, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
+                                  scrollController.animateTo((MediaQuery.of(context).size.height / 4.7) * -1, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
                                 },
                                 child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
-                                    height: 60,
-                                    width: 60,
+                                    height: MediaQuery.of(context).size.height / 13.5,
+                                    width: MediaQuery.of(context).size.width /12.5,
                                     fit: BoxFit.fill),
                                 style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
                             ),
@@ -227,9 +234,11 @@ class _SearchPageState extends State<SearchPage> {
                         return Center(child: Text('Failed to Load Wallpapers'));
                         //Todo Lottie asset for server down and msg
                       }
-                      return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
-                        height: 200,
-                        width: 200,));
+                      return Container(
+                          margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height / 6.5, 0, 0),
+                          child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                        height: MediaQuery.of(context).size.height / 4,
+                        width: MediaQuery.of(context).size.width / 1.96,));
                       // Todo change lottie asset
                     },
                   ),
