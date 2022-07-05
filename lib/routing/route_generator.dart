@@ -1,3 +1,6 @@
+import 'package:PixaMart/front_end/pages/login_page.dart';
+import 'package:PixaMart/front_end/pages/signup_page.dart';
+import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/image_view_page.dart';
 import 'package:PixaMart/front_end/pages/search_page.dart';
@@ -19,6 +22,12 @@ class RouteGenerator {
       case '/search':
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => SearchPageNavigation(searchQuery: args['searchQuery']));
+      case '/navigationBar':
+        return MaterialPageRoute(builder: (context) => Navigation_bar());
+      case '/signUp':
+        return MaterialPageRoute(builder: (context) => SignupPage());
+      case '/login':
+        return MaterialPageRoute(builder: (context) => LoginPage());
       default:
         return MaterialPageRoute(builder: (context) => ErrorPage());
     }

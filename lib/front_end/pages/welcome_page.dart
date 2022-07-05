@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-
 import '../animation/FadeAnimation.dart';
 import 'login_page.dart';
 import 'signup_page.dart';
@@ -20,9 +19,9 @@ class WelcomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Column(
-              children: <Widget>[
+              children: [
                 FadeAnimation(1, Text("Welcome", style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 60,
@@ -36,68 +35,60 @@ class WelcomePage extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 15,
                       fontFamily: 'Wallington-Pro'
-
-
                   ),)),
               ],
             ),
-            FadeAnimation(1.4, Container(
+            Container(
               height: MediaQuery.of(context).size.height / 2.15,
               width: MediaQuery.of(context).size.height / 2,
               margin: EdgeInsets.fromLTRB(0, 0, 0, 50),
               child: RiveAnimation.asset('assets/rive/Welcome.riv',fit: BoxFit.fitHeight,),
-            )),
+            ),
             Column(
-              children: <Widget>[
-                FadeAnimation(1.5, MaterialButton(
-                  minWidth: double.infinity,
-                  height: 60,
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.circular(50)
-                  ),
-                  child: Text("Login", style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                    color: Colors.white,
-                  ),),
-                )),
-                SizedBox(height: 20,),
-                FadeAnimation(1.6, Container(
-                  padding: EdgeInsets.only(top: 3, left: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border(
-                        bottom: BorderSide(color: Colors.white,),
-                        top: BorderSide(color: Colors.white,),
-                        left: BorderSide(color: Colors.white,),
-                        right: BorderSide(color: Colors.white,),
-                      )
-                  ),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
-                    },
-                    color: Colors.blueAccent,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(color: Colors.transparent),
+                    padding: EdgeInsets.symmetric(horizontal: 140, vertical: 20),
                     elevation: 0,
+                    primary:Color(0xfff07371),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)
-                    ),
-                    child: Text("Sign up", style: TextStyle(
+                        borderRadius: BorderRadius.circular(50)),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: Text(
+                    "Log In",
+                    style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
-                      color: Colors.white,
-                    ),),
+                        color: Colors.white,
+                        fontFamily: 'medio'),
                   ),
-                ))
+                ),
+                SizedBox(height: 20,),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(color: Colors.transparent),
+                    padding: EdgeInsets.symmetric(horizontal: 134, vertical: 20),
+                    elevation: 0,
+                    primary: Color(0xff8ab6fd),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signUp');
+                  },
+                  child: Text(
+                    "SignUp",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontFamily: 'medio'),
+                  ),
+                ),
               ],
             )
           ],

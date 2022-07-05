@@ -118,6 +118,7 @@ class _HomePageState extends State<HomePage> {
               resizeToAvoidBottomInset: false,
               backgroundColor: Colors.black,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
                 title: AppTitle(
