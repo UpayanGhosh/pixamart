@@ -1,5 +1,4 @@
 // When user searches something he/she lands on this page
-//This is a comment
 
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
@@ -13,8 +12,9 @@ import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:PixaMart/private/api_key.dart';
-import 'account_page.dart';
-import 'favourites_page.dart';
+import 'package:PixaMart/front_end/pages/account_page.dart';
+import 'package:PixaMart/front_end/pages/favourites_page.dart';
+import 'package:flutter/services.dart';
 
 class SearchPageNavigation extends StatefulWidget {
   final TextEditingController searchQuery;
@@ -25,14 +25,14 @@ class SearchPageNavigation extends StatefulWidget {
 }
 
 class _SearchPageNavigationState extends State<SearchPageNavigation> {
-  late var pagesAll;
+  late List<Widget> pagesAll;
   late int myIndex;
-  late GlobalKey<CurvedNavigationBarState> _NavKey;
+  late GlobalKey<CurvedNavigationBarState> _navKey;
 
   @override
   void initState() {
     super.initState();
-    _NavKey = GlobalKey();
+    _navKey = GlobalKey();
     pagesAll = [SearchPage(searchQuery: widget.searchQuery,),FavouritesPage(),AccountPage()];
     myIndex = 0;
   }
@@ -47,7 +47,7 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
         backgroundColor: Colors.black,
         color: Colors.black,
         buttonBackgroundColor: Colors.white,
-        key: _NavKey,
+        key: _navKey,
         items: [
           Icon(Icons.search_outlined,color: Colors.blue,),
           Icon(Icons.favorite_outline,color: Colors.blue,),
@@ -80,6 +80,7 @@ class _SearchPageState extends State<SearchPage> {
   late double currentMaxScrollExtent;
   late Future<Box<dynamic>> favouritesBox;
   TextEditingController searchController = TextEditingController();
+  late Box<dynamic> favouritesList;
 
   Future<List<dynamic>>getSearchWallpapers(String query) async{
     Response url = await get(Uri.parse("https://api.pexels.com/v1/search?query=$query&per_page=80"),
@@ -118,18 +119,43 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  addToLiked({required String imgShowUrl, required String imgDownloadUrl, required String alt}) {
-    Favourites favourites = Favourites(imgShowUrl, imgDownloadUrl, alt);
-    Hive.box('favourites').add(favourites);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
-      label: 'Undo',
-      onPressed: () {
-        Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
-      },
-    ),));
-    // Todo Add to favourites code
+  checkIfLiked({required String imgShowUrl}) {
+    int alreadyLikedAt = -1;
+    for(int i = 0; i < favouritesList.length; i++) {
+      if(imgShowUrl == (favouritesList.getAt(i) as Favourites).imgShowUrl) {
+        alreadyLikedAt = i;
+      }
+    }
+    return alreadyLikedAt;
   }
 
+  handleLiked({required String imgShowUrl, required String imgDownloadUrl, required String alt}) {
+    Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
+    int index = checkIfLiked(imgShowUrl: imgShowUrl);
+    if(index == -1) {
+      Hive.box('favourites').add(fav);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+          setState(() {});
+        },
+      ),));
+    } else {
+      Hive.box('favourites').deleteAt(index);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          Favourites lastDeleted = Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
+          favouritesList.add(lastDeleted);
+          setState(() {});
+        },
+      ),));
+    }
+    setState(() {});
+    HapticFeedback.lightImpact();
+    // Todo Add to favourites code
+  }
   @override
   void initState() {
     getSearchWallpapers(widget.searchQuery.text);
@@ -137,6 +163,7 @@ class _SearchPageState extends State<SearchPage> {
     scrollController = ScrollController();
     currentMaxScrollExtent = 0.0;
     favouritesBox = Hive.openBox('favourites');
+    favouritesList = Hive.box('favourites');
     super.initState();
   }
 
@@ -189,7 +216,7 @@ class _SearchPageState extends State<SearchPage> {
                                     ClipRRect(borderRadius: BorderRadius.circular(16),
                                       child: GestureDetector(
                                         onDoubleTap: () {
-                                          addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
+                                          handleLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                         },
                                         onTap: (){
                                           Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
@@ -203,9 +230,17 @@ class _SearchPageState extends State<SearchPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
-                                        child: Icon(Icons.favorite_outline_rounded,color: Colors.red),
+                                        child: Builder(
+                                            builder: (context) {
+                                              if(checkIfLiked(imgShowUrl: photo.src.portrait) == -1) {
+                                                return Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
+                                              } else {
+                                                return Icon(Icons.favorite_outlined,color: Colors.pink,);
+                                              }
+                                            }
+                                        ),
                                         onTap: () {
-                                          addToLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
+                                          handleLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                         },
                                       ),
                                     ),

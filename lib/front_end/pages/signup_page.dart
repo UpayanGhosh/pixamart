@@ -1,7 +1,4 @@
-import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
-import '../animation/FadeAnimation.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -36,24 +33,24 @@ class SignupPage extends StatelessWidget {
             children: [
               Column(
                 children: [
-                      Text(
-                        "Sign up",
-                        style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: 'medio'),
-                      ),
+                  Text(
+                    "Sign up",
+                    style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: 'medio'),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
-                      Text(
-                        "Create an account, It's free",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                        ),
-                      ),
+                  Text(
+                    "Create an account, It's free",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
               Column(
@@ -62,16 +59,18 @@ class SignupPage extends StatelessWidget {
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 3, color: Colors.white),
-                      ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 3, color: Colors.white)
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 3, color: Colors.white),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 3, color: Colors.white)),
                         labelText: 'Email',
                         labelStyle: TextStyle(color: Colors.white)),
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   TextFormField(
                     cursorColor: Colors.white,
                     obscureText: true,
@@ -81,8 +80,8 @@ class SignupPage extends StatelessWidget {
                           borderSide: BorderSide(width: 3, color: Colors.white),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(width: 3, color: Colors.white)
-                        ),
+                            borderSide:
+                                BorderSide(width: 3, color: Colors.white)),
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.white)),
                   ),
@@ -134,30 +133,28 @@ class SignupPage extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, '/login');
                 },
-                child: FadeAnimation(
-                    1.6,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Already have an account?",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already have an account?",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: Text(
+                        " Login",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
                         ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: Text(
-                            " Login",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
