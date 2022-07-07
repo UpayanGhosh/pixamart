@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/account_page.dart';
 import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:PixaMart/front_end/pages/homepage.dart';
-class Navigation_bar extends StatefulWidget {
-  const Navigation_bar({Key? key}) : super(key: key);
+class AppBottomNavigationBar extends StatefulWidget {
+  const AppBottomNavigationBar({Key? key}) : super(key: key);
 
   @override
-  State<Navigation_bar> createState() => _Navigation_barState();
+  State<AppBottomNavigationBar> createState() => _AppBottomNavigationBarState();
 }
 
-class _Navigation_barState extends State<Navigation_bar> {
-  GlobalKey<CurvedNavigationBarState> _NavKey = GlobalKey();
-  var pagesAll = [HomePage(),FavouritesPage(),AccountPage()];
+class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
+  final GlobalKey<CurvedNavigationBarState> _navKey = GlobalKey();
+  var pagesAll = [const HomePage(),const FavouritesPage(),const AccountPage()];
   int myIndex = 0;
 
   @override
@@ -24,8 +24,8 @@ class _Navigation_barState extends State<Navigation_bar> {
         height: MediaQuery.of(context).size.height / 16.05,
         backgroundColor: Colors.black,
         color: Colors.black,
-        key: _NavKey,
-        items: [
+        key: _navKey,
+        items: const [
           Icon(Icons.home_outlined,color: Colors.blue,),
           Icon(Icons.favorite_outline,color: Colors.blue,),
           Icon(Icons.account_circle_outlined,color: Colors.blue,),
