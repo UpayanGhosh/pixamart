@@ -85,9 +85,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                   setState(() {});
                                 },
                               ),));
-                              // Todo add to favourites code
                             },
-                          ), //Todo change favourite icon
+                          ),
                         ),
                       ],
                     )
@@ -175,7 +174,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           ),));
                           // Todo add to favourites code
                         },
-                      ), //Todo change favourite icon
+                      ),
                     ),
                   ],
                 )

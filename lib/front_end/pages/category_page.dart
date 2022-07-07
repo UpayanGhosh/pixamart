@@ -34,7 +34,7 @@ class _CategoryPageNavigationState extends State<CategoryPageNavigation> {
   void initState() {
     super.initState();
     _navKey = GlobalKey();
-    pagesAll = [CategoryPage(categoryName: widget.categoryName), FavouritesPage(), AccountPage()];
+    pagesAll = [CategoryPage(categoryName: widget.categoryName), const FavouritesPage(), const AccountPage()];
     myIndex = 0;
   }
   @override
@@ -47,7 +47,7 @@ class _CategoryPageNavigationState extends State<CategoryPageNavigation> {
         backgroundColor: Colors.black,
         color: Colors.black,
         key: _navKey,
-        items: [
+        items: const [
           Icon(Icons.category_outlined,color: Colors.blue,),
           Icon(Icons.favorite_outline,color: Colors.blue,),
           Icon(Icons.account_circle_outlined,color: Colors.blue,),
@@ -131,7 +131,7 @@ class _CategoryPageState extends State<CategoryPage> {
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if(index == -1) {
       Hive.box('favourites').add(fav);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
           Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
@@ -140,7 +140,7 @@ class _CategoryPageState extends State<CategoryPage> {
       ),));
     } else {
       Hive.box('favourites').deleteAt(index);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
           Favourites lastDeleted = Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
@@ -151,7 +151,6 @@ class _CategoryPageState extends State<CategoryPage> {
     }
     setState(() {});
     HapticFeedback.lightImpact();
-    // Todo Add to favourites code
   }
 
   @override
@@ -182,115 +181,114 @@ class _CategoryPageState extends State<CategoryPage> {
               resizeToAvoidBottomInset: false,
               backgroundColor: Colors.black,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 centerTitle: true,
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0.0, padTop: MediaQuery.of(context).size.height / 15, padRight: MediaQuery.of(context).size.width / 10, padBottom: 0),
+                title: AppTitle(padLeft: MediaQuery.of(context).size.width / 8, padTop: MediaQuery.of(context).size.height / 15, padRight: MediaQuery.of(context).size.width / 10, padBottom: 0),
               ),
-              body: Container(
-                child: Column(
-                  children: [
-                    SearchBar(),
-                    SizedBox(height: MediaQuery.of(context).size.height / 80,),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 1.43,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          FutureBuilder(
-                            future: getSearchWallpapers(widget.categoryName),
-                            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                              if (snapshot.hasData) {
-                                List<dynamic> photos = snapshot.data!;
-                                return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: GridView.count(
-                                    controller: scrollController,
-                                    physics: BouncingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    childAspectRatio: 0.61,
-                                    scrollDirection: Axis.vertical,
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
-                                    mainAxisSpacing: 0,
-                                    children: photoList
-                                        .map((dynamic photo) => GridTile(
-                                      child: Stack(
-                                        alignment: Alignment.bottomRight,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(16),
-                                            child: GestureDetector(
-                                              onDoubleTap: () {
-                                                handleLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
-                                              },
-                                              onTap: () {
-                                                Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
-                                              },
-                                              child: Hero(
-                                                tag: photo.src.portrait,
-                                                child: Image.network(
-                                                  '${photo.src.portrait}',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
+              body: Column(
+                children: [
+                  const SearchBar(),
+                  SizedBox(height: MediaQuery.of(context).size.height / 80,),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 1.43,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        FutureBuilder(
+                          future: getSearchWallpapers(widget.categoryName),
+                          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                            if (snapshot.hasData) {
+                              List<dynamic> photos = snapshot.data!;
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5),
+                                child: GridView.count(
+                                  controller: scrollController,
+                                  physics: const BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  childAspectRatio: 0.61,
+                                  scrollDirection: Axis.vertical,
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
+                                  mainAxisSpacing: 0,
+                                  children: photoList
+                                      .map((dynamic photo) => GridTile(
+                                    child: Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(16),
+                                          child: GestureDetector(
+                                            onDoubleTap: () {
                                               handleLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                             },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Builder(
-                                                  builder: (context) {
-                                                    if(checkIfLiked(imgShowUrl: photo.src.portrait) == -1) {
-                                                      return Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
-                                                    } else {
-                                                      return Icon(Icons.favorite_outlined,color: Colors.pink,);
-                                                    }
-                                                  }
+                                            onTap: () {
+                                              Navigator.pushNamed(context, '/imageView', arguments: {'imgShowUrl': photo.src.portrait, 'imgDownloadUrl': photo.src.original, 'alt': photo.alt});
+                                            },
+                                            child: Hero(
+                                              tag: photo.src.portrait,
+                                              child: Image.network(
+                                                '${photo.src.portrait}',
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            handleLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Builder(
+                                                builder: (context) {
+                                                  if(checkIfLiked(imgShowUrl: photo.src.portrait) == -1) {
+                                                    return const Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
+                                                  } else {
+                                                    return const Icon(Icons.favorite_outlined,color: Colors.pink,);
+                                                  }
+                                                }
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    ).toList(),
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Center(child: Text('Failed to Load Wallpapers'));
-                              }
-                              return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
-                                height: MediaQuery.of(context).size.height / 4,
-                                width: MediaQuery.of(context).size.width / 1.96,));
+                                  ).toList(),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Center(child: Text('Failed to Load Wallpapers'));
+                            }
+                            return Center(child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
+                              height: MediaQuery.of(context).size.height / 4,
+                              width: MediaQuery.of(context).size.width / 1.96,));
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5, vertical: MediaQuery.of(context).size.height / 50.15),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              scrollController.animateTo((MediaQuery.of(context).size.height / 4.7) * -1, duration: const Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
                             },
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5, vertical: MediaQuery.of(context).size.height / 50.15),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                scrollController.animateTo((MediaQuery.of(context).size.height / 4.7) * -1, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
-                              },
-                              child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
-                                  height: MediaQuery.of(context).size.height / 13.5,
-                                  width: MediaQuery.of(context).size.width / 12.5,
-                                  fit: BoxFit.fill),
-                              style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
-                          ),
-                        ],
-                      ),
+                            style: ElevatedButton.styleFrom(primary: Colors.black54, shape: const CircleBorder()),
+                            child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
+                                height: MediaQuery.of(context).size.height / 13.5,
+                                width: MediaQuery.of(context).size.width / 12.5,
+                                fit: BoxFit.fill),),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           } else {
-            return Text('data'); // Todo add Code for when Hive doensn't initialize
+            return const Text('data'); // Todo add Code for when Hive doensn't initialize
           }
         } else {
-          return Scaffold(backgroundColor: Colors.black,);
+          return const Scaffold(backgroundColor: Colors.black,);
         }
   }
     );

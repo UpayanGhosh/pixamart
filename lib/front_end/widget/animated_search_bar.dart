@@ -58,7 +58,7 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
     );
   }
 
-  unfocusKeyboard() {
+  unFocusKeyboard() {
     final FocusScopeNode currentScope = FocusScope.of(context);
     if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
       FocusManager.instance.primaryFocus?.unfocus();
@@ -72,17 +72,17 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height - 755,
-      alignment: widget.rtl ? Alignment.centerRight : Alignment(-1.0, 0.0),
+      height: MediaQuery.of(context).size.height / 16.73,
+      alignment: widget.rtl ? Alignment.centerRight : const Alignment(-1.0, 0.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: widget.animationDurationInMilli),
-        height: 48.0,
-        width: (toggle == 0) ? 48.0 : widget.width,
+        height: MediaQuery.of(context).size.height / 16.73,
+        width: (toggle == 0) ? MediaQuery.of(context).size.width / 8.16 : widget.width,
         curve: Curves.easeOut,
         decoration: BoxDecoration(
           color: widget.color,
           borderRadius: BorderRadius.circular(30.0),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               spreadRadius: -10.0,
@@ -100,39 +100,13 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
               curve: Curves.easeOut,
               child: AnimatedOpacity(
                 opacity: (toggle == 0) ? 0.0 : 1.0,
-                duration: Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 200),
                 child: Container(
                   decoration: BoxDecoration(
                     color: widget.color,
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   child: AnimatedBuilder(
-                    child: GestureDetector(
-                      onTap: () {
-                        try {
-                          widget.onSuffixTap();
-                          if (widget.closeSearchOnSuffixTap) {
-                            unfocusKeyboard();
-                            setState(() {
-                              toggle = 0;
-                            });
-                          }
-                        } catch (e) {
-
-                        }
-                      },
-                      child: Container(
-                        child: GestureDetector(
-                          child: Lottie.asset('assets/lottie/lf30_editor_in1ne4w9.json',
-                          height: MediaQuery.of(context).size.height / 20,
-                          width: MediaQuery.of(context).size.height / 20,
-                          fit: BoxFit.fill),
-                          onTap: (){
-                            unfocusKeyboard();
-                            },
-                          ),
-                      ),
-                    ),
                     builder: (context, widget) {
                       return Transform.rotate(
                         angle: _animationController.value * 2.0 * pi,
@@ -140,6 +114,30 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       );
                     },
                     animation: _animationController,
+                    child: GestureDetector(
+                      onTap: () {
+                        try {
+                          widget.onSuffixTap();
+                          if (widget.closeSearchOnSuffixTap) {
+                            unFocusKeyboard();
+                            setState(() {
+                              toggle = 0;
+                            });
+                          }
+                        } catch (e) {
+                          throw e.toString();
+                        }
+                      },
+                      child: GestureDetector(
+                        child: Lottie.asset('assets/lottie/lf30_editor_in1ne4w9.json',
+                        height: MediaQuery.of(context).size.height / 20,
+                        width: MediaQuery.of(context).size.height / 20,
+                        fit: BoxFit.fill),
+                        onTap: (){
+                          unFocusKeyboard();
+                          },
+                        ),
+                    ),
                   ),
                 ),
               ),
@@ -151,7 +149,7 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
               top: 11.0,
               child: AnimatedOpacity(
                 opacity: (toggle == 0) ? 0.0 : 1.0,
-                duration: Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 200),
                 child: Container(
                   padding: const EdgeInsets.only(left: 10),
                   alignment: Alignment.topCenter,
@@ -160,15 +158,15 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                     controller: widget.textController,
                     inputFormatters: widget.inputFormatters,
                     focusNode: focusNode,
-                    cursorRadius: Radius.circular(10.0),
+                    cursorRadius: const Radius.circular(10.0),
                     cursorWidth: 2.0,
                     onEditingComplete: () {
-                      unfocusKeyboard();
+                      unFocusKeyboard();
                       setState(() {
                         toggle = 0;
                       });
                     },
-                    style: widget.style != null ? widget.style : TextStyle(color: Colors.black),
+                    style: widget.style ?? const TextStyle(color: Colors.black),
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.only(bottom: 5),
@@ -176,8 +174,8 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       labelText: widget.helpText,
                       labelStyle: TextStyle(
-                        color: Color(0xff5B5B5B),
-                        fontSize: 16.0,
+                        color: const Color(0xff5B5B5B),
+                        fontSize: MediaQuery.of(context).size.height / 50.2,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                       ),
@@ -199,12 +197,11 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                 splashRadius: 19.0,
                 icon: widget.prefixIcon != null
                     ? toggle == 1
-                    ? Icon(Icons.arrow_back_ios)
+                    ? const Icon(Icons.arrow_back_ios)
                     : widget.prefixIcon!
                     : GestureDetector(
-                  child: toggle == 1 ? Icon(Icons.align_horizontal_left_rounded): Lottie.asset('assets/lottie/lf30_editor_in1ne4w9.json',),
+                  child: toggle == 1 ? Transform.rotate(angle: 0.8, child: const Icon(Icons.add)): Lottie.asset('assets/lottie/lf30_editor_in1ne4w9.json',),
                   onTap: (){
-                    print("object");
                     if(widget.textController.text.isNotEmpty && toggle == 1) {
                       widget.textController.clear();
                     }
@@ -213,8 +210,9 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                         if (toggle == 0) {
                           toggle = 1;
                           setState(() {
-                            if (widget.autoFocus)
+                            if (widget.autoFocus) {
                               FocusScope.of(context).requestFocus(focusNode);
+                            }
                           });
                           _animationController.forward();
                         }
@@ -222,7 +220,7 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                         else {
                           toggle = 0;
                           setState(() {
-                            if (widget.autoFocus) unfocusKeyboard();
+                            if (widget.autoFocus) unFocusKeyboard();
                           });
                           _animationController.reverse();
                         }
@@ -232,7 +230,6 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                   },
                 ),
                 onPressed: () {
-                  print("object");
                   if(widget.textController.text.isNotEmpty && toggle == 1) {
                     widget.textController.clear();
                   }
@@ -241,8 +238,9 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       if (toggle == 0) {
                         toggle = 1;
                         setState(() {
-                          if (widget.autoFocus)
+                          if (widget.autoFocus) {
                             FocusScope.of(context).requestFocus(focusNode);
+                          }
                         });
                         _animationController.forward();
                       }
@@ -250,7 +248,7 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerP
                       else {
                         toggle = 0;
                         setState(() {
-                          if (widget.autoFocus) unfocusKeyboard();
+                          if (widget.autoFocus) unFocusKeyboard();
                         });
                         _animationController.reverse();
                       }

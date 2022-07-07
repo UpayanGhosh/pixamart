@@ -142,7 +142,6 @@ class _ImageViewState extends State<ImageView>
                   center: Text('${progressValue * 100}%', style: TextStyle(color: Colors.white),),
                 ),
               ),
-              // Todo Make the user wait until the wallpaper downloads
             ),
           ),
         ],

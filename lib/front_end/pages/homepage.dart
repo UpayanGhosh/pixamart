@@ -1,4 +1,5 @@
 // This is the HomePage of the application
+//Todo Remove unnecessary Lottie assets from yaml
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if(index == -1) {
       Hive.box('favourites').add(fav);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
           Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
       ),));
     } else {
       Hive.box('favourites').deleteAt(index);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
           Favourites lastDeleted = Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
@@ -112,7 +113,6 @@ class _HomePageState extends State<HomePage> {
     }
     setState(() {});
     HapticFeedback.lightImpact();
-    // Todo Add to favourites code
   }
 
   @override
@@ -147,9 +147,9 @@ class _HomePageState extends State<HomePage> {
                   elevation: 0.0,
                   backgroundColor: Colors.transparent,
                   title: AppTitle(
-                    padLeft: MediaQuery.of(context).size.width / 26,
+                    padLeft: MediaQuery.of(context).size.width / 8,
                     padTop: MediaQuery.of(context).size.height / 15,
-                    padRight: 0,
+                    padRight: MediaQuery.of(context).size.width / 10,
                     padBottom: 0.0,
                   ),
                 ),
@@ -159,16 +159,16 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: MediaQuery.of(context).size.height / 80,),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      padding: EdgeInsets.all(0.0),
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(0.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SearchBar(),
-                          Container(
+                          const SearchBar(),
+                          SizedBox(
                             height: MediaQuery.of(context).size.height / 16.05,
                             child: ListView.builder(
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 98),
                                 itemCount: categories.length,
                                 shrinkWrap: true,
@@ -194,10 +194,10 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Container(
                                 height: MediaQuery.of(context).size.height / 1.45,
-                                decoration: BoxDecoration(),
-                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                decoration: const BoxDecoration(),
+                                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5),
                                 child: GridView.count(
-                                  physics: BouncingScrollPhysics(),
+                                  physics: const BouncingScrollPhysics(),
                                   controller: scrollController,
                                   shrinkWrap: true,
                                   childAspectRatio: 0.61,
@@ -240,16 +240,16 @@ class _HomePageState extends State<HomePage> {
                                               child: Builder(
                                                 builder: (context) {
                                                   if(checkIfLiked(imgShowUrl: photo.src.portrait) == -1) {
-                                                    return Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
+                                                    return const Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
                                                   } else {
-                                                    return Icon(Icons.favorite_outlined,color: Colors.pink,);
+                                                    return const Icon(Icons.favorite_outlined,color: Colors.pink,);
                                                   }
                                                 }
                                               ),
                                               onTap: () {
                                                 handleLiked(imgShowUrl: photo.src.portrait, imgDownloadUrl: photo.src.original, alt: photo.alt);
                                               },
-                                            ), //Todo change favourite icon
+                                            ),
                                           ),
                                         ],
                                       )
@@ -264,23 +264,23 @@ class _HomePageState extends State<HomePage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     scrollController.animateTo((MediaQuery.of(context).size.height / 4.7) * -1,
-                                        duration: Duration(milliseconds: 400),
+                                        duration: const Duration(milliseconds: 400),
                                         curve: Curves
                                             .easeOutSine); // easeinexpo, easeoutsine
                                   },
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.black54, shape: const CircleBorder()),
                                   child: Lottie.asset(
                                       'assets/lottie/81045-rocket-launch.json',
                                       height: MediaQuery.of(context).size.height / 13.5,
                                       width: MediaQuery.of(context).size.width / 12.5,
                                       fit: BoxFit.fill),
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Colors.black54, shape: CircleBorder()),
                                 ),
                               ),
                             ],
                           );
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Failed to Load Wallpapers'));
+                          return const Center(child: Text('Failed to Load Wallpapers'));
                         }
                         return Container(
                           margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height / 6.5, MediaQuery.of(context).size.width / 5.2, 0),
@@ -294,10 +294,10 @@ class _HomePageState extends State<HomePage> {
               );
             }
             else {
-              return Text('data'); //Todo add code for when Hive doesn't initialize
+              return const Text('data'); //Todo add code for when Hive doesn't initialize
             }
           } else {
-            return Scaffold(backgroundColor: Colors.black,);
+            return const Scaffold(backgroundColor: Colors.black,);
           }
         }
     );
