@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
-import '../widget/profile_list_item.dart';
-import 'constants.dart';
+import 'package:PixaMart/front_end/widget/profile_list_item.dart';
+import 'package:PixaMart/front_end/widget/constants.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({Key? key}) : super(key: key);

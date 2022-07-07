@@ -12,6 +12,7 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   Hive.registerAdapter(FavouritesAdapter());
+  await Hive.openBox('favourites');
   runApp(
     PixaMartApp()
   );

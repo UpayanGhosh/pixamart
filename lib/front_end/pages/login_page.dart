@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../animation/FadeAnimation.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -33,8 +32,6 @@ class LoginPage extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      FadeAnimation(
-                          1,
                           Text(
                             "Login",
                             style: TextStyle(
@@ -42,19 +39,17 @@ class LoginPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontFamily: 'medio'),
-                          )),
+                          ),
                       SizedBox(
                         height: 20,
                       ),
-                      FadeAnimation(
-                          1.2,
                           Text(
                             "Login to your account",
                             style: TextStyle(
                               fontSize: 15,
                               color: Colors.white,
                             ),
-                          )),
+                          ),
                     ],
                   ),
                   Padding(
@@ -137,8 +132,7 @@ class LoginPage extends StatelessWidget {
                     onTap: () {
                       Navigator.pushNamed(context, '/signUp');
                     },
-                    child: FadeAnimation(
-                        1.5,
+                    child:
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -158,18 +152,16 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                           ],
-                        )),
+                        ),
                   )
                 ],
               ),
             ),
-            FadeAnimation(
-                1.2,
                 Container(
                   height: MediaQuery.of(context).size.height / 3,
                   child:
                       Lottie.asset('assets/lottie/lf30_editor_v2sd4e12.json'),
-                ))
+                )
           ],
         ),
       ),
