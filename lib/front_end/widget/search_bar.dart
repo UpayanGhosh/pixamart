@@ -19,8 +19,8 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-      child: AnimatedSearchBar(width: MediaQuery.of(context).size.width/1.525, textController: searchController, onSuffixTap: (){
+      padding:  EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 24.5, 0, 0, 0),
+      child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.57, textController: searchController, onSuffixTap: (){
       }, searchQuery: searchController,),
     );
   }

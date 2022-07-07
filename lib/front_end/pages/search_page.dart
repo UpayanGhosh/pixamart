@@ -33,7 +33,7 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
   void initState() {
     super.initState();
     _navKey = GlobalKey();
-    pagesAll = [SearchPage(searchQuery: widget.searchQuery,),FavouritesPage(),AccountPage()];
+    pagesAll = [SearchPage(searchQuery: widget.searchQuery,),const FavouritesPage(),const AccountPage()];
     myIndex = 0;
   }
 
@@ -48,7 +48,7 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
         color: Colors.black,
         buttonBackgroundColor: Colors.white,
         key: _navKey,
-        items: [
+        items: const [
           Icon(Icons.search_outlined,color: Colors.blue,),
           Icon(Icons.favorite_outline,color: Colors.blue,),
           Icon(Icons.account_circle_outlined,color: Colors.blue,),
@@ -134,7 +134,7 @@ class _SearchPageState extends State<SearchPage> {
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if(index == -1) {
       Hive.box('favourites').add(fav);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Added to Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
           Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
@@ -143,7 +143,7 @@ class _SearchPageState extends State<SearchPage> {
       ),));
     } else {
       Hive.box('favourites').deleteAt(index);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
         label: 'Undo',
         onPressed: () {
           Favourites lastDeleted = Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
@@ -154,7 +154,6 @@ class _SearchPageState extends State<SearchPage> {
     }
     setState(() {});
     HapticFeedback.lightImpact();
-    // Todo Add to favourites code
   }
   @override
   void initState() {
@@ -183,12 +182,13 @@ class _SearchPageState extends State<SearchPage> {
               resizeToAvoidBottomInset: false,
               backgroundColor: Colors.black,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
-                title: AppTitle(padLeft: 0, padTop: MediaQuery.of(context).size.height / 15, padRight: MediaQuery.of(context).size.width / 10, padBottom: 0),
+                title: AppTitle(padLeft: MediaQuery.of(context).size.width / 8, padTop: MediaQuery.of(context).size.height / 15, padRight: MediaQuery.of(context).size.width / 10, padBottom: 0),
               ),
               body: Column(
                 children: [
-                  SearchBar(),
+                  const SearchBar(),
                   FutureBuilder(
                     future: getSearchWallpapers(widget.searchQuery.text),
                     builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -200,10 +200,10 @@ class _SearchPageState extends State<SearchPage> {
                             Container(
                               height: MediaQuery.of(context).size.height / 1.40,
                               color: Colors.black,
-                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5),
                               child: GridView.count(
                                 controller: scrollController,
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 shrinkWrap: true,
                                 childAspectRatio: 0.61,
                                 scrollDirection: Axis.vertical,
@@ -233,9 +233,9 @@ class _SearchPageState extends State<SearchPage> {
                                         child: Builder(
                                             builder: (context) {
                                               if(checkIfLiked(imgShowUrl: photo.src.portrait) == -1) {
-                                                return Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
+                                                return const Icon(Icons.favorite_outline_rounded,color: Colors.pink,);
                                               } else {
-                                                return Icon(Icons.favorite_outlined,color: Colors.pink,);
+                                                return const Icon(Icons.favorite_outlined,color: Colors.pink,);
                                               }
                                             }
                                         ),
@@ -254,19 +254,19 @@ class _SearchPageState extends State<SearchPage> {
                               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 24.5, vertical: MediaQuery.of(context).size.height / 50.15),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  scrollController.animateTo((MediaQuery.of(context).size.height / 4.7) * -1, duration: Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
+                                  scrollController.animateTo((MediaQuery.of(context).size.height / 4.7) * -1, duration: const Duration(milliseconds: 400), curve: Curves.easeOutSine); // easeinexpo, easeoutsine
                                 },
+                                style: ElevatedButton.styleFrom(primary: Colors.black54, shape: const CircleBorder()),
                                 child: Lottie.asset('assets/lottie/81045-rocket-launch.json',
                                     height: MediaQuery.of(context).size.height / 13.5,
                                     width: MediaQuery.of(context).size.width /12.5,
-                                    fit: BoxFit.fill),
-                                style: ElevatedButton.styleFrom(primary: Colors.black54, shape: CircleBorder()),),
+                                    fit: BoxFit.fill),),
                             ),
                           ],
                         );
                       }
                       else if(snapshot.hasError){
-                        return Center(child: Text('Failed to Load Wallpapers'));
+                        return const Center(child: Text('Failed to Load Wallpapers'));
                         //Todo Lottie asset for server down and msg
                       }
                       return Container(
@@ -275,18 +275,17 @@ class _SearchPageState extends State<SearchPage> {
                           child: Lottie.asset('assets/lottie/lf30_editor_vomrc8qf.json',
                         height: MediaQuery.of(context).size.height / 4,
                         width: MediaQuery.of(context).size.width / 1.96,));
-                      // Todo change lottie asset
                     },
                   ),
                 ],
               ),
             );
           } else {
-            return Text('data');
+            return const Text('data');
           }
         }
         else {
-          return Scaffold(backgroundColor: Colors.black,);
+          return const Scaffold(backgroundColor: Colors.black,);
         }
   }
     );
