@@ -48,7 +48,6 @@ class _ImageViewState extends State<ImageView>
       progressValue.value = currentProgressValue;
       await Future.delayed(const Duration(milliseconds: 10));
     }
-      print(progressValue.value);
   }
 
   saveToGallery() async {
