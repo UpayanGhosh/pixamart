@@ -44,11 +44,11 @@ class _ImageViewState extends State<ImageView>
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
     while(currentProgressValue != newProgressValue) {
-      //print(progressValue.value + newProgressValue);
-      currentProgressValue += 0.1;
+      currentProgressValue += 1;
       progressValue.value = currentProgressValue;
       await Future.delayed(const Duration(milliseconds: 10));
     }
+      print(progressValue.value);
   }
 
   saveToGallery() async {
@@ -65,7 +65,7 @@ class _ImageViewState extends State<ImageView>
         content: const Text('Wallpaper saved to gallery Successfully'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-    updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue.value);
+    await updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue.value);
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 500));
     opacity = 1.0;
@@ -82,9 +82,9 @@ class _ImageViewState extends State<ImageView>
       opacity = 1.0;
       var dir = await getExternalStorageDirectory();
       String filePath = '${dir?.path}/${widget.alt}.jpg';
-      await Dio().download(widget.imgDownloadUrl, filePath).then((value) {
+      await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
         dialogue = 'Setting as Wallpaper'.obs;
-        updateProgressValue(newProgressValue: 0.4, currentProgressValue: progressValue.value);
+        await updateProgressValue(newProgressValue: 40, currentProgressValue: progressValue.value);
         setState(() {});
       });
       //print('Download Complete');
@@ -105,7 +105,7 @@ class _ImageViewState extends State<ImageView>
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ));
-      updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue);
+      await updateProgressValue(newProgressValue: 100, currentProgressValue: progressValue.value);
       setState(() {});
       await Future.delayed(Duration(milliseconds: 500));
       opacity = 0.0;
@@ -144,13 +144,15 @@ class _ImageViewState extends State<ImageView>
               content: SizedBox(
                 height: MediaQuery.of(context).size.height / 26,
                 width: MediaQuery.of(context).size.width / 2,
-                child: LiquidLinearProgressIndicator(
-                  borderColor: Colors.transparent,
-                  value: progressValue.value,
-                  borderRadius: 30,
-                  borderWidth: 0,
-                  direction: Axis.horizontal,
-                  center: Obx(() => Text('${(progressValue.value).toStringAsFixed(1)}%', style: const TextStyle(color: Colors.white),)),
+                child: Obx(
+                  () => LiquidLinearProgressIndicator(
+                    borderColor: Colors.transparent,
+                    value: progressValue.value / 100,
+                    borderRadius: 30,
+                    borderWidth: 0,
+                    direction: Axis.horizontal,
+                    center: Text('${(progressValue.value).toStringAsFixed(1)}%', style: const TextStyle(color: Colors.white),),
+                  ),
                 ),
               ),
             ),
