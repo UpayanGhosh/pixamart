@@ -23,7 +23,7 @@ class RouteGenerator {
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => SearchPageNavigation(searchQuery: args['searchQuery']));
       case '/navigationBar':
-        return MaterialPageRoute(builder: (context) => Navigation_bar());
+        return MaterialPageRoute(builder: (context) => AppBottomNavigationBar());
       case '/signUp':
         return MaterialPageRoute(builder: (context) => SignupPage());
       case '/login':
@@ -39,7 +39,7 @@ class ErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text('You have come to the wrong place!'),
       ),

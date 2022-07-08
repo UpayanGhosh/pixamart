@@ -1,7 +1,6 @@
 import 'package:PixaMart/front_end/pages/Help&Support.dart';
 import 'package:PixaMart/front_end/pages/settings_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:PixaMart/front_end/widget/profile_list_item.dart';
 
