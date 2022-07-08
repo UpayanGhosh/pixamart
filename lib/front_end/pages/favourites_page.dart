@@ -111,7 +111,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 style: ElevatedButton.styleFrom(
                     primary: Colors.black54, shape: const CircleBorder()),
                 child: Lottie.asset('assets/lottie/Rocket.json',
-                    height: 60, width: 60, fit: BoxFit.fill),
+                    height: MediaQuery.of(context).size.height /
+                        13.5, width: MediaQuery.of(context).size.width /
+                        12.5, fit: BoxFit.fill),
               ),
             ),
           ],

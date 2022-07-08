@@ -233,16 +233,16 @@ class _CategoryPageState extends State<CategoryPage> {
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 1.43,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          FutureBuilder(
-                            future: getSearchWallpapers(widget.categoryName),
-                            builder: (context,
-                                AsyncSnapshot<List<dynamic>> snapshot) {
-                              if (snapshot.hasData) {
-                                List<dynamic> photos = snapshot.data!;
-                                return Container(
+                      child: FutureBuilder(
+                        future: getSearchWallpapers(widget.categoryName),
+                        builder:
+                            (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                          if (snapshot.hasData) {
+                            List<dynamic> photos = snapshot.data!;
+                            return Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal:
                                           MediaQuery.of(context).size.width /
@@ -338,46 +338,53 @@ class _CategoryPageState extends State<CategoryPage> {
                                         )
                                         .toList(),
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return const Center(
-                                    child: Text('Failed to Load Wallpapers'));
-                              }
-                              return Center(
-                                  child: Lottie.asset(
-                                'assets/lottie/Loading.json',
-                                height: MediaQuery.of(context).size.height / 4,
-                                width: MediaQuery.of(context).size.width / 1.96,
-                              ));
-                            },
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.width / 24.5,
-                                vertical:
-                                    MediaQuery.of(context).size.height / 50.15),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                scrollController.animateTo(
-                                    (MediaQuery.of(context).size.height / 4.7) *
-                                        -1,
-                                    duration: const Duration(milliseconds: 400),
-                                    curve: Curves
-                                        .easeOutSine); // easeinexpo, easeoutsine
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.black54,
-                                  shape: const CircleBorder()),
-                              child: Lottie.asset('assets/lottie/Rocket.json',
-                                  height:
-                                      MediaQuery.of(context).size.height / 13.5,
-                                  width:
-                                      MediaQuery.of(context).size.width / 12.5,
-                                  fit: BoxFit.fill),
-                            ),
-                          ),
-                        ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width /
+                                              24.5,
+                                      vertical:
+                                          MediaQuery.of(context).size.height /
+                                              50.15),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      scrollController.animateTo(
+                                          (MediaQuery.of(context).size.height /
+                                                  4.7) *
+                                              -1,
+                                          duration:
+                                              const Duration(milliseconds: 400),
+                                          curve: Curves
+                                              .easeOutSine); // easeinexpo, easeoutsine
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.black54,
+                                        shape: const CircleBorder()),
+                                    child: Lottie.asset(
+                                        'assets/lottie/Rocket.json',
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                13.5,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                12.5,
+                                        fit: BoxFit.fill),
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Failed to Load Wallpapers'));
+                          }
+                          return Center(
+                              child: Lottie.asset(
+                            'assets/lottie/Loading.json',
+                            height: MediaQuery.of(context).size.height / 4,
+                            width: MediaQuery.of(context).size.width / 1.96,
+                          ));
+                        },
                       ),
                     ),
                   ],
