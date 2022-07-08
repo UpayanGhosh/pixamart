@@ -49,6 +49,7 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   google_fonts: ^3.0.1
   simple_animations: ^4.2.0
+  ionicons: ^0.1.2
 
 dev_dependencies:
   flutter_test:
@@ -77,24 +78,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/rive/1920-3835-start.riv
-    - assets/rive/loading.riv
-    - assets/rive/intro.riv
-    - assets/rive/pull-to-refresh_community_demo.riv
-    - assets/rive/App_intro.riv
     - assets/rive/Welcome.riv
-    - assets/lottie/73969-rocket-flying.json
-    - assets/lottie/89628-rocket-no-blackground.json
-    - assets/lottie/lf30_editor_y3gijqdm.json
-    - assets/lottie/106405-energy-rocket.json
-    - assets/lottie/81045-rocket-launch.json
-    - assets/lottie/lf30_editor_in1ne4w9.json
-    - assets/lottie/lf30_editor_x3tmhtxh.json
-    - assets/lottie/lf30_editor_vomrc8qf.json
-    - assets/lottie/lf20_4cntnmut.json
-    - assets/lottie/lf30_editor_wqxr1uwq.json
-    - assets/lottie/lf30_editor_6akqllok.json
-    - assets/lottie/lf30_editor_v2sd4e12.json
+    - assets/lottie/Rocket.json
+    - assets/lottie/Loading.json
+    - assets/lottie/Server_Error.json
+    - assets/lottie/SearchIcon.json
+    - assets/lottie/LoginPage.json
+    - assets/lottie/Help.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

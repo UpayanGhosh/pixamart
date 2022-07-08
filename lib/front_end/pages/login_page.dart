@@ -160,7 +160,7 @@ class LoginPage extends StatelessWidget {
                 Container(
                   height: MediaQuery.of(context).size.height / 3,
                   child:
-                      Lottie.asset('assets/lottie/lf30_editor_v2sd4e12.json'),
+                      Lottie.asset('assets/lottie/LoginPage.json'),
                 )
           ],
         ),

@@ -1,3 +1,5 @@
+import 'package:PixaMart/front_end/pages/Help&Support.dart';
+import 'package:PixaMart/front_end/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:PixaMart/front_end/widget/profile_list_item.dart';
@@ -34,14 +36,19 @@ class AccountPage extends StatelessWidget {
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
                               ),
                             ),
-                            Text('U', style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height / 25,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),),
+                            Text(
+                              'U',
+                              style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 25,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
                           ],
                           alignment: Alignment.center,
                         ),
@@ -79,7 +86,8 @@ class AccountPage extends StatelessWidget {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height / 200),
                   Container(
-                    margin: EdgeInsets.only(right: MediaQuery.of(context).size.width / 16),
+                    margin: EdgeInsets.only(
+                        right: MediaQuery.of(context).size.width / 16),
                     child: Text(
                       'upayan1231@gmail.com',
                       style: TextStyle(
@@ -91,11 +99,12 @@ class AccountPage extends StatelessWidget {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height / 50),
                   Container(
-                    margin: EdgeInsets.only(right: MediaQuery.of(context).size.width / 16),
+                    margin: EdgeInsets.only(
+                        right: MediaQuery.of(context).size.width / 16),
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        primary : Colors.blueAccent,
+                        primary: Colors.blueAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -117,18 +126,72 @@ class AccountPage extends StatelessWidget {
           Expanded(
             child: ListView(
               physics: BouncingScrollPhysics(),
-              children: const [
+              children: [
                 ProfileListItem(
                   icon: LineAwesomeIcons.donate,
                   text: 'Help Creator',
                 ),
-                ProfileListItem(
-                  icon: LineAwesomeIcons.question_circle,
-                  text: 'Help & Support',
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HelpSupport()));
+                        //Todo Add pages
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blueAccent,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          padding: EdgeInsets.all(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            LineAwesomeIcons.question_circle,
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text('Help & Support'),
+                        ],
+                      )),
                 ),
-                ProfileListItem(
-                  icon: LineAwesomeIcons.cog,
-                  text: 'Settings',
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SettingsPage()));
+                        //Todo Add pages
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blueAccent,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          padding: EdgeInsets.all(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            LineAwesomeIcons.cog,
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text('Settings'),
+                        ],
+                      )),
                 ),
                 ProfileListItem(
                   icon: LineAwesomeIcons.user_plus,

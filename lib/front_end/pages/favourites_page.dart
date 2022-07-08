@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 
-
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);
 
@@ -20,12 +19,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
     super.initState();
     scrollController = ScrollController();
     currentMaxScrollExtent = 0.0;
-
   }
+
   @override
   Widget build(BuildContext context) {
     Box<dynamic> favouritesBox = Hive.box('favourites');
-    if(favouritesBox.length > 4) {
+    if (favouritesBox.length > 4) {
       return Scaffold(
         backgroundColor: Colors.black,
         body: Stack(
@@ -47,69 +46,72 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 final favourites = favouritesBox.getAt(index) as Favourites;
                 return GridTile(
                     child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/imageView',
-                                    arguments: {
-                                      'imgShowUrl':
-                                      favourites.imgShowUrl,
-                                      'imgDownloadUrl':
-                                      favourites.imgDownloadUrl,
-                                      'alt': favourites.alt,
-                                    });
-                              },
-                              child: Hero(
-                                  tag: favourites.imgShowUrl.toString(),
-                                  child: Image.network(
-                                    favourites.imgShowUrl.toString(),
-                                    fit: BoxFit.cover,
-                                  )),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            child: const Icon(Icons.favorite_rounded,color: Colors.pink,),
-                            onTap: () {
-                              Favourites lastDeleted = Favourites(favourites.imgShowUrl, favourites.imgDownloadUrl, favourites.alt);
-                              favouritesBox.deleteAt(index);
-                              setState(() {});
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
-                                label: 'Undo',
-                                onPressed: () {
-                                  favouritesBox.add(lastDeleted);
-                                  setState(() {});
-                                },
-                              ),));
-                            },
-                          ),
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/imageView',
+                                arguments: {
+                                  'imgShowUrl': favourites.imgShowUrl,
+                                  'imgDownloadUrl': favourites.imgDownloadUrl,
+                                  'alt': favourites.alt,
+                                });
+                          },
+                          child: Hero(
+                              tag: favourites.imgShowUrl.toString(),
+                              child: Image.network(
+                                favourites.imgShowUrl.toString(),
+                                fit: BoxFit.cover,
+                              )),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: const Icon(
+                          Icons.favorite_rounded,
+                          color: Colors.pink,
                         ),
-                      ],
-                    )
-                );
+                        onTap: () {
+                          Favourites lastDeleted = Favourites(
+                              favourites.imgShowUrl,
+                              favourites.imgDownloadUrl,
+                              favourites.alt);
+                          favouritesBox.deleteAt(index);
+                          setState(() {});
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text('Removed from Favourites!!'),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () {
+                                favouritesBox.add(lastDeleted);
+                                setState(() {});
+                              },
+                            ),
+                          ));
+                        },
+                      ),
+                    ),
+                  ],
+                ));
               },
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: ElevatedButton(
                 onPressed: () {
                   scrollController.animateTo(-170,
                       duration: Duration(milliseconds: 400),
-                      curve: Curves
-                          .easeOutSine); // easeinexpo, easeoutsine
+                      curve: Curves.easeOutSine); // easeinexpo, easeoutsine
                 },
                 style: ElevatedButton.styleFrom(
                     primary: Colors.black54, shape: const CircleBorder()),
-                child: Lottie.asset(
-                    'assets/lottie/81045-rocket-launch.json',
-                    height: 60,
-                    width: 60,
-                    fit: BoxFit.fill),
+                child: Lottie.asset('assets/lottie/Rocket.json',
+                    height: 60, width: 60, fit: BoxFit.fill),
               ),
             ),
           ],
@@ -134,51 +136,56 @@ class _FavouritesPageState extends State<FavouritesPage> {
             final favourites = favouritesBox.getAt(index) as Favourites;
             return GridTile(
                 child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, '/imageView',
-                                arguments: {
-                                  'imgShowUrl':
-                                  favourites.imgShowUrl,
-                                  'imgDownloadUrl':
-                                  favourites.imgDownloadUrl,
-                                  'alt': favourites.alt,
-                                });
-                          },
-                          child: Hero(
-                              tag: favourites.imgShowUrl.toString(),
-                              child: Image.network(
-                                favourites.imgShowUrl.toString(),
-                                fit: BoxFit.cover,
-                              )),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        child: const Icon(Icons.favorite_rounded,color: Colors.pink,),
-                        onTap: () {
-                          Favourites lastDeleted = Favourites(favourites.imgShowUrl, favourites.imgDownloadUrl, favourites.alt);
-                          favouritesBox.deleteAt(index);
-                          setState(() {});
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
-                            label: 'Undo',
-                            onPressed: () {
-                              favouritesBox.add(lastDeleted);
-                              setState(() {});
-                            },
-                          ),));
-                          // Todo add to favourites code
-                        },
-                      ),
+              alignment: Alignment.bottomRight,
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/imageView', arguments: {
+                          'imgShowUrl': favourites.imgShowUrl,
+                          'imgDownloadUrl': favourites.imgDownloadUrl,
+                          'alt': favourites.alt,
+                        });
+                      },
+                      child: Hero(
+                          tag: favourites.imgShowUrl.toString(),
+                          child: Image.network(
+                            favourites.imgShowUrl.toString(),
+                            fit: BoxFit.cover,
+                          )),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: const Icon(
+                      Icons.favorite_rounded,
+                      color: Colors.pink,
                     ),
-                  ],
-                )
-            );
+                    onTap: () {
+                      Favourites lastDeleted = Favourites(favourites.imgShowUrl,
+                          favourites.imgDownloadUrl, favourites.alt);
+                      favouritesBox.deleteAt(index);
+                      setState(() {});
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Removed from Favourites!!'),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            favouritesBox.add(lastDeleted);
+                            setState(() {});
+                          },
+                        ),
+                      ));
+                      // Todo add to favourites code
+                    },
+                  ),
+                ),
+              ],
+            ));
           },
         ),
       );
