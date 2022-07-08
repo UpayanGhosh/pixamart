@@ -1,7 +1,12 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
+// Todo Solve Image Cropping Issue (Kingshuk)
+// Todo Build UI for Image Sharing (Upayan)
+// Todo Build System to share Images through App (Kingshuk)
+// Todo Drag Down Page to go to the previous page (Kingshuk/Upayan)
+// Todo Fix Same Image download issue (Kingshuk)
+// Todo try different sounds with actions (Kingshuk)
 
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
@@ -61,7 +66,10 @@ class _ImageViewState extends State<ImageView>
     final result =
         await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Wallpaper saved to gallery Successfully'),
+        content: Text('Wallpaper saved to gallery Successfully', style: TextStyle(
+          fontFamily: 'Nexa',
+          fontWeight: FontWeight.bold,
+        ),),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
     await updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue.value);
@@ -100,16 +108,19 @@ class _ImageViewState extends State<ImageView>
       await WallpaperManager.setWallpaperFromFile(filePath, location);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set'),
+            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set', style: TextStyle(
+        fontFamily: 'Nexa',
+          fontWeight: FontWeight.bold,
+        ),),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ));
       await updateProgressValue(newProgressValue: 100, currentProgressValue: progressValue.value);
       setState(() {});
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
       opacity = 0.0;
       setState(() {});
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
       //Todo Pop an Alert Dialogue saying Wait until Wallpaper is set
       Navigator.pop(context);
     } else {
@@ -139,7 +150,11 @@ class _ImageViewState extends State<ImageView>
             duration: const Duration(milliseconds: 400),
             child: AlertDialog(
               backgroundColor: Colors.transparent,
-              title: Obx(() => Text('$dialogue',style: const TextStyle(color: Colors.white),textAlign: TextAlign.center,)),
+              title: Obx(() => Text('$dialogue', style: TextStyle(
+                fontFamily: 'Nexa',
+                fontWeight: FontWeight.bold,
+                color: Colors.white
+              ),textAlign: TextAlign.center,)),
               content: SizedBox(
                 height: MediaQuery.of(context).size.height / 26,
                 width: MediaQuery.of(context).size.width / 2,
@@ -150,7 +165,11 @@ class _ImageViewState extends State<ImageView>
                     borderRadius: 30,
                     borderWidth: 0,
                     direction: Axis.horizontal,
-                    center: Text('${(progressValue.value).toStringAsFixed(1)}%', style: const TextStyle(color: Colors.white),),
+                    center: Text('${(progressValue.value).toStringAsFixed(1)}%', style: TextStyle(
+                    fontFamily: 'Nexa',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                    ),),
                   ),
                 ),
               ),
@@ -167,9 +186,13 @@ class _ImageViewState extends State<ImageView>
         spaceBetweenChildren: 12,
         children: [
           SpeedDialChild(
-              child: const Icon(Icons.add_to_home_screen),
+              child: const Icon(Icons.add_to_home_screen), //todo try ionicons or lineawesomeicons (upayan)
               backgroundColor: Colors.white,
               label: 'Homescreen',
+              labelStyle: TextStyle(
+                fontFamily: 'Nexa',
+                fontWeight: FontWeight.bold,
+              ),
               onTap: () {
                 setWallpaper('homescreen');
                 setState(() {});
@@ -178,6 +201,10 @@ class _ImageViewState extends State<ImageView>
               child: const Icon(Icons.lock),
               backgroundColor: Colors.white,
               label: 'Lockscreen',
+              labelStyle: TextStyle(
+                fontFamily: 'Nexa',
+                fontWeight: FontWeight.bold,
+              ),
               onTap: () {
                 setWallpaper('lockscreen');
                 setState(() {});
@@ -186,6 +213,10 @@ class _ImageViewState extends State<ImageView>
               child: const Icon(Icons.now_wallpaper),
               backgroundColor: Colors.white,
               label: 'Both',
+              labelStyle: TextStyle(
+                fontFamily: 'Nexa',
+                fontWeight: FontWeight.bold,
+              ),
               onTap: () {
                 setWallpaper('bothscreen');
                 setState(() {});
@@ -194,6 +225,10 @@ class _ImageViewState extends State<ImageView>
               child: const Icon(Icons.download),
               backgroundColor: Colors.white,
               label: 'Save',
+              labelStyle: TextStyle(
+                fontFamily: 'Nexa',
+                fontWeight: FontWeight.bold,
+              ),
               onTap: () {
                 saveToGallery();
                 setState(() {});

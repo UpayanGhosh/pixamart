@@ -1,4 +1,6 @@
 // This is the HomePage of the application
+//todo fix old images appear with new images issue (kingshuk)
+//todo find info about limitedbox widget (kingshuk)
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> {
       if (imgShowUrl == (favouritesList.getAt(i) as Favourites).imgShowUrl) {
         alreadyLikedAt = i;
       }
-    }
+    } // Todo find a better searching solution (Kingshuk/upayan)
     return alreadyLikedAt;
   }
 
@@ -96,7 +98,11 @@ class _HomePageState extends State<HomePage> {
     if (index == -1) {
       Hive.box('favourites').add(fav);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Added to Favourites!!'),
+        content: Text('Added to Favourites!!', style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Nexa'
+        ),),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
@@ -110,7 +116,11 @@ class _HomePageState extends State<HomePage> {
     } else {
       Hive.box('favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Removed from Favourites!!'),
+        content: Text('Removed from Favourites!!', style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Nexa'
+        ),),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(

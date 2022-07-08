@@ -43,7 +43,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
               ),
               itemCount: favouritesBox.length,
               itemBuilder: (context, index) {
-                final favourites = favouritesBox.getAt(index) as Favourites;
+                final favourites = favouritesBox.getAt(favouritesBox.length - index - 1) as Favourites;
                 return GridTile(
                     child: Stack(
                   alignment: Alignment.bottomRight,
@@ -78,10 +78,13 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               favourites.imgShowUrl,
                               favourites.imgDownloadUrl,
                               favourites.alt);
-                          favouritesBox.deleteAt(index);
+                          favouritesBox.deleteAt(favouritesBox.length - index - 1);
                           setState(() {});
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: const Text('Removed from Favourites!!'),
+                            content: const Text('Removed from Favourites!!', style: TextStyle(
+                              fontFamily: 'Nexa',
+                              fontWeight: FontWeight.bold,
+                            ),),
                             behavior: SnackBarBehavior.floating,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
@@ -111,7 +114,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 style: ElevatedButton.styleFrom(
                     primary: Colors.black54, shape: const CircleBorder()),
                 child: Lottie.asset('assets/lottie/Rocket.json',
-                    height: 60, width: 60, fit: BoxFit.fill, repeat: true),
+                    height: MediaQuery.of(context).size.height /
+                        13.5, width: MediaQuery.of(context).size.width /
+                        12.5, fit: BoxFit.fill),
               ),
             ),
           ],
@@ -168,7 +173,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       favouritesBox.deleteAt(index);
                       setState(() {});
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: const Text('Removed from Favourites!!'),
+                        content: const Text('Removed from Favourites!!', style: TextStyle(
+                          fontFamily: 'Nexa',
+                          fontWeight: FontWeight.bold,
+                        ),),
                         behavior: SnackBarBehavior.floating,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
@@ -180,7 +188,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           },
                         ),
                       ));
-                      // Todo add to favourites code
                     },
                   ),
                 ),

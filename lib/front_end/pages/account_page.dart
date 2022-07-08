@@ -1,6 +1,7 @@
-import 'package:PixaMart/front_end/pages/Help&Support.dart';
-import 'package:PixaMart/front_end/pages/settings_page.dart';
+// Todo Add Random avatar when user signs up
+
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:PixaMart/front_end/widget/profile_list_item.dart';
 
@@ -81,7 +82,6 @@ class AccountPage extends StatelessWidget {
                         fontSize: MediaQuery.of(context).size.height / 35,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
-                        fontFamily: 'Nexa',
                       ),
                     ),
                   ),
@@ -95,7 +95,6 @@ class AccountPage extends StatelessWidget {
                         fontSize: MediaQuery.of(context).size.height / 80,
                         fontWeight: FontWeight.w100,
                         color: Colors.white,
-                        fontFamily: 'Nexa',
                       ),
                     ),
                   ),
@@ -117,7 +116,6 @@ class AccountPage extends StatelessWidget {
                           fontSize: MediaQuery.of(context).size.height / 50,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
-                          fontFamily: 'Nexa',
                         ),
                       ),
                     ),
@@ -128,86 +126,32 @@ class AccountPage extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
+              physics: const BouncingScrollPhysics(),
+              children: const [
                 ProfileListItem(
-                  icon: LineAwesomeIcons.donate,
-                  text: 'Help Creator',
+                  icon: LineAwesomeIcons.download,
+                  text: 'Downloads',
+                  page: '', // Todo add downloads page (Kingshuk/Upayan)
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HelpSupport()));
-                        //Todo Add pages
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.blueAccent,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24)),
-                          padding: EdgeInsets.all(10)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            LineAwesomeIcons.question_circle,
-                          ),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Text(
-                            'Help & Support',
-                            style: TextStyle(
-                                fontFamily: 'Nexa',
-                                fontWeight: FontWeight.w900),
-                          ),
-                        ],
-                      )),
+                ProfileListItem(
+                  icon: LineAwesomeIcons.question_circle,
+                  text: 'Help & Support',
+                  page: '/helpSupport',
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SettingsPage()));
-                        //Todo Add pages
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.blueAccent,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24)),
-                          padding: EdgeInsets.all(10)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            LineAwesomeIcons.cog,
-                          ),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Text('Settings'),
-                        ],
-                      )),
+                ProfileListItem(
+                  icon: LineAwesomeIcons.cog,
+                  text: 'Settings',
+                  page: '/settings',
                 ),
                 ProfileListItem(
                   icon: LineAwesomeIcons.user_plus,
                   text: 'Invite a Friend',
+                  page: '', //Todo Add a system to invite new users
                 ),
                 ProfileListItem(
                   icon: LineAwesomeIcons.alternate_sign_out,
                   text: 'Logout',
+                  page: ''
                   //hasNavigation: false,
                 ),
               ],

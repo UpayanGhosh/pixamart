@@ -3,7 +3,7 @@ description: Pixamart
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -69,7 +69,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -87,7 +86,6 @@ flutter:
     - assets/lottie/Help.json
     - assets/lottie/ThankYou.json
 
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -102,22 +100,10 @@ flutter:
   fonts:
     - family: Raunchies
       fonts:
-        - asset: fonts/RaunchiesDemoRegular.ttf
-    - family: Voga-Medium
-      fonts:
-        - asset: fonts/Voga-Medium.otf
-    - family: Lovelyn Free Personal Use
-      fonts:
-        - asset: fonts/Lovelyn Free Personal Use.ttf
-    - family: medio
-      fonts:
-        - asset: fonts/medio.otf
-    - family: Wallington
-      fonts:
-        - asset: fonts/Wallington-Pro.ttf
+        - asset: assets/fonts/RaunchiesDemoRegular.ttf
     - family: Nexa
       fonts:
-        - asset: fonts/Nexa Light.otf
+        - asset: assets/fonts/Nexa Light.otf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

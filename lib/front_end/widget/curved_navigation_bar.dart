@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/account_page.dart';
 import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:PixaMart/front_end/pages/homepage.dart';
+import 'package:ionicons/ionicons.dart';
+
 class AppBottomNavigationBar extends StatefulWidget {
   const AppBottomNavigationBar({Key? key}) : super(key: key);
 
@@ -12,7 +14,11 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   final GlobalKey<CurvedNavigationBarState> _navKey = GlobalKey();
-  var pagesAll = [const HomePage(),const FavouritesPage(),const AccountPage()];
+  var pagesAll = [
+    const HomePage(),
+    const FavouritesPage(),
+    const AccountPage()
+  ];
   int myIndex = 0;
 
   @override
@@ -25,14 +31,23 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
         backgroundColor: Colors.black,
         color: Colors.black,
         key: _navKey,
-        items: const [
-          Icon(Icons.home_outlined,color: Colors.blue,),
-          Icon(Icons.favorite_outline,color: Colors.blue,),
-          Icon(Icons.account_circle_outlined,color: Colors.blue,),
+        items: [
+          Icon(
+            Ionicons.home_outline,
+            color: Colors.blue,
+          ),
+          Icon(
+            Ionicons.heart,
+            color: Colors.pink,
+          ),
+          Icon(
+            Icons.account_circle_outlined,
+            color: Colors.blue,
+          ),
         ],
         buttonBackgroundColor: Colors.white,
-        onTap: (index){
-          setState((){
+        onTap: (index) {
+          setState(() {
             myIndex = index;
           });
         },
