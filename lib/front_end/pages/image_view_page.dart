@@ -1,7 +1,11 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
+// Todo Solve Image Cropping Issue (Kingshuk)
+// Todo Build UI for Image Sharing (Upayan)
+// Todo Build System to share Images through App (Kingshuk)
+// Todo Drag Down Page to go to the previous page (Kingshuk/Upayan)
+// Todo Fix Same Image download issue (Kingshuk)
 
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';

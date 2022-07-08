@@ -1,4 +1,6 @@
+import 'package:PixaMart/front_end/pages/helpSupport.dart';
 import 'package:PixaMart/front_end/pages/login_page.dart';
+import 'package:PixaMart/front_end/pages/settings_page.dart';
 import 'package:PixaMart/front_end/pages/signup_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => SignupPage());
       case '/login':
         return MaterialPageRoute(builder: (context) => LoginPage());
+      case '/helpSupport':
+        return MaterialPageRoute(builder: (context) => HelpSupport());
+      case '/settings':
+        return MaterialPageRoute(builder: (context) => SettingsPage());
       default:
         return MaterialPageRoute(builder: (context) => ErrorPage());
     }

@@ -145,7 +145,7 @@ class _SearchPageState extends State<SearchPage> {
       if (imgShowUrl == (favouritesList.getAt(i) as Favourites).imgShowUrl) {
         alreadyLikedAt = i;
       }
-    }
+    } // Todo find a better searching solution (Kingshuk/upayan)
     return alreadyLikedAt;
   }
 

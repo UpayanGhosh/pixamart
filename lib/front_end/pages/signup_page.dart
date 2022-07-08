@@ -166,7 +166,7 @@ class SignupPage extends StatelessWidget {
   Widget makeInput({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+      children: [
         Text(
           label,
           style: TextStyle(
