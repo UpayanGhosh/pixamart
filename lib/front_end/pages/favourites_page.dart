@@ -32,11 +32,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
           alignment: Alignment.bottomRight,
           children: [
             GridView.builder(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               controller: scrollController,
               shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 mainAxisSpacing: 0,
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
@@ -66,19 +66,19 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               child: Hero(
                                   tag: favourites.imgShowUrl.toString(),
                                   child: Image.network(
-                                    '${favourites.imgShowUrl.toString()}',
+                                    favourites.imgShowUrl.toString(),
                                     fit: BoxFit.cover,
                                   )),
                             )),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
-                            child: Icon(Icons.favorite_rounded,color: Colors.pink,),
+                            child: const Icon(Icons.favorite_rounded,color: Colors.pink,),
                             onTap: () {
                               Favourites lastDeleted = Favourites(favourites.imgShowUrl, favourites.imgDownloadUrl, favourites.alt);
                               favouritesBox.deleteAt(index);
                               setState(() {});
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
                                 label: 'Undo',
                                 onPressed: () {
                                   favouritesBox.add(lastDeleted);
@@ -103,13 +103,13 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       curve: Curves
                           .easeOutSine); // easeinexpo, easeoutsine
                 },
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black54, shape: const CircleBorder()),
                 child: Lottie.asset(
                     'assets/lottie/81045-rocket-launch.json',
                     height: 60,
                     width: 60,
                     fit: BoxFit.fill),
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.black54, shape: CircleBorder()),
               ),
             ),
           ],
@@ -119,11 +119,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
       return Scaffold(
         backgroundColor: Colors.black,
         body: GridView.builder(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.vertical,
           controller: scrollController,
           shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 0,
             crossAxisCount: 2,
             crossAxisSpacing: 10,
@@ -153,19 +153,19 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           child: Hero(
                               tag: favourites.imgShowUrl.toString(),
                               child: Image.network(
-                                '${favourites.imgShowUrl.toString()}',
+                                favourites.imgShowUrl.toString(),
                                 fit: BoxFit.cover,
                               )),
                         )),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        child: Icon(Icons.favorite_rounded,color: Colors.pink,),
+                        child: const Icon(Icons.favorite_rounded,color: Colors.pink,),
                         onTap: () {
                           Favourites lastDeleted = Favourites(favourites.imgShowUrl, favourites.imgDownloadUrl, favourites.alt);
                           favouritesBox.deleteAt(index);
                           setState(() {});
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Removed from Favourites!!'), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), action: SnackBarAction(
                             label: 'Undo',
                             onPressed: () {
                               favouritesBox.add(lastDeleted);

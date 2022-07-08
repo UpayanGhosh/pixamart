@@ -1,5 +1,7 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
 
+import 'dart:async';
+import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
@@ -30,14 +32,23 @@ class _ImageViewState extends State<ImageView>
     with SingleTickerProviderStateMixin {
   late Rx<String> dialogue;
   late double opacity;
-  late double progressValue;
+  late RxDouble progressValue;
 
   @override
   void initState() {
     super.initState();
     dialogue = 'Downloading'.obs;
     opacity = 0.0;
-    progressValue = 0;
+    progressValue = 0.0.obs;
+  }
+
+  updateProgressValue({required newProgressValue, currentProgressValue}) async {
+    while(currentProgressValue != newProgressValue) {
+      //print(progressValue.value + newProgressValue);
+      currentProgressValue += 0.1;
+      progressValue.value = currentProgressValue;
+      await Future.delayed(const Duration(milliseconds: 10));
+    }
   }
 
   saveToGallery() async {
@@ -51,15 +62,15 @@ class _ImageViewState extends State<ImageView>
     final result =
         await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Wallpaper saved to gallery Successfully'),
+        content: const Text('Wallpaper saved to gallery Successfully'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-    progressValue = 1.0;
+    updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue.value);
     setState(() {});
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     opacity = 1.0;
     setState(() {});
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     Navigator.pop(context);
   }
 
@@ -73,7 +84,7 @@ class _ImageViewState extends State<ImageView>
       String filePath = '${dir?.path}/${widget.alt}.jpg';
       await Dio().download(widget.imgDownloadUrl, filePath).then((value) {
         dialogue = 'Setting as Wallpaper'.obs;
-        progressValue = 0.4;
+        updateProgressValue(newProgressValue: 0.4, currentProgressValue: progressValue.value);
         setState(() {});
       });
       //print('Download Complete');
@@ -83,7 +94,7 @@ class _ImageViewState extends State<ImageView>
       } else if (place == 'lockscreen') {
         location = WallpaperManager.LOCK_SCREEN;
       } else {
-        print('Hello');
+        //Todo change both screen code
         location = WallpaperManager.BOTH_SCREEN;
       }
       //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
@@ -94,7 +105,7 @@ class _ImageViewState extends State<ImageView>
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ));
-      progressValue = 1.0;
+      updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue);
       setState(() {});
       await Future.delayed(Duration(milliseconds: 500));
       opacity = 0.0;
@@ -116,7 +127,7 @@ class _ImageViewState extends State<ImageView>
         children: [
           Hero(
             tag: widget.imgShowUrl,
-            child: Container(
+            child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: Image.network(
@@ -126,20 +137,20 @@ class _ImageViewState extends State<ImageView>
           ),
           AnimatedOpacity(
             opacity: opacity,
-            duration: Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 400),
             child: AlertDialog(
               backgroundColor: Colors.transparent,
-              title: Obx(() => Text('${dialogue}',style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)),
-              content: Container(
+              title: Obx(() => Text('$dialogue',style: const TextStyle(color: Colors.white),textAlign: TextAlign.center,)),
+              content: SizedBox(
                 height: MediaQuery.of(context).size.height / 26,
                 width: MediaQuery.of(context).size.width / 2,
                 child: LiquidLinearProgressIndicator(
                   borderColor: Colors.transparent,
-                  value: progressValue,
+                  value: progressValue.value,
                   borderRadius: 30,
                   borderWidth: 0,
                   direction: Axis.horizontal,
-                  center: Text('${progressValue * 100}%', style: TextStyle(color: Colors.white),),
+                  center: Obx(() => Text('${(progressValue.value).toStringAsFixed(1)}%', style: const TextStyle(color: Colors.white),)),
                 ),
               ),
             ),
@@ -155,7 +166,7 @@ class _ImageViewState extends State<ImageView>
         spaceBetweenChildren: 12,
         children: [
           SpeedDialChild(
-              child: Icon(Icons.add_to_home_screen),
+              child: const Icon(Icons.add_to_home_screen),
               backgroundColor: Colors.white,
               label: 'Homescreen',
               onTap: () {
@@ -163,7 +174,7 @@ class _ImageViewState extends State<ImageView>
                 setState(() {});
               }),
           SpeedDialChild(
-              child: Icon(Icons.lock),
+              child: const Icon(Icons.lock),
               backgroundColor: Colors.white,
               label: 'Lockscreen',
               onTap: () {
@@ -171,7 +182,7 @@ class _ImageViewState extends State<ImageView>
                 setState(() {});
               }),
           SpeedDialChild(
-              child: Icon(Icons.now_wallpaper),
+              child: const Icon(Icons.now_wallpaper),
               backgroundColor: Colors.white,
               label: 'Both',
               onTap: () {
@@ -179,7 +190,7 @@ class _ImageViewState extends State<ImageView>
                 setState(() {});
               }),
           SpeedDialChild(
-              child: Icon(Icons.download),
+              child: const Icon(Icons.download),
               backgroundColor: Colors.white,
               label: 'Save',
               onTap: () {
