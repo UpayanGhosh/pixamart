@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
       if (imgShowUrl == (favouritesList.getAt(i) as Favourites).imgShowUrl) {
         alreadyLikedAt = i;
       }
-    }
+    } // Todo find a better searching solution (Kingshuk/upayan)
     return alreadyLikedAt;
   }
 
