@@ -1,3 +1,4 @@
+import 'package:PixaMart/front_end/pages/Help&Support.dart';
 import 'package:PixaMart/front_end/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -131,9 +132,36 @@ class AccountPage extends StatelessWidget {
                   icon: LineAwesomeIcons.donate,
                   text: 'Help Creator',
                 ),
-                ProfileListItem(
-                  icon: LineAwesomeIcons.question_circle,
-                  text: 'Help & Support',
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HelpSupport()));
+                        //Todo Add pages
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blueAccent,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          padding: EdgeInsets.all(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            LineAwesomeIcons.question_circle,
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text('Help & Support'),
+                        ],
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
