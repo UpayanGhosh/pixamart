@@ -5,7 +5,13 @@ class AppTitle extends StatelessWidget {
   final double padRight;
   final double padTop;
   final double padBottom;
-  const AppTitle({Key? key, required this.padLeft, required this.padTop, required this.padRight, required this.padBottom}) : super(key: key);
+  const AppTitle(
+      {Key? key,
+      required this.padLeft,
+      required this.padTop,
+      required this.padRight,
+      required this.padBottom})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +21,23 @@ class AppTitle extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Pixa', style: TextStyle(
-            fontSize: MediaQuery.of(context).size.height / 21,
-            fontFamily: 'Raunchies',
-            fontWeight: FontWeight.bold,
-          ),),
-          Text('Mart', style: TextStyle(
-            fontSize: MediaQuery.of(context).size.height / 21,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-            fontFamily: 'Raunchies',
-          ),),
+          Text(
+            'Pixa',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height / 18,
+              fontFamily: 'Raunchies',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            'Mart',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height / 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+              fontFamily: 'Raunchies',
+            ),
+          ),
         ],
       ),
     );

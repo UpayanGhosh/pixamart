@@ -345,7 +345,7 @@ class _CategoryPageState extends State<CategoryPage> {
                               }
                               return Center(
                                   child: Lottie.asset(
-                                'assets/lottie/Loading.jason',
+                                'assets/lottie/Loading.json',
                                 height: MediaQuery.of(context).size.height / 4,
                                 width: MediaQuery.of(context).size.width / 1.96,
                               ));

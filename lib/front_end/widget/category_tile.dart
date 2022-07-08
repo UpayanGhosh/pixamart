@@ -23,7 +23,7 @@ class CategoryTile extends StatelessWidget {
                 )),
             Container(
               decoration: BoxDecoration(
-                color: Colors.black38,
+                color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               height: 50,
@@ -34,7 +34,8 @@ class CategoryTile extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: 16),
+                    fontSize: 16,
+                    fontFamily: 'Nexa',),
               ),
             ),
           ],

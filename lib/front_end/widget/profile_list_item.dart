@@ -30,7 +30,7 @@ class ProfileListItem extends StatelessWidget {
             children: [
               Icon(icon),
               SizedBox(width: MediaQuery.of(context).size.width / 24.5,),
-              Text(text),
+              Text(text,style: TextStyle(fontFamily: 'Nexa',fontWeight: FontWeight.w900),),
             ],
           )),
     );

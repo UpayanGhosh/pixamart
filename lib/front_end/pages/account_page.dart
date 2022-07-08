@@ -81,6 +81,7 @@ class AccountPage extends StatelessWidget {
                         fontSize: MediaQuery.of(context).size.height / 35,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
+                        fontFamily: 'Nexa',
                       ),
                     ),
                   ),
@@ -94,6 +95,7 @@ class AccountPage extends StatelessWidget {
                         fontSize: MediaQuery.of(context).size.height / 80,
                         fontWeight: FontWeight.w100,
                         color: Colors.white,
+                        fontFamily: 'Nexa',
                       ),
                     ),
                   ),
@@ -115,6 +117,7 @@ class AccountPage extends StatelessWidget {
                           fontSize: MediaQuery.of(context).size.height / 50,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
+                          fontFamily: 'Nexa',
                         ),
                       ),
                     ),
@@ -158,7 +161,12 @@ class AccountPage extends StatelessWidget {
                           SizedBox(
                             width: 16,
                           ),
-                          Text('Help & Support'),
+                          Text(
+                            'Help & Support',
+                            style: TextStyle(
+                                fontFamily: 'Nexa',
+                                fontWeight: FontWeight.w900),
+                          ),
                         ],
                       )),
                 ),

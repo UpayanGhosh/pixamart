@@ -18,24 +18,29 @@ class WelcomePage extends StatelessWidget {
           children: [
             Column(
               children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height/16.9,
+                ),
                 Text(
-                  "Welcome",
+                  "W E L C O M E",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 60,
+                      fontSize: 40,
                       color: Colors.white,
-                      fontFamily: 'medio'),
+                      fontFamily: 'Nexa'),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  "Automatic identity verification which \n enables us to verify your identity",
+                  "Automatic identity verification which\n\nenables us to verify your identity",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontFamily: 'Wallington-Pro'),
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontFamily: 'Nexa',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -66,10 +71,10 @@ class WelcomePage extends StatelessWidget {
                   child: Text(
                     "Log In",
                     style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: Colors.white,
-                        fontFamily: 'medio'),
+                        fontFamily: 'Nexa'),
                   ),
                 ),
                 SizedBox(
@@ -91,10 +96,10 @@ class WelcomePage extends StatelessWidget {
                   child: Text(
                     "SignUp",
                     style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: Colors.white,
-                        fontFamily: 'medio'),
+                        fontFamily: 'Nexa'),
                   ),
                 ),
               ],

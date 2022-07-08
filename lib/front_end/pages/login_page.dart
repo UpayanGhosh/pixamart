@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                                fontFamily: 'medio'),
+                                fontFamily: 'Nexa'),
                           ),
                       SizedBox(
                         height: 20,
@@ -101,10 +101,10 @@ class LoginPage extends StatelessWidget {
                     child: Text(
                       "Log In",
                       style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           fontSize: 18,
                           color: Colors.white,
-                          fontFamily: 'medio'),
+                          fontFamily: 'Nexa'),
                     ),
                   ),
                   ElevatedButton(
@@ -122,10 +122,10 @@ class LoginPage extends StatelessWidget {
                     child: Text(
                       "Login With Google",
                       style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           fontSize: 18,
                           color: Colors.white,
-                          fontFamily: 'medio'),
+                          fontFamily: 'Nexa'),
                     ),
                   ),
                   GestureDetector(
@@ -145,10 +145,10 @@ class LoginPage extends StatelessWidget {
                               child: Text(
                                 "Sign up",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                     color: Colors.white,
-                                    fontFamily: 'medio'),
+                                    fontFamily: 'Nexa'),
                               ),
                             ),
                           ],
@@ -175,7 +175,7 @@ class LoginPage extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.white),
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         SizedBox(
           height: 5,

@@ -85,6 +85,8 @@ flutter:
     - assets/lottie/SearchIcon.json
     - assets/lottie/LoginPage.json
     - assets/lottie/Help.json
+    - assets/lottie/ThankYou.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -113,6 +115,9 @@ flutter:
     - family: Wallington
       fonts:
         - asset: fonts/Wallington-Pro.ttf
+    - family: Nexa
+      fonts:
+        - asset: fonts/Nexa Light.otf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -39,16 +39,18 @@ class SignupPage extends StatelessWidget {
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontFamily: 'medio'),
+                        fontFamily: 'Nexa'),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    "Create an account, It's free",
+                    "Create an account, it's free",
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Nexa'
                     ),
                   ),
                 ],
@@ -66,7 +68,7 @@ class SignupPage extends StatelessWidget {
                             borderSide:
                                 BorderSide(width: 3, color: Colors.white)),
                         labelText: 'Email',
-                        labelStyle: TextStyle(color: Colors.white)),
+                        labelStyle: TextStyle(color: Colors.white,fontFamily: 'Nexa')),
                   ),
                   SizedBox(
                     height: 30,
@@ -83,7 +85,7 @@ class SignupPage extends StatelessWidget {
                             borderSide:
                                 BorderSide(width: 3, color: Colors.white)),
                         labelText: 'Password',
-                        labelStyle: TextStyle(color: Colors.white)),
+                        labelStyle: TextStyle(color: Colors.white,fontFamily: 'Nexa')),
                   ),
                 ],
               ),
@@ -102,10 +104,10 @@ class SignupPage extends StatelessWidget {
                 child: Text(
                   "SignUp",
                   style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
                       color: Colors.white,
-                      fontFamily: 'medio'),
+                      fontFamily: 'Nexa'),
                 ),
               ),
               ElevatedButton(
@@ -123,10 +125,10 @@ class SignupPage extends StatelessWidget {
                 child: Text(
                   "Login With Google",
                   style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
                       color: Colors.white,
-                      fontFamily: 'medio'),
+                      fontFamily: 'Nexa'),
                 ),
               ),
               GestureDetector(
@@ -140,6 +142,8 @@ class SignupPage extends StatelessWidget {
                       "Already have an account?",
                       style: TextStyle(
                         color: Colors.white,
+                        fontFamily: 'Nexa',
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Container(
@@ -147,9 +151,10 @@ class SignupPage extends StatelessWidget {
                       child: Text(
                         " Login",
                         style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           fontSize: 18,
                           color: Colors.white,
+                          fontFamily: 'Nexa',
                         ),
                       ),
                     ),
@@ -171,8 +176,9 @@ class SignupPage extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 15,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontFamily: 'Nexa',
           ),
         ),
         SizedBox(
