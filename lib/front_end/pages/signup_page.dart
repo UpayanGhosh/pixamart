@@ -5,9 +5,11 @@ class SignupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.height);
+    print(MediaQuery.of(context).size.width);
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black87,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.black87,
@@ -17,17 +19,16 @@ class SignupPage extends StatelessWidget {
           },
           icon: Icon(
             Icons.arrow_back_ios,
-            size: 20,
+            size: MediaQuery.of(context).size.height / 41.7,
             color: Colors.white,
           ),
         ),
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Container(
-          color: Colors.black87,
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          height: MediaQuery.of(context).size.height - 50,
-          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 9.8),
+          height: MediaQuery.of(context).size.height / 1.06,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -36,13 +37,13 @@ class SignupPage extends StatelessWidget {
                   Text(
                     "Sign up",
                     style: TextStyle(
-                        fontSize: 40,
+                        fontSize: MediaQuery.of(context).size.height / 20.85,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontFamily: 'Nexa'),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: MediaQuery.of(context).size.height / 40.85,
                   ),
                   Text(
                     "Create an account, It's free",
@@ -57,43 +58,49 @@ class SignupPage extends StatelessWidget {
               ),
               Column(
                 children: [
-                  TextFormField(
-                    cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 3, color: Colors.white),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 3, color: Colors.white)),
-                        labelText: 'Email',
-                        labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
-                          fontWeight: FontWeight.bold,)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 13.9,
+                    child: TextFormField(
+                      cursorColor: Colors.white,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2, color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 3, color: Colors.white)),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
+                            fontWeight: FontWeight.bold,)),
+                    ),
                   ),
                   SizedBox(
                     height: 30,
                   ),
-                  TextFormField(
-                    cursorColor: Colors.white,
-                    obscureText: true,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 3, color: Colors.white),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 3, color: Colors.white)),
-                        labelText: 'Password',
-                        labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
-                          fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 13.9,
+                    child: TextFormField(
+                      cursorColor: Colors.white,
+                      obscureText: true,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2, color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 3, color: Colors.white)),
+                          labelText: 'Password',
+                          labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
+                            fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ],
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 128, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 3.07, vertical: MediaQuery.of(context).size.height / 41.7),
                   side: BorderSide(color: Colors.transparent),
                   elevation: 0,
                   primary: Color(0xff8ab6fd),
@@ -108,14 +115,14 @@ class SignupPage extends StatelessWidget {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Nexa',
-                      fontSize: 17,
+                      fontSize: MediaQuery.of(context).size.height / 49.05,
                       color: Colors.white,),
                 ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   side: BorderSide(color: Colors.transparent),
-                  padding: EdgeInsets.symmetric(horizontal: 83, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 4.8, vertical: MediaQuery.of(context).size.height / 35.6),
                   elevation: 0,
                   primary: Color(0xff63c54f),
                   shape: RoundedRectangleBorder(
@@ -129,16 +136,16 @@ class SignupPage extends StatelessWidget {
                   style: TextStyle(
                       fontFamily: 'Nexa',
                       fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontSize: MediaQuery.of(context).size.height / 49.05,
                       color: Colors.white,),
                 ),
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
                       "Already have an account?",
@@ -146,16 +153,16 @@ class SignupPage extends StatelessWidget {
                         color: Colors.white,
                         fontFamily: 'Nexa',
                         fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.height / 59.57,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: Text(
                         " Login",
                         style: TextStyle(
                           fontFamily: 'Nexa',
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: MediaQuery.of(context).size.height / 46.33,
                           color: Colors.white,
                         ),
                       ),
