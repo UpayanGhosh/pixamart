@@ -40,6 +40,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+    super.initState();
     idleAnimationController = OneShotAnimation('idle', autoplay: true);
     successAnimationController = OneShotAnimation('success', autoplay: false);
     handsUpAnimationController = OneShotAnimation('Hands_up', autoplay: false);
@@ -48,7 +49,6 @@ class _WelcomePageState extends State<WelcomePage> {
     confettiController =
         ConfettiController(duration: const Duration(milliseconds: 100));
 
-    super.initState();
     opacityManager = [
       0.0.obs,
       0.0.obs,

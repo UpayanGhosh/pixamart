@@ -1,12 +1,49 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class SignupPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
+class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
   @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  late List<RxDouble> opacityManager;
+
+  void manageOpacity() async {
+    int i = 0;
+    await Future.delayed(const Duration(milliseconds: 250));
+    Timer.periodic(const Duration(milliseconds: 250), (timer) {
+      if (i < opacityManager.length) {
+        opacityManager[i].value = 1.0;
+        i++;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    opacityManager = [
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+    ];
+
+    manageOpacity();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
-    print(MediaQuery.of(context).size.width);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black87,
@@ -25,7 +62,7 @@ class SignupPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 9.8),
           height: MediaQuery.of(context).size.height / 1.06,
@@ -34,24 +71,36 @@ class SignupPage extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Text(
-                    "Sign up",
-                    style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 20.85,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontFamily: 'Nexa'),
+                  Obx(
+                    () => AnimatedOpacity(
+                      duration: const Duration(milliseconds: 350),
+                      opacity: opacityManager[0].value,
+                      child: Text(
+                        "Sign up",
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.height / 20.85,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Nexa'),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 40.85,
                   ),
-                  Text(
-                    "Create an account, It's free",
-                    style: TextStyle(
-                      fontFamily: 'Nexa',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.white,
+                  Obx(
+                    () => AnimatedOpacity(
+                      duration: const Duration(milliseconds: 350),
+                      opacity: opacityManager[1].value,
+                      child: Text(
+                        "Create an account, It's free",
+                        style: TextStyle(
+                          fontFamily: 'Nexa',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -60,19 +109,25 @@ class SignupPage extends StatelessWidget {
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 13.9,
-                    child: TextFormField(
-                      cursorColor: Colors.white,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(width: 2, color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 3, color: Colors.white)),
-                          labelText: 'Email',
-                          labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
-                            fontWeight: FontWeight.bold,)),
+                    child: Obx(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 350),
+                        opacity: opacityManager[2].value,
+                        child: TextFormField(
+                          cursorColor: Colors.white,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(width: 2, color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 3, color: Colors.white)),
+                              labelText: 'Email',
+                              labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
+                                fontWeight: FontWeight.bold,)),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -80,64 +135,82 @@ class SignupPage extends StatelessWidget {
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 13.9,
-                    child: TextFormField(
-                      cursorColor: Colors.white,
-                      obscureText: true,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(width: 2, color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 3, color: Colors.white)),
-                          labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
-                            fontWeight: FontWeight.bold)),
+                    child: Obx(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 350),
+                        opacity: opacityManager[3].value,
+                        child: TextFormField( // todo implement obscure text (kingshuk)
+                          cursorColor: Colors.white,
+                          obscureText: true,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(width: 2, color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 3, color: Colors.white)),
+                              labelText: 'Password',
+                              labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa',
+                                fontWeight: FontWeight.bold)),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 3.07, vertical: MediaQuery.of(context).size.height / 41.7),
-                  side: BorderSide(color: Colors.transparent),
-                  elevation: 0,
-                  primary: Color(0xff8ab6fd),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/navigationBar');
-                },
-                child: Text(
-                  "SignUp",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Nexa',
-                      fontSize: MediaQuery.of(context).size.height / 49.05,
-                      color: Colors.white,),
+              Obx(
+                () => AnimatedOpacity(
+                  duration: const Duration(milliseconds: 350),
+                  opacity: opacityManager[4].value,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 3.07, vertical: MediaQuery.of(context).size.height / 41.7),
+                      side: BorderSide(color: Colors.transparent),
+                      elevation: 0,
+                      primary: Color(0xff8ab6fd),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/navigationBar');
+                    },
+                    child: Text(
+                      "SignUp",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nexa',
+                          fontSize: MediaQuery.of(context).size.height / 49.05,
+                          color: Colors.white,),
+                    ),
+                  ),
                 ),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  side: BorderSide(color: Colors.transparent),
-                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 4.8, vertical: MediaQuery.of(context).size.height / 35.6),
-                  elevation: 0,
-                  primary: Color(0xff63c54f),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/navigationBar');
-                },
-                child: Text(
-                  "Login With Google",
-                  style: TextStyle(
-                      fontFamily: 'Nexa',
-                      fontWeight: FontWeight.bold,
-                      fontSize: MediaQuery.of(context).size.height / 49.05,
-                      color: Colors.white,),
+              Obx(
+                () => AnimatedOpacity(
+                  duration: const Duration(milliseconds: 350),
+                  opacity: opacityManager[5].value,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      side: BorderSide(color: Colors.transparent),
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 4.8, vertical: MediaQuery.of(context).size.height / 35.6),
+                      elevation: 0,
+                      primary: Color(0xff63c54f),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/navigationBar');
+                    },
+                    child: Text(
+                      "Login With Google",
+                      style: TextStyle(
+                          fontFamily: 'Nexa',
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.height / 49.05,
+                          color: Colors.white,),
+                    ),
+                  ),
                 ),
               ),
               GestureDetector(
@@ -147,23 +220,33 @@ class SignupPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "Already have an account?",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Nexa',
-                        fontWeight: FontWeight.bold,
-                        fontSize: MediaQuery.of(context).size.height / 59.57,
+                    Obx(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 350),
+                        opacity: opacityManager[6].value,
+                        child: Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Nexa',
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.height / 59.57,
+                          ),
+                        ),
                       ),
                     ),
-                    Container(
-                      child: Text(
-                        " Login",
-                        style: TextStyle(
-                          fontFamily: 'Nexa',
-                          fontWeight: FontWeight.bold,
-                          fontSize: MediaQuery.of(context).size.height / 46.33,
-                          color: Colors.white,
+                    Obx(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 350),
+                        opacity: opacityManager[7].value,
+                        child: Text(
+                          " Login",
+                          style: TextStyle(
+                            fontFamily: 'Nexa',
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.height / 46.33,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -174,42 +257,6 @@ class SignupPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget makeInput({label, obscureText = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        TextField(
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-              color: Colors.white,
-            )),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(
-              color: Colors.white,
-            )),
-          ),
-        ),
-        SizedBox(
-          height: 30,
-        ),
-      ],
     );
   }
 }
