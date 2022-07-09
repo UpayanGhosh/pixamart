@@ -154,7 +154,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       if(!successAnimationController.isActive) {
                         successAnimationController.isActive = true;
                       }
-                      await Future.delayed(Duration(milliseconds: 2000));
+                      await Future.delayed(Duration(milliseconds: 1700));
                       Navigator.pushNamed(context, '/login');
                     },
                     child: Text(
@@ -190,7 +190,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       if(!successAnimationController.isActive) {
                         successAnimationController.isActive = true;
                       }
-                      await Future.delayed(Duration(milliseconds: 2000));
+                      await Future.delayed(Duration(milliseconds: 1750));
                       Navigator.pushNamed(context, '/signUp');
                     },
                     child: Text(
