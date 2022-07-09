@@ -20,6 +20,7 @@ class _WelcomePageState extends State<WelcomePage> {
   late RiveAnimationController idleAnimationController;
   late RiveAnimationController successAnimationController;
   late RiveAnimationController handsUpAnimationController;
+  late RiveAnimationController handsDownAnimationController;
   late ConfettiController confettiController;
 
   void manageOpacity() async {
@@ -42,7 +43,10 @@ class _WelcomePageState extends State<WelcomePage> {
     idleAnimationController = OneShotAnimation('idle', autoplay: true);
     successAnimationController = OneShotAnimation('success', autoplay: false);
     handsUpAnimationController = OneShotAnimation('Hands_up', autoplay: false);
-    confettiController = ConfettiController(duration: const Duration(milliseconds: 100));
+    handsDownAnimationController =
+        OneShotAnimation('hands_down', autoplay: false);
+    confettiController =
+        ConfettiController(duration: const Duration(milliseconds: 100));
 
     super.initState();
     opacityManager = [
@@ -141,17 +145,20 @@ class _WelcomePageState extends State<WelcomePage> {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: GestureDetector(
                         onDoubleTap: () async {
-                          if (!handsUpAnimationController.isActive) {
-                            idleAnimationController.isActive = false;
+                          if (idleAnimationController.isActive) {
                             handsUpAnimationController.isActive = true;
                           }
+                          Future.delayed(Duration(milliseconds: 900), () {
+                            handsDownAnimationController.isActive = true;
+                          });
                         },
                         child: Stack(
                           alignment: Alignment.topCenter,
                           children: [
                             ConfettiWidget(
                               confettiController: confettiController,
-                              blastDirectionality: BlastDirectionality.explosive,
+                              blastDirectionality:
+                                  BlastDirectionality.explosive,
                               numberOfParticles: 30,
                               //emissionFrequency: 0.0,
                               gravity: 0.5,
@@ -167,11 +174,12 @@ class _WelcomePageState extends State<WelcomePage> {
                               ],
                             ),
                             RiveAnimation.asset(
-                              'assets/rive/Welcome.riv',
+                              'assets/rive/Bear.riv',
                               controllers: [
                                 idleAnimationController,
                                 successAnimationController,
                                 handsUpAnimationController,
+                                handsDownAnimationController,
                               ],
                               fit: BoxFit.fitHeight,
                             ),

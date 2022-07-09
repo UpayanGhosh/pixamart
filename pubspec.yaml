@@ -79,6 +79,7 @@ flutter:
   assets:
     - assets/
     - assets/rive/Welcome.riv
+    - assets/rive/Bear.riv
     - assets/lottie/Rocket.json
     - assets/lottie/Loading.json
     - assets/lottie/Server_Error.json
