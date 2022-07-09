@@ -76,7 +76,7 @@ class LoginPage extends StatelessWidget {
                                 labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa', fontWeight: FontWeight.bold)),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: MediaQuery.of(context).size.height / 27.8,
                           ),
                           TextFormField(
                             cursorColor: Colors.white,
@@ -99,7 +99,7 @@ class LoginPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         side: BorderSide(color: Colors.transparent),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 140, vertical: 20),
+                            EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 2.8, vertical: MediaQuery.of(context).size.height / 41.7),
                         elevation: 0,
                         primary: Color(0xfff07371),
                         shape: RoundedRectangleBorder(
