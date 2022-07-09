@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 import 'dart:math';
+import 'package:flutter/services.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -149,6 +150,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           borderRadius: BorderRadius.circular(50)),
                     ),
                     onPressed: () async {
+                      HapticFeedback.lightImpact();
                       if(!successAnimationController.isActive) {
                         successAnimationController.isActive = true;
                       }
@@ -184,11 +186,11 @@ class _WelcomePageState extends State<WelcomePage> {
                           borderRadius: BorderRadius.circular(50)),
                     ),
                     onPressed: () async {
+                      HapticFeedback.lightImpact();
                       if(!successAnimationController.isActive) {
                         successAnimationController.isActive = true;
                       }
                       await Future.delayed(Duration(milliseconds: 2000));
-
                       Navigator.pushNamed(context, '/signUp');
                     },
                     child: Text(
