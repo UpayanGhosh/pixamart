@@ -20,7 +20,6 @@ class _WelcomePageState extends State<WelcomePage> {
   late RiveAnimationController idleAnimationController;
   late RiveAnimationController successAnimationController;
   late RiveAnimationController handsUpAnimationController;
-  late RiveAnimationController handsDownAnimationController;
   late ConfettiController confettiController;
 
   void manageOpacity() async {
@@ -43,8 +42,6 @@ class _WelcomePageState extends State<WelcomePage> {
     idleAnimationController = OneShotAnimation('idle', autoplay: true);
     successAnimationController = OneShotAnimation('success', autoplay: false);
     handsUpAnimationController = OneShotAnimation('Hands_up', autoplay: false);
-    handsDownAnimationController =
-        OneShotAnimation('hands_down', autoplay: false);
     confettiController = ConfettiController(duration: const Duration(milliseconds: 100));
 
     super.initState();
@@ -175,7 +172,6 @@ class _WelcomePageState extends State<WelcomePage> {
                                 idleAnimationController,
                                 successAnimationController,
                                 handsUpAnimationController,
-                                handsDownAnimationController,
                               ],
                               fit: BoxFit.fitHeight,
                             ),
