@@ -7,6 +7,8 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.height);
+    print(MediaQuery.of(context).size.width);
     return AnimatedSplashScreen(
         splash: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -16,7 +18,7 @@ class SplashScreen extends StatelessWidget {
               fontSize: MediaQuery
                   .of(context)
                   .size
-                  .width / 12,
+                  .height / 20.85,
               color: Colors.white,
               fontFamily: 'Raunchies',
               fontWeight: FontWeight.bold,
@@ -25,7 +27,7 @@ class SplashScreen extends StatelessWidget {
               fontSize: MediaQuery
                   .of(context)
                   .size
-                  .width / 12,
+                  .height / 20.85,
               fontWeight: FontWeight.bold,
               color: Colors.blue,
               fontFamily: 'Raunchies',

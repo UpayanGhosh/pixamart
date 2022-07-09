@@ -15,6 +15,8 @@ class _WelcomePageState extends State<WelcomePage> {
   late List<RxDouble> opacityManager;
   late List<Color> colorManager;
   late final Color bearBackgroundColor;
+  late RiveAnimationController idleAnimationController;
+  late RiveAnimationController successAnimationController;
 
   void manageOpacity() async {
     int i = 0;
@@ -33,6 +35,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+    successAnimationController = OneShotAnimation('success', autoplay: false);
+    idleAnimationController = OneShotAnimation('idle', autoplay: true);
+
     super.initState();
     opacityManager = [
       0.0.obs,
@@ -119,6 +124,10 @@ class _WelcomePageState extends State<WelcomePage> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       child: RiveAnimation.asset(
                         'assets/rive/Welcome.riv',
+                        controllers: [
+                          idleAnimationController,
+                          successAnimationController,
+                        ],
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -139,7 +148,11 @@ class _WelcomePageState extends State<WelcomePage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      if(!successAnimationController.isActive) {
+                        successAnimationController.isActive = true;
+                      }
+                      await Future.delayed(Duration(milliseconds: 2000));
                       Navigator.pushNamed(context, '/login');
                     },
                     child: Text(
@@ -170,7 +183,12 @@ class _WelcomePageState extends State<WelcomePage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      if(!successAnimationController.isActive) {
+                        successAnimationController.isActive = true;
+                      }
+                      await Future.delayed(Duration(milliseconds: 2000));
+
                       Navigator.pushNamed(context, '/signUp');
                     },
                     child: Text(
