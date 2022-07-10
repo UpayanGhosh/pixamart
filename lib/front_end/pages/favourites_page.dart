@@ -34,6 +34,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               controller: scrollController,
+              clipBehavior: Clip.antiAlias,
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 mainAxisSpacing: 0,
@@ -114,8 +115,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 style: ElevatedButton.styleFrom(
                     primary: Colors.black54, shape: const CircleBorder()),
                 child: Lottie.asset('assets/lottie/Rocket.json',
-                    height: MediaQuery.of(context).size.height /
-                        13.5, width: MediaQuery.of(context).size.width /
+                    height: MediaQuery.of(context).size.width /
+                        6.53, width: MediaQuery.of(context).size.width /
                         12.5, fit: BoxFit.fill),
               ),
             ),

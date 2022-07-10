@@ -15,6 +15,7 @@ import 'package:PixaMart/private/api_key.dart';
 import 'package:PixaMart/front_end/pages/account_page.dart';
 import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart' as getx;
 
 class SearchPageNavigation extends StatefulWidget {
   final TextEditingController searchQuery;
@@ -26,6 +27,7 @@ class SearchPageNavigation extends StatefulWidget {
 }
 
 class _SearchPageNavigationState extends State<SearchPageNavigation> {
+  late getx.RxDouble iconSize;
   late List<Widget> pagesAll;
   late int myIndex;
   late GlobalKey<CurvedNavigationBarState> _navKey;
@@ -42,31 +44,42 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
       const AccountPage()
     ];
     myIndex = 0;
+    iconSize = 0.0.obs;
   }
 
   @override
   Widget build(BuildContext context) {
+    iconSize.value = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        height: MediaQuery.of(context).size.height / 16.05,
+        height: MediaQuery.of(context).size.height / 11.27,
         backgroundColor: Colors.black,
         color: Colors.black,
         buttonBackgroundColor: Colors.white,
         key: _navKey,
-        items: const [
-          Icon(
-            Icons.search_outlined,
-            color: Colors.blue,
+        items: [
+          getx.Obx(
+          () => Icon(
+              Icons.search_outlined,
+              color: Colors.blue,
+              size: iconSize / 37.90,
+            ),
           ),
-          Icon(
-            Icons.favorite_outline,
-            color: Colors.blue,
+          getx.Obx(
+            () => Icon(
+              Icons.favorite_outline,
+              color: Colors.blue,
+              size: iconSize / 37.90,
+            ),
           ),
-          Icon(
-            Icons.account_circle_outlined,
-            color: Colors.blue,
+          getx.Obx(
+            () => Icon(
+              Icons.account_circle_outlined,
+              color: Colors.blue,
+              size: iconSize / 37.90,
+            ),
           ),
         ],
         onTap: (index) {
@@ -236,7 +249,13 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 body: Column(
                   children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 80,
+                    ),
                     const SearchBar(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 80,
+                    ),
                     FutureBuilder(
                       future: getSearchWallpapers(widget.searchQuery.text),
                       builder:
@@ -248,7 +267,7 @@ class _SearchPageState extends State<SearchPage> {
                             children: [
                               Container(
                                 height:
-                                    MediaQuery.of(context).size.height / 1.40,
+                                    MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.67),
                                 color: Colors.black,
                                 padding: EdgeInsets.symmetric(
                                     horizontal:
@@ -258,6 +277,7 @@ class _SearchPageState extends State<SearchPage> {
                                   controller: scrollController,
                                   physics: const BouncingScrollPhysics(),
                                   shrinkWrap: true,
+                                  clipBehavior: Clip.antiAlias,
                                   childAspectRatio: 0.61,
                                   scrollDirection: Axis.vertical,
                                   crossAxisCount: 2,
@@ -368,8 +388,8 @@ class _SearchPageState extends State<SearchPage> {
                                   child: Lottie.asset(
                                       'assets/lottie/Rocket.json',
                                       height:
-                                          MediaQuery.of(context).size.height /
-                                              13.5,
+                                          MediaQuery.of(context).size.width /
+                                              6.53,
                                       width: MediaQuery.of(context).size.width /
                                           12.5,
                                       fit: BoxFit.fill),

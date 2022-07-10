@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -26,6 +27,7 @@ class CategoryPageNavigation extends StatefulWidget {
 }
 
 class _CategoryPageNavigationState extends State<CategoryPageNavigation> {
+  late getx.RxDouble iconSize;
   late GlobalKey<CurvedNavigationBarState> _navKey;
   late List<Widget> pagesAll;
   late int myIndex;
@@ -40,30 +42,41 @@ class _CategoryPageNavigationState extends State<CategoryPageNavigation> {
       const AccountPage()
     ];
     myIndex = 0;
+    iconSize = 0.0.obs;
   }
 
   @override
   Widget build(BuildContext context) {
+    iconSize.value = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        height: MediaQuery.of(context).size.height / 16.05,
+        height: MediaQuery.of(context).size.height / 11.27,
         backgroundColor: Colors.black,
         color: Colors.black,
         key: _navKey,
-        items: const [
-          Icon(
-            Icons.category_outlined,
-            color: Colors.blue,
+        items: [
+          getx.Obx(
+            () => Icon(
+              Icons.category_outlined,
+              color: Colors.blue,
+              size: iconSize / 37.90,
+            ),
           ),
-          Icon(
-            Icons.favorite_outline,
-            color: Colors.blue,
+          getx.Obx(
+            () => Icon(
+              Icons.favorite_outline,
+              color: Colors.blue,
+              size: iconSize / 37.90,
+            ),
           ),
-          Icon(
-            Icons.account_circle_outlined,
-            color: Colors.blue,
+          getx.Obx(
+            () => Icon(
+              Icons.account_circle_outlined,
+              color: Colors.blue,
+              size: iconSize / 37.90,
+            ),
           ),
         ],
         buttonBackgroundColor: Colors.white,
@@ -243,7 +256,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       height: MediaQuery.of(context).size.height / 80,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height / 1.43,
+                      height: MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.67),
                       child: FutureBuilder(
                         future: getSearchWallpapers(widget.categoryName),
                         builder:
@@ -264,6 +277,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                     shrinkWrap: true,
                                     childAspectRatio: 0.61,
                                     scrollDirection: Axis.vertical,
+                                    clipBehavior: Clip.antiAlias,
                                     crossAxisCount: 2,
                                     crossAxisSpacing:
                                         MediaQuery.of(context).size.width /
@@ -375,8 +389,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                     child: Lottie.asset(
                                         'assets/lottie/Rocket.json',
                                         height:
-                                            MediaQuery.of(context).size.height /
-                                                13.5,
+                                            MediaQuery.of(context).size.width /
+                                                6.53,
                                         width:
                                             MediaQuery.of(context).size.width /
                                                 12.5,

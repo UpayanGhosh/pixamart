@@ -241,7 +241,6 @@ class _HomePageState extends State<HomePage> {
                                     crossAxisCount: 2,
                                     clipBehavior: Clip.antiAlias,
                                     crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
-                                    //mainAxisSpacing: MediaQuery.of(context).size.height / 834,
                                     children: photoList
                                         .map((dynamic photo) => GridTile(
                                                 child: Stack(
@@ -342,8 +341,8 @@ class _HomePageState extends State<HomePage> {
                                   child: Lottie.asset(
                                       'assets/lottie/Rocket.json',
                                       height:
-                                          MediaQuery.of(context).size.height /
-                                              13.9,
+                                          MediaQuery.of(context).size.width /
+                                              6.53,
                                       width: MediaQuery.of(context).size.width /
                                           12.5,
                                       fit: BoxFit.fill),
