@@ -235,6 +235,9 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
                 body: Column(
                   children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 80,
+                    ),
                     const SearchBar(),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,

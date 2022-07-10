@@ -1,13 +1,51 @@
+import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  late List<RxDouble> opacityManager;
+
+  void manageOpacity() async {
+    int i = 0;
+    await Future.delayed(const Duration(milliseconds: 250));
+    Timer.periodic(const Duration(milliseconds: 250), (timer) {
+      if (i < opacityManager.length) {
+        opacityManager[i].value = 1.0;
+        i++;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    opacityManager = [
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+    ];
+
+    manageOpacity();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
-    print(MediaQuery.of(context).size.width);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black87,
@@ -18,7 +56,9 @@ class LoginPage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios, size: MediaQuery.of(context).size.height / 41.7, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios,
+              size: MediaQuery.of(context).size.height / 41.7,
+              color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -34,46 +74,74 @@ class LoginPage extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Text(
-                          "Login",
-                          style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height / 20.85,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontFamily: 'Nexa'),
+                        Obx(
+                          () => AnimatedOpacity(
+                            duration: const Duration(milliseconds: 250),
+                            opacity: opacityManager[0].value,
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.height /
+                                      20.85,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: 'Nexa'),
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height / 41.7,
                         ),
-                        Text(
-                          "Login to your account",
-                          style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height / 55.6,
-                              color: Colors.white,
-                              fontFamily: 'Nexa',
-                              fontWeight: FontWeight.bold),
+                        Obx(
+                          () => AnimatedOpacity(
+                            duration: const Duration(milliseconds: 250),
+                            opacity: opacityManager[1].value,
+                            child: Text(
+                              "Login to your account",
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 55.6,
+                                  color: Colors.white,
+                                  fontFamily: 'Nexa',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 9.8),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width / 9.8),
                       child: Column(
                         children: [
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 13.9,
-                            child: TextFormField(
-                              cursorColor: Colors.white,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(width: 3, color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: Colors.white)),
-                                  labelText: 'Email',
-                                  labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa', fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.height / 52.125)),
+                            child: Obx(
+                              () => AnimatedOpacity(
+                                duration: const Duration(milliseconds: 250),
+                                opacity: opacityManager[2].value,
+                                child: TextFormField(
+                                  cursorColor: Colors.white,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 3, color: Colors.white),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 3, color: Colors.white)),
+                                      labelText: 'Email',
+                                      labelStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Nexa',
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              52.125)),
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -81,66 +149,107 @@ class LoginPage extends StatelessWidget {
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 13.9,
-                            child: TextFormField( // todo add code to obscure text
-                              cursorColor: Colors.white,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(width: 3, color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: Colors.white)),
-                                  labelText: 'Password',
-                                  labelStyle: TextStyle(color: Colors.white, fontFamily: 'Nexa', fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.height / 52.125)),
+                            child: Obx(
+                              () => AnimatedOpacity(
+                                duration: const Duration(milliseconds: 250),
+                                opacity: opacityManager[3].value,
+                                child: TextFormField(
+                                  // todo add code to obscure text
+                                  cursorColor: Colors.white,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 3, color: Colors.white),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 3, color: Colors.white)),
+                                      labelText: 'Password',
+                                      labelStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Nexa',
+                                          fontWeight: FontWeight.bold,
+                                          fontSize:
+                                              MediaQuery.of(context).size.height /
+                                                  52.125)),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        side: BorderSide(color: Colors.transparent),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 2.8, vertical: MediaQuery.of(context).size.height / 41.7),
-                        elevation: 0,
-                        primary: Color(0xfff07371),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/navigationBar');
-                      },
-                      child: Text(
-                        "Log In",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: MediaQuery.of(context).size.height / 46.33,
-                            color: Colors.white,
-                            fontFamily: 'Nexa'),
+                    Obx(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: opacityManager[4].value,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            side: BorderSide(color: Colors.transparent),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: MediaQuery.of(context).size.width / 2.8,
+                                vertical:
+                                    MediaQuery.of(context).size.height / 41.7),
+                            elevation: 0,
+                            primary: Color(0xfff07371),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            Navigator.pushNamed(context, '/navigationBar');
+                          },
+                          child: Obx(
+                            () => AnimatedOpacity(
+                              duration: const Duration(milliseconds: 250),
+                              opacity: opacityManager[5].value,
+                              child: Text(
+                                "Log In",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height / 46.33,
+                                    color: Colors.white,
+                                    fontFamily: 'Nexa'),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        side: BorderSide(color: Colors.transparent),
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 4.35, vertical: MediaQuery.of(context).size.height / 41.7),
-                        elevation: 0,
-                        primary: Color(0xff63c54f),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
+                    Obx(
+                          () => AnimatedOpacity(
+                            duration: const Duration(milliseconds: 250),
+                            opacity: opacityManager[6].value,
+                            child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            side: BorderSide(color: Colors.transparent),
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width / 4.35,
+                                vertical:
+                                    MediaQuery.of(context).size.height / 41.7),
+                            elevation: 0,
+                            primary: Color(0xff63c54f),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                        ),
+                        onPressed: () {
+                            HapticFeedback.lightImpact();
+                            Navigator.pushNamed(context, '/navigationBar');
+                        },
+                        child: Text(
+                            "Login With Google",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 46.33,
+                                color: Colors.white,
+                                fontFamily: 'Nexa'),
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/navigationBar');
-                      },
-                      child: Text(
-                        "Login With Google",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: MediaQuery.of(context).size.height / 46.33,
-                            color: Colors.white,
-                            fontFamily: 'Nexa'),
-                      ),
+                          ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -149,20 +258,31 @@ class LoginPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("Don't have an account?",
-                              style: TextStyle(
-                                fontFamily: 'Nexa',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              )),
-                          Container(
-                            child: Text(
-                              "Sign up",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: MediaQuery.of(context).size.height / 46.33,
-                                  color: Colors.white,
-                                  fontFamily: 'Nexa'),
+                          Obx(
+                                () => AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 250),
+                                  opacity: opacityManager[7].value,
+                                  child: Text("Don't have an account?",
+                                  style: TextStyle(
+                                    fontFamily: 'Nexa',
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  )),
+                                ),
+                          ),
+                          Obx(
+                            () => AnimatedOpacity(
+                              duration: const Duration(milliseconds: 250),
+                              opacity: opacityManager[8].value,
+                              child: Text(
+                                "Sign up",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: MediaQuery.of(context).size.height /
+                                        46.33,
+                                    color: Colors.white,
+                                    fontFamily: 'Nexa'),
+                              ),
                             ),
                           ),
                         ],
@@ -171,10 +291,11 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height / 3,
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: Lottie.asset('assets/lottie/LoginPage.json'),
+                child: Obx(() => AnimatedOpacity(duration: const Duration(milliseconds: 250),
+                    opacity: opacityManager[9].value, child: Lottie.asset('assets/lottie/LoginPage.json'))),
               ),
             ],
           ),

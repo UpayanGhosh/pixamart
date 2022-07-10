@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class AnimatedSearchBar extends StatefulWidget {
@@ -73,14 +74,15 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 16.73,
+      height: MediaQuery.of(context).size.height / 16.68,
+      //width: 50,
       alignment:
           widget.rtl ? Alignment.centerRight : const Alignment(-1.0, 0.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: widget.animationDurationInMilli),
-        height: MediaQuery.of(context).size.height / 16.73,
+        height: MediaQuery.of(context).size.height / 16.68,
         width: (toggle == 0)
-            ? MediaQuery.of(context).size.width / 8.16
+            ? MediaQuery.of(context).size.height / 16.68
             : widget.width,
         curve: Curves.easeOut,
         decoration: BoxDecoration(
@@ -99,8 +101,8 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar>
           children: [
             AnimatedPositioned(
               duration: Duration(milliseconds: widget.animationDurationInMilli),
-              top: 3,
-              right: 8,
+              top: MediaQuery.of(context).size.height / 278,
+              right: MediaQuery.of(context).size.width / 49,
               curve: Curves.easeOut,
               child: AnimatedOpacity(
                 opacity: (toggle == 0) ? 0.0 : 1.0,
@@ -134,8 +136,8 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar>
                       },
                       child: GestureDetector(
                         child: Lottie.asset('assets/lottie/SearchIcon.json',
-                            height: MediaQuery.of(context).size.height / 20,
-                            width: MediaQuery.of(context).size.height / 20,
+                            height: MediaQuery.of(context).size.height / 20.85,
+                            width: MediaQuery.of(context).size.height / 20.85,
                             fit: BoxFit.fill),
                         onTap: () {
                           unFocusKeyboard();
@@ -148,14 +150,14 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar>
             ),
             AnimatedPositioned(
               duration: Duration(milliseconds: widget.animationDurationInMilli),
-              left: (toggle == 0) ? 20.0 : 40.0,
+              left: (toggle == 0) ? 0.0 : MediaQuery.of(context).size.width / 9.8,
               curve: Curves.easeOut,
-              top: 11.0,
+              top: MediaQuery.of(context).size.height / 64.13,
               child: AnimatedOpacity(
                 opacity: (toggle == 0) ? 0.0 : 1.0,
                 duration: const Duration(milliseconds: 200),
                 child: Container(
-                  padding: const EdgeInsets.only(left: 10),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 39.2),
                   alignment: Alignment.topCenter,
                   width: widget.width / 1.7,
                   child: TextField(
@@ -173,13 +175,13 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar>
                     style: widget.style ?? const TextStyle(color: Colors.black),
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.only(bottom: 5),
+                      contentPadding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 166.8),
                       isDense: true,
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       labelText: widget.helpText,
                       labelStyle: TextStyle(
                         color: const Color(0xff5B5B5B),
-                        fontSize: MediaQuery.of(context).size.height / 50.2,
+                        fontSize: MediaQuery.of(context).size.height / 52.125,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                       ),
@@ -205,9 +207,11 @@ class AnimatedSearchBarState extends State<AnimatedSearchBar>
                     : GestureDetector(
                         child: toggle == 1
                             ? Transform.rotate(
-                                angle: 0.8, child: const Icon(Icons.add))
+                                angle: 0.78, child: Icon(Icons.add, size: MediaQuery.of(context).size.height / 34.75,))
                             : Lottie.asset(
                                 'assets/lottie/SearchIcon.json',
+                          height: MediaQuery.of(context).size.height / 20.85,
+                                width: MediaQuery.of(context).size.height / 20.85,
                               ),
                         onTap: () {
                           if (widget.textController.text.isNotEmpty &&

@@ -10,15 +10,16 @@ class CategoryTile extends StatelessWidget {
         Navigator.pushNamed(context, '/category', arguments: {'categoryName': title.toLowerCase()});
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4),
+        margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 98),
         child: Stack(
+          alignment: Alignment.center,
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
                   imgUrl,
-                  height: 50,
-                  width: 100,
+                  height: MediaQuery.of(context).size.height / 16.68,
+                  width: MediaQuery.of(context).size.width / 3.92,
                   fit: BoxFit.fitWidth,
                 )),
             Container(
@@ -26,15 +27,15 @@ class CategoryTile extends StatelessWidget {
                 color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
-              height: 50,
-              width: 100,
+              height: MediaQuery.of(context).size.height / 16.68,
+              width: MediaQuery.of(context).size.width / 3.92,
               alignment: Alignment.center,
               child: Text(
                 title,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: MediaQuery.of(context).size.height / 52.125,
                     fontFamily: 'Nexa',),
               ),
             ),

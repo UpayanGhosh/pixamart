@@ -24,7 +24,7 @@ class AppTitle extends StatelessWidget {
           Text(
             'Pixa',
             style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height / 18,
+              fontSize: MediaQuery.of(context).size.height / 18.53,
               fontFamily: 'Raunchies',
               fontWeight: FontWeight.bold,
             ),
@@ -32,7 +32,7 @@ class AppTitle extends StatelessWidget {
           Text(
             'Mart',
             style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height / 18,
+              fontSize: MediaQuery.of(context).size.height / 18.53,
               fontWeight: FontWeight.bold,
               color: Colors.blue,
               fontFamily: 'Raunchies',
