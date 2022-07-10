@@ -1,3 +1,4 @@
+import 'package:PixaMart/front_end/pages/helpSupport.dart';
 import 'package:PixaMart/front_end/pages/login_page.dart';
 import 'package:PixaMart/front_end/pages/signup_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
@@ -9,25 +10,38 @@ import 'package:PixaMart/front_end/pages/splash_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch(settings.name) {
+    switch (settings.name) {
       case '/':
         final args = settings.arguments;
         return MaterialPageRoute(builder: (context) => SplashScreen());
       case '/category':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => CategoryPageNavigation(categoryName: args['categoryName'],));
+        return MaterialPageRoute(
+            builder: (context) => CategoryPageNavigation(
+                  categoryName: args['categoryName'],
+                ));
       case '/imageView':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => ImageView(imgShowUrl: args['imgShowUrl'], imgDownloadUrl: args['imgDownloadUrl'], alt: args['alt'],));
+        return MaterialPageRoute(
+            builder: (context) => ImageView(
+                  imgShowUrl: args['imgShowUrl'],
+                  imgDownloadUrl: args['imgDownloadUrl'],
+                  alt: args['alt'],
+                ));
       case '/search':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => SearchPageNavigation(searchQuery: args['searchQuery']));
+        return MaterialPageRoute(
+            builder: (context) =>
+                SearchPageNavigation(searchQuery: args['searchQuery']));
       case '/navigationBar':
-        return MaterialPageRoute(builder: (context) => AppBottomNavigationBar());
+        return MaterialPageRoute(
+            builder: (context) => AppBottomNavigationBar());
       case '/signUp':
         return MaterialPageRoute(builder: (context) => SignupPage());
       case '/login':
         return MaterialPageRoute(builder: (context) => LoginPage());
+      case '/helpSupport':
+        return MaterialPageRoute(builder: (context) => HelpSupport());
       default:
         return MaterialPageRoute(builder: (context) => ErrorPage());
     }
