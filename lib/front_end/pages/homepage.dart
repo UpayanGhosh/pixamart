@@ -3,8 +3,8 @@
 //todo find info about limitedbox widget (kingshuk)
 
 import 'dart:convert';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' as Getx;
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -226,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                               SingleChildScrollView(
                                 child: Container(
                                   height:
-                                      MediaQuery.of(context).size.height / 1.45,
+                                      MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.67),
                                   decoration: const BoxDecoration(),
                                   padding: EdgeInsets.symmetric(
                                       horizontal:
