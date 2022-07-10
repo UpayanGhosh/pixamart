@@ -61,7 +61,7 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
         key: _navKey,
         items: [
           getx.Obx(
-          () => Icon(
+            () => Icon(
               Icons.search_outlined,
               color: Colors.blue,
               size: iconSize / 37.90,
@@ -171,11 +171,13 @@ class _SearchPageState extends State<SearchPage> {
     if (index == -1) {
       Hive.box('favourites').add(fav);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Added to Favourites!!', style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nexa'
-        ),),
+        content: Text(
+          'Added to Favourites!!',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Nexa'),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
@@ -189,11 +191,13 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       Hive.box('favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Removed from Favourites!!', style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nexa'
-        ),),
+        content: Text(
+          'Removed from Favourites!!',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Nexa'),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
@@ -266,8 +270,11 @@ class _SearchPageState extends State<SearchPage> {
                             alignment: Alignment.bottomRight,
                             children: [
                               Container(
-                                height:
-                                    MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.67),
+                                height: MediaQuery.of(context).size.height /
+                                    (MediaQuery.of(context).orientation ==
+                                            Orientation.portrait
+                                        ? 1.45
+                                        : 1.68),
                                 color: Colors.black,
                                 padding: EdgeInsets.symmetric(
                                     horizontal:

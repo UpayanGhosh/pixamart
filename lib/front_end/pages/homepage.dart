@@ -226,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                               SingleChildScrollView(
                                 child: Container(
                                   height:
-                                      MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.67),
+                                      MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.68),
                                   decoration: const BoxDecoration(),
                                   padding: EdgeInsets.symmetric(
                                       horizontal:

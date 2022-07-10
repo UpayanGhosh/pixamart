@@ -256,7 +256,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       height: MediaQuery.of(context).size.height / 80,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.67),
+                      height: MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.68),
                       child: FutureBuilder(
                         future: getSearchWallpapers(widget.categoryName),
                         builder:
