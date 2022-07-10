@@ -277,6 +277,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                     shrinkWrap: true,
                                     childAspectRatio: 0.61,
                                     scrollDirection: Axis.vertical,
+                                    clipBehavior: Clip.antiAlias,
                                     crossAxisCount: 2,
                                     crossAxisSpacing:
                                         MediaQuery.of(context).size.width /

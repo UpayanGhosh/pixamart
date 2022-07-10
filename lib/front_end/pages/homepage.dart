@@ -241,7 +241,6 @@ class _HomePageState extends State<HomePage> {
                                     crossAxisCount: 2,
                                     clipBehavior: Clip.antiAlias,
                                     crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
-                                    //mainAxisSpacing: MediaQuery.of(context).size.height / 834,
                                     children: photoList
                                         .map((dynamic photo) => GridTile(
                                                 child: Stack(

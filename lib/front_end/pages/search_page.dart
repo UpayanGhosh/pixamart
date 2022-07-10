@@ -249,7 +249,13 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 body: Column(
                   children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 80,
+                    ),
                     const SearchBar(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 80,
+                    ),
                     FutureBuilder(
                       future: getSearchWallpapers(widget.searchQuery.text),
                       builder:
@@ -271,6 +277,7 @@ class _SearchPageState extends State<SearchPage> {
                                   controller: scrollController,
                                   physics: const BouncingScrollPhysics(),
                                   shrinkWrap: true,
+                                  clipBehavior: Clip.antiAlias,
                                   childAspectRatio: 0.61,
                                   scrollDirection: Axis.vertical,
                                   crossAxisCount: 2,

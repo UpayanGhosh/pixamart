@@ -34,6 +34,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               controller: scrollController,
+              clipBehavior: Clip.antiAlias,
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 mainAxisSpacing: 0,
