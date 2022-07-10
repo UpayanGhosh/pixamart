@@ -3,6 +3,7 @@
 //todo find info about limitedbox widget (kingshuk)
 
 import 'dart:convert';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           const SearchBar(),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height / 16.05,
+                            height: MediaQuery.of(context).size.height / 16.68,
                             child: ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 padding: EdgeInsets.symmetric(
@@ -222,96 +223,98 @@ class _HomePageState extends State<HomePage> {
                           return Stack(
                             alignment: Alignment.bottomRight,
                             children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 1.45,
-                                decoration: const BoxDecoration(),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        MediaQuery.of(context).size.width /
-                                            24.5),
-                                child: GridView.count(
-                                  physics: const BouncingScrollPhysics(),
-                                  controller: scrollController,
-                                  shrinkWrap: true,
-                                  childAspectRatio: 0.61,
-                                  scrollDirection: Axis.vertical,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing:
-                                      MediaQuery.of(context).size.width / 39.2,
-                                  mainAxisSpacing: 0,
-                                  children: photoList
-                                      .map((dynamic photo) => GridTile(
-                                              child: Stack(
-                                            alignment: Alignment.bottomRight,
-                                            children: [
-                                              ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
+                              SingleChildScrollView(
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.45,
+                                  decoration: const BoxDecoration(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width /
+                                              24.5),
+                                  child: GridView.count(
+                                    physics: const BouncingScrollPhysics(),
+                                    controller: scrollController,
+                                    shrinkWrap: true,
+                                    childAspectRatio: 0.61,
+                                    scrollDirection: Axis.vertical,
+                                    crossAxisCount: 2,
+                                    clipBehavior: Clip.antiAlias,
+                                    crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
+                                    //mainAxisSpacing: MediaQuery.of(context).size.height / 834,
+                                    children: photoList
+                                        .map((dynamic photo) => GridTile(
+                                                child: Stack(
+                                              alignment: Alignment.bottomRight,
+                                              children: [
+                                                ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(16),
+                                                    child: GestureDetector(
+                                                      onDoubleTap: () {
+                                                        handleLiked(
+                                                            imgShowUrl: photo
+                                                                .src.portrait,
+                                                            imgDownloadUrl: photo
+                                                                .src.original,
+                                                            alt: photo.alt);
+                                                      },
+                                                      onTap: () {
+                                                        Navigator.pushNamed(
+                                                            context, '/imageView',
+                                                            arguments: {
+                                                              'imgShowUrl': photo
+                                                                  .src.portrait,
+                                                              'imgDownloadUrl':
+                                                                  photo.src
+                                                                      .original,
+                                                              'alt': photo.alt
+                                                            });
+                                                      },
+                                                      child: Hero(
+                                                          tag: photo.src.portrait,
+                                                          child: Image.network(
+                                                            '${photo.src.portrait}',
+                                                            fit: BoxFit.cover,
+                                                          )),
+                                                    )),
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.all(MediaQuery.of(context).size.height / 104.25),
                                                   child: GestureDetector(
-                                                    onDoubleTap: () {
+                                                    child: Builder(
+                                                        builder: (context) {
+                                                      if (checkIfLiked(
+                                                              imgShowUrl: photo
+                                                                  .src
+                                                                  .portrait) ==
+                                                          -1) {
+                                                        return const Icon(
+                                                          Icons
+                                                              .favorite_outline_rounded,
+                                                          color: Colors.pink,
+                                                        );
+                                                      } else {
+                                                        return const Icon(
+                                                          Icons.favorite_outlined,
+                                                          color: Colors.pink,
+                                                        );
+                                                      }
+                                                    }),
+                                                    onTap: () {
                                                       handleLiked(
-                                                          imgShowUrl: photo
-                                                              .src.portrait,
-                                                          imgDownloadUrl: photo
-                                                              .src.original,
+                                                          imgShowUrl:
+                                                              photo.src.portrait,
+                                                          imgDownloadUrl:
+                                                              photo.src.original,
                                                           alt: photo.alt);
                                                     },
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                          context, '/imageView',
-                                                          arguments: {
-                                                            'imgShowUrl': photo
-                                                                .src.portrait,
-                                                            'imgDownloadUrl':
-                                                                photo.src
-                                                                    .original,
-                                                            'alt': photo.alt
-                                                          });
-                                                    },
-                                                    child: Hero(
-                                                        tag: photo.src.portrait,
-                                                        child: Image.network(
-                                                          '${photo.src.portrait}',
-                                                          fit: BoxFit.cover,
-                                                        )),
-                                                  )),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: GestureDetector(
-                                                  child: Builder(
-                                                      builder: (context) {
-                                                    if (checkIfLiked(
-                                                            imgShowUrl: photo
-                                                                .src
-                                                                .portrait) ==
-                                                        -1) {
-                                                      return const Icon(
-                                                        Icons
-                                                            .favorite_outline_rounded,
-                                                        color: Colors.pink,
-                                                      );
-                                                    } else {
-                                                      return const Icon(
-                                                        Icons.favorite_outlined,
-                                                        color: Colors.pink,
-                                                      );
-                                                    }
-                                                  }),
-                                                  onTap: () {
-                                                    handleLiked(
-                                                        imgShowUrl:
-                                                            photo.src.portrait,
-                                                        imgDownloadUrl:
-                                                            photo.src.original,
-                                                        alt: photo.alt);
-                                                  },
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          )))
-                                      .toList(),
+                                              ],
+                                            )))
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -321,7 +324,7 @@ class _HomePageState extends State<HomePage> {
                                             24.5,
                                     vertical:
                                         MediaQuery.of(context).size.height /
-                                            50.15),
+                                            52.125),
                                 child: ElevatedButton(
                                   onPressed: () {
                                     scrollController.animateTo(
@@ -340,7 +343,7 @@ class _HomePageState extends State<HomePage> {
                                       'assets/lottie/Rocket.json',
                                       height:
                                           MediaQuery.of(context).size.height /
-                                              13.5,
+                                              13.9,
                                       width: MediaQuery.of(context).size.width /
                                           12.5,
                                       fit: BoxFit.fill),

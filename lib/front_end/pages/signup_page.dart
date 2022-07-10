@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -173,6 +172,7 @@ class _SignupPageState extends State<SignupPage> {
                           borderRadius: BorderRadius.circular(50)),
                     ),
                     onPressed: () {
+                      HapticFeedback.lightImpact();
                       Navigator.pushNamed(context, '/navigationBar');
                     },
                     child: Text(
@@ -200,6 +200,7 @@ class _SignupPageState extends State<SignupPage> {
                           borderRadius: BorderRadius.circular(50)),
                     ),
                     onPressed: () {
+                      HapticFeedback.lightImpact();
                       Navigator.pushNamed(context, '/navigationBar');
                     },
                     child: Text(

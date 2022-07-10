@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -197,6 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(50)),
                           ),
                           onPressed: () {
+                            HapticFeedback.lightImpact();
                             Navigator.pushNamed(context, '/navigationBar');
                           },
                           child: Obx(
@@ -235,6 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(50)),
                         ),
                         onPressed: () {
+                            HapticFeedback.lightImpact();
                             Navigator.pushNamed(context, '/navigationBar');
                         },
                         child: Text(
