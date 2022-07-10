@@ -39,7 +39,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       resizeToAvoidBottomInset: false,
       body: pagesAll[myIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        height: MediaQuery.of(context).size.height / 11.27,
+        height: MediaQuery.of(context).size.height <=845 ? MediaQuery.of(context).size.height / 11.27 : 74,
         backgroundColor: Colors.black,
         color: Colors.black,
         key: _navKey,
