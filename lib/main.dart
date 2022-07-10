@@ -6,13 +6,17 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:PixaMart/front_end/pages/splash_screen.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   Hive.registerAdapter(FavouritesAdapter());
   await Hive.openBox('favourites');
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(
     PixaMartApp()
   );

@@ -51,6 +51,8 @@ dependencies:
   simple_animations: ^4.2.0
   ionicons: ^0.1.2
   confetti: ^0.7.0
+  firebase_core: ^1.19.1
+  firebase_auth: ^3.4.1
 
 dev_dependencies:
   flutter_test:
