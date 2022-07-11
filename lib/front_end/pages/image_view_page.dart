@@ -1,9 +1,8 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
-// Todo Solve Image Cropping Issue (Kingshuk)
+// Todo Solve Image Cropping Issue through calling proper height and width in image view page
 // Todo Build UI for Image Sharing (Upayan)
 // Todo Build System to share Images through App (Kingshuk)
 // Todo Drag Down Page to go to the previous page (Kingshuk/Upayan)
-// Todo Fix Same Image download issue (Kingshuk)
 // Todo try different sounds with actions (Kingshuk)
 
 import 'dart:async';
@@ -17,6 +16,7 @@ import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
@@ -38,6 +38,7 @@ class _ImageViewState extends State<ImageView>
   late Rx<String> dialogue;
   late double opacity;
   late RxDouble progressValue;
+  static const platform = MethodChannel('com.wallpaper.pixamart/screenSize');
 
   @override
   void initState() {
@@ -45,6 +46,17 @@ class _ImageViewState extends State<ImageView>
     dialogue = 'Downloading'.obs;
     opacity = 0.0;
     progressValue = 0.0.obs;
+    getScreenSize();
+  }
+
+  getScreenSize() async {
+    try {
+    var result = await platform.invokeMethod('getScreenSize');
+    print(result['height']);
+    print(result['width']);
+    } catch (e) {
+      print(e);
+    }
   }
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
