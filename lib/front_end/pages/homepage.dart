@@ -3,6 +3,7 @@
 //todo find info about limitedbox widget (kingshuk)
 
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Getx;
 import 'package:hive/hive.dart';
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   late double currentMaxScrollExtent;
   late Future<Box<dynamic>> favouritesBox;
   late Box<dynamic> favouritesList;
+  late final database;
+  late final favouritesRef;
 
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {
     Response url = await get(
@@ -93,17 +96,33 @@ class _HomePageState extends State<HomePage> {
   handleLiked(
       {required String imgShowUrl,
       required String imgDownloadUrl,
-      required String alt}) {
+      required String alt}) async {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
       Hive.box('favourites').add(fav);
+      try{
+        await favouritesRef.push().update(
+            {
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            }
+        );
+        await favouritesRef.onValue.listen((DatabaseEvent event) {
+          final data = event.snapshot.value;
+        });
+      } catch (e) {
+        print(e);
+      }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Added to Favourites!!', style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Nexa'
-        ),),
+        content: Text(
+          'Added to Favourites!!',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Nexa'),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
@@ -117,11 +136,13 @@ class _HomePageState extends State<HomePage> {
     } else {
       Hive.box('favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Removed from Favourites!!', style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nexa'
-        ),),
+        content: Text(
+          'Removed from Favourites!!',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Nexa'),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
@@ -148,6 +169,8 @@ class _HomePageState extends State<HomePage> {
     currentMaxScrollExtent = 0.0;
     favouritesBox = Hive.openBox('favourites');
     favouritesList = Hive.box('favourites');
+    database = FirebaseDatabase.instance.ref('users/userID/');
+    favouritesRef = database.child('favourites/');
   }
 
   @override
@@ -225,8 +248,11 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               SingleChildScrollView(
                                 child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.68),
+                                  height: MediaQuery.of(context).size.height /
+                                      (MediaQuery.of(context).orientation ==
+                                              Orientation.portrait
+                                          ? 1.45
+                                          : 1.68),
                                   decoration: const BoxDecoration(),
                                   padding: EdgeInsets.symmetric(
                                       horizontal:
@@ -240,7 +266,9 @@ class _HomePageState extends State<HomePage> {
                                     scrollDirection: Axis.vertical,
                                     crossAxisCount: 2,
                                     clipBehavior: Clip.antiAlias,
-                                    crossAxisSpacing: MediaQuery.of(context).size.width / 39.2,
+                                    crossAxisSpacing:
+                                        MediaQuery.of(context).size.width /
+                                            39.2,
                                     children: photoList
                                         .map((dynamic photo) => GridTile(
                                                 child: Stack(
@@ -248,22 +276,26 @@ class _HomePageState extends State<HomePage> {
                                               children: [
                                                 ClipRRect(
                                                     borderRadius:
-                                                        BorderRadius.circular(16),
+                                                        BorderRadius.circular(
+                                                            16),
                                                     child: GestureDetector(
                                                       onDoubleTap: () {
                                                         handleLiked(
                                                             imgShowUrl: photo
                                                                 .src.portrait,
-                                                            imgDownloadUrl: photo
-                                                                .src.original,
+                                                            imgDownloadUrl:
+                                                                photo.src
+                                                                    .original,
                                                             alt: photo.alt);
                                                       },
                                                       onTap: () {
                                                         Navigator.pushNamed(
-                                                            context, '/imageView',
+                                                            context,
+                                                            '/imageView',
                                                             arguments: {
-                                                              'imgShowUrl': photo
-                                                                  .src.portrait,
+                                                              'imgShowUrl':
+                                                                  photo.src
+                                                                      .portrait,
                                                               'imgDownloadUrl':
                                                                   photo.src
                                                                       .original,
@@ -271,15 +303,19 @@ class _HomePageState extends State<HomePage> {
                                                             });
                                                       },
                                                       child: Hero(
-                                                          tag: photo.src.portrait,
+                                                          tag: photo
+                                                              .src.portrait,
                                                           child: Image.network(
                                                             '${photo.src.portrait}',
                                                             fit: BoxFit.cover,
                                                           )),
                                                     )),
                                                 Padding(
-                                                  padding:
-                                                      EdgeInsets.all(MediaQuery.of(context).size.height / 104.25),
+                                                  padding: EdgeInsets.all(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .height /
+                                                          104.25),
                                                   child: GestureDetector(
                                                     child: Builder(
                                                         builder: (context) {
@@ -295,17 +331,18 @@ class _HomePageState extends State<HomePage> {
                                                         );
                                                       } else {
                                                         return const Icon(
-                                                          Icons.favorite_outlined,
+                                                          Icons
+                                                              .favorite_outlined,
                                                           color: Colors.pink,
                                                         );
                                                       }
                                                     }),
                                                     onTap: () {
                                                       handleLiked(
-                                                          imgShowUrl:
-                                                              photo.src.portrait,
-                                                          imgDownloadUrl:
-                                                              photo.src.original,
+                                                          imgShowUrl: photo
+                                                              .src.portrait,
+                                                          imgDownloadUrl: photo
+                                                              .src.original,
                                                           alt: photo.alt);
                                                     },
                                                   ),
