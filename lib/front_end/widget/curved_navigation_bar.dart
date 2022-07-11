@@ -26,7 +26,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     pagesAll = [
     const HomePage(),
     const FavouritesPage(),
-    const AccountPage()
+     AccountPage()
     ];
     myIndex = 0;
     iconSize = 0.0.obs;

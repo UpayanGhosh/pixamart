@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late List<RxDouble> opacityManager;
+  final AuthService _auth = AuthService();
+  String email = '';
+  String password = '';
+  String error = '';
 
   void manageOpacity() async {
     int i = 0;
@@ -76,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Obx(
                           () => AnimatedOpacity(
-                            duration: const Duration(milliseconds: 250),
+                            duration: const Duration(milliseconds: 150),
                             opacity: opacityManager[0].value,
                             child: Text(
                               "Login",
@@ -121,6 +126,9 @@ class _LoginPageState extends State<LoginPage> {
                                 duration: const Duration(milliseconds: 250),
                                 opacity: opacityManager[2].value,
                                 child: TextFormField(
+                                  onChanged: (val) {
+                                    setState(() => email = val);
+                                  },
                                   cursorColor: Colors.white,
                                   style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
@@ -154,6 +162,10 @@ class _LoginPageState extends State<LoginPage> {
                                 duration: const Duration(milliseconds: 250),
                                 opacity: opacityManager[3].value,
                                 child: TextFormField(
+                                  obscureText: true,
+                                  onChanged: (val) {
+                                    setState(() => password = val);
+                                  },
                                   // todo add code to obscure text
                                   cursorColor: Colors.white,
                                   style: TextStyle(color: Colors.white),
@@ -170,9 +182,10 @@ class _LoginPageState extends State<LoginPage> {
                                           color: Colors.white,
                                           fontFamily: 'Nexa',
                                           fontWeight: FontWeight.bold,
-                                          fontSize:
-                                              MediaQuery.of(context).size.height /
-                                                  52.125)),
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              52.125)),
                                 ),
                               ),
                             ),
@@ -188,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
                           style: ElevatedButton.styleFrom(
                             side: BorderSide(color: Colors.transparent),
                             padding: EdgeInsets.symmetric(
-                                horizontal: MediaQuery.of(context).size.width / 2.8,
+                                horizontal:
+                                    MediaQuery.of(context).size.width / 2.8,
                                 vertical:
                                     MediaQuery.of(context).size.height / 41.7),
                             elevation: 0,
@@ -196,9 +210,14 @@ class _LoginPageState extends State<LoginPage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             HapticFeedback.lightImpact();
-                            Navigator.pushNamed(context, '/navigationBar');
+                            dynamic result =
+                                await _auth.loginWithEmailAndPassword(
+                                    email: email, password: password);
+                            print('hi $result');
+                            // Navigator.pushReplacementNamed(
+                            //       context, '/navigationBar');
                           },
                           child: Obx(
                             () => AnimatedOpacity(
@@ -209,7 +228,8 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize:
-                                        MediaQuery.of(context).size.height / 46.33,
+                                        MediaQuery.of(context).size.height /
+                                            46.33,
                                     color: Colors.white,
                                     fontFamily: 'Nexa'),
                               ),
@@ -219,11 +239,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Obx(
-                          () => AnimatedOpacity(
-                            duration: const Duration(milliseconds: 250),
-                            opacity: opacityManager[6].value,
-                            child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: opacityManager[6].value,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
                             side: BorderSide(color: Colors.transparent),
                             padding: EdgeInsets.symmetric(
                                 horizontal:
@@ -234,12 +254,14 @@ class _LoginPageState extends State<LoginPage> {
                             primary: Color(0xff63c54f),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
-                        ),
-                        onPressed: () {
+                          ),
+                          onPressed: () {
                             HapticFeedback.lightImpact();
-                            Navigator.pushNamed(context, '/navigationBar');
-                        },
-                        child: Text(
+                            // Navigator.pushNamed(context, '/navigationBar');
+                            print(email);
+                            print(password);
+                          },
+                          child: Text(
                             "Login With Google",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -247,9 +269,9 @@ class _LoginPageState extends State<LoginPage> {
                                     MediaQuery.of(context).size.height / 46.33,
                                 color: Colors.white,
                                 fontFamily: 'Nexa'),
+                          ),
                         ),
                       ),
-                          ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -259,16 +281,16 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Obx(
-                                () => AnimatedOpacity(
-                                  duration: const Duration(milliseconds: 250),
-                                  opacity: opacityManager[7].value,
-                                  child: Text("Don't have an account?",
+                            () => AnimatedOpacity(
+                              duration: const Duration(milliseconds: 250),
+                              opacity: opacityManager[7].value,
+                              child: Text("Don't have an account?",
                                   style: TextStyle(
                                     fontFamily: 'Nexa',
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   )),
-                                ),
+                            ),
                           ),
                           Obx(
                             () => AnimatedOpacity(
@@ -278,8 +300,9 @@ class _LoginPageState extends State<LoginPage> {
                                 "Sign up",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: MediaQuery.of(context).size.height /
-                                        46.33,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height /
+                                            46.33,
                                     color: Colors.white,
                                     fontFamily: 'Nexa'),
                               ),
@@ -294,8 +317,10 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 3,
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: Obx(() => AnimatedOpacity(duration: const Duration(milliseconds: 250),
-                    opacity: opacityManager[9].value, child: Lottie.asset('assets/lottie/LoginPage.json'))),
+                child: Obx(() => AnimatedOpacity(
+                    duration: const Duration(milliseconds: 250),
+                    opacity: opacityManager[9].value,
+                    child: Lottie.asset('assets/lottie/LoginPage.json'))),
               ),
             ],
           ),

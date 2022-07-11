@@ -1,12 +1,14 @@
 // Todo Add Random avatar when user signs up
 
+import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:PixaMart/front_end/widget/profile_list_item.dart';
 
 class AccountPage extends StatelessWidget {
-  const AccountPage({Key? key}) : super(key: key);
+  AccountPage({Key? key}) : super(key: key);
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +129,7 @@ class AccountPage extends StatelessWidget {
           Expanded(
             child: ListView(
               physics: const BouncingScrollPhysics(),
-              children: const [
+              children: [
                 ProfileListItem(
                   icon: LineAwesomeIcons.download,
                   text: 'Downloads',
@@ -148,11 +150,37 @@ class AccountPage extends StatelessWidget {
                   text: 'Invite a Friend',
                   page: '', //Todo Add a system to invite new users
                 ),
-                ProfileListItem(
-                  icon: LineAwesomeIcons.alternate_sign_out,
-                  text: 'Logout',
-                  page: ''
-                  //hasNavigation: false,
+                Padding(
+                  padding:
+                      EdgeInsets.all(MediaQuery.of(context).size.width / 24.5),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        _auth.logout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blueAccent,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          padding: const EdgeInsets.all(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(LineAwesomeIcons.alternate_sign_out),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 24.5,
+                          ),
+                          Text(
+                            'Logout',
+                            style: TextStyle(
+                              fontFamily: 'Nexa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )),
                 ),
               ],
             ),

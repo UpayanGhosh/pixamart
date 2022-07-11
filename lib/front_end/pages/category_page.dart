@@ -39,7 +39,7 @@ class _CategoryPageNavigationState extends State<CategoryPageNavigation> {
     pagesAll = [
       CategoryPage(categoryName: widget.categoryName),
       const FavouritesPage(),
-      const AccountPage()
+       AccountPage()
     ];
     myIndex = 0;
     iconSize = 0.0.obs;

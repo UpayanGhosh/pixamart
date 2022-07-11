@@ -41,7 +41,7 @@ class _SearchPageNavigationState extends State<SearchPageNavigation> {
         searchQuery: widget.searchQuery,
       ),
       const FavouritesPage(),
-      const AccountPage()
+       AccountPage()
     ];
     myIndex = 0;
     iconSize = 0.0.obs;
