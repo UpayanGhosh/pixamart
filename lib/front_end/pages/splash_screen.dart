@@ -1,6 +1,5 @@
 import 'package:PixaMart/front_end/pages/welcome_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:PixaMart/backend/model/auth_model.dart';

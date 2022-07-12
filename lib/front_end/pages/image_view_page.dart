@@ -16,7 +16,6 @@ import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
-import 'package:flutter/services.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
@@ -38,25 +37,12 @@ class _ImageViewState extends State<ImageView>
   late Rx<String> dialogue;
   late double opacity;
   late RxDouble progressValue;
-  static const platform = MethodChannel('com.wallpaper.pixamart/screenSize');
-
   @override
   void initState() {
     super.initState();
     dialogue = 'Downloading'.obs;
     opacity = 0.0;
     progressValue = 0.0.obs;
-    getScreenSize();
-  }
-
-  getScreenSize() async {
-    try {
-    var result = await platform.invokeMethod('getScreenSize');
-    print(result['height']);
-    print(result['width']);
-    } catch (e) {
-      print(e);
-    }
   }
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
@@ -101,7 +87,7 @@ class _ImageViewState extends State<ImageView>
       opacity = 1.0;
       var dir = await getExternalStorageDirectory();
       String filePath = '${dir?.path}/${widget.alt}.jpg';
-      await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
+      await Dio().download('widget.imgDownloadUrl', filePath).then((value) async {
         dialogue = 'Setting as Wallpaper'.obs;
         await updateProgressValue(newProgressValue: 40, currentProgressValue: progressValue.value);
         setState(() {});
@@ -120,7 +106,7 @@ class _ImageViewState extends State<ImageView>
       await WallpaperManager.setWallpaperFromFile(filePath, location);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set', style: TextStyle(
+            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set', style: const TextStyle(
         fontFamily: 'Nexa',
           fontWeight: FontWeight.bold,
         ),),

@@ -1,3 +1,5 @@
+//todo implement focus nodes
+
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
@@ -220,12 +222,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 onPressed: () async {
                                   HapticFeedback.lightImpact();
-                                  dynamic result =
                                   await auth.loginWithEmailAndPassword(
                                       email: email, password: password);
-                                  print('hi $result');
-                                  // Navigator.pushReplacementNamed(
-                                  //       context, '/navigationBar');
                                 },
                                 child: Obx(
                                       () => AnimatedOpacity(
@@ -265,9 +263,6 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 onPressed: () {
                                   HapticFeedback.lightImpact();
-                                  // Navigator.pushNamed(context, '/navigationBar');
-                                  print(email);
-                                  print(password);
                                 },
                                 child: Text(
                                   "Login With Google",

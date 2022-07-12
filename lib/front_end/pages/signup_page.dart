@@ -221,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Nexa',
-                        fontSize: MediaQuery.of(context).size.height / 49.05,
+                        fontSize: MediaQuery.of(context).size.height / 49.2,
                         color: Colors.white,
                       ),
                     ),
