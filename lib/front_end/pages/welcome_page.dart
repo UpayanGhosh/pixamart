@@ -25,7 +25,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void manageOpacity() async {
     int i = 0;
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 500));
     Timer.periodic(const Duration(milliseconds: 500), (timer) {
       if (i < opacityManager.length) {
         opacityManager[i].value = 1.0;

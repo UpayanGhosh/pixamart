@@ -2,14 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth credential = FirebaseAuth.instance;
-  Stream<User?> get user {
-    return credential.authStateChanges();
-  }
 
   Future registerWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      UserCredential result = await credential.createUserWithEmailAndPassword(
+      await credential.createUserWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -19,7 +16,6 @@ class AuthService {
       } else if (e.code == 'invalid-email') {
         print('Invalid email provided.');
       }
-      return null;
     } catch (e) {
       print(e);
     }
@@ -28,8 +24,10 @@ class AuthService {
   Future loginWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
+      final User? user = credential.currentUser;
       await credential.signInWithEmailAndPassword(
           email: email, password: password);
+      return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
