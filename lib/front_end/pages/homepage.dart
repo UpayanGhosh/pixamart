@@ -3,6 +3,7 @@
 //todo find info about limitedbox widget (kingshuk)
 
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Getx;
@@ -35,8 +36,10 @@ class _HomePageState extends State<HomePage> {
   late double currentMaxScrollExtent;
   late Future<Box<dynamic>> favouritesBox;
   late Box<dynamic> favouritesList;
-  late final database;
+  late final DatabaseReference database;
   late final favouritesRef;
+  late final User? user;
+  late final FirebaseAuth auth;
 
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {
     Response url = await get(
@@ -100,9 +103,9 @@ class _HomePageState extends State<HomePage> {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
-      Hive.box('favourites').add(fav);
+      Hive.box('${user?.uid}-favourites').add(fav);
       try{
-        await favouritesRef.push().update(
+        favouritesRef.push().update(
             {
               'imgShowUrl': imgShowUrl,
               'imgDownloadUrl': imgDownloadUrl,
@@ -116,7 +119,7 @@ class _HomePageState extends State<HomePage> {
         print(e);
       }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
+        content: const Text(
           'Added to Favourites!!',
           style: TextStyle(
               color: Colors.white,
@@ -128,15 +131,15 @@ class _HomePageState extends State<HomePage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+            Hive.box('${user?.uid}-favourites').deleteAt(Hive.box('favourites').length - 1);
             setState(() {});
           },
         ),
       ));
     } else {
-      Hive.box('favourites').deleteAt(index);
+      Hive.box('${user?.uid}-favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
+        content: const Text(
           'Removed from Favourites!!',
           style: TextStyle(
               color: Colors.white,
@@ -167,10 +170,12 @@ class _HomePageState extends State<HomePage> {
     categories = getCategory();
     scrollController = ScrollController();
     currentMaxScrollExtent = 0.0;
-    favouritesBox = Hive.openBox('favourites');
-    favouritesList = Hive.box('favourites');
-    database = FirebaseDatabase.instance.ref('users/userID/');
-    favouritesRef = database.child('favourites/');
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    favouritesBox = Hive.openBox('${user?.uid}-favourites');
+    favouritesList = Hive.box('${user?.uid}-favourites');
+    database = FirebaseDatabase.instance.ref('users/${user?.uid}/');
+    favouritesRef = database.child('${user?.uid}-favourites/');
   }
 
   @override

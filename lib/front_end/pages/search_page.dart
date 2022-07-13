@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
@@ -108,6 +109,7 @@ class _SearchPageState extends State<SearchPage> {
   late Future<Box<dynamic>> favouritesBox;
   TextEditingController searchController = TextEditingController();
   late Box<dynamic> favouritesList;
+  late FirebaseAuth auth;
 
   Future<List<dynamic>> getSearchWallpapers(String query) async {
     Response url = await get(
@@ -169,7 +171,7 @@ class _SearchPageState extends State<SearchPage> {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
-      Hive.box('favourites').add(fav);
+      Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Added to Favourites!!',
@@ -183,13 +185,13 @@ class _SearchPageState extends State<SearchPage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
             setState(() {});
           },
         ),
       ));
     } else {
-      Hive.box('favourites').deleteAt(index);
+      Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Removed from Favourites!!',
@@ -217,12 +219,13 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
+    auth = FirebaseAuth.instance;
     getSearchWallpapers(widget.searchQuery.text);
     page = 2;
     scrollController = ScrollController();
     currentMaxScrollExtent = 0.0;
-    favouritesBox = Hive.openBox('favourites');
-    favouritesList = Hive.box('favourites');
+    favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
+    favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
     super.initState();
   }
 

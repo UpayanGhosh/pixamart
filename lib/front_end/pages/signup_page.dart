@@ -3,6 +3,8 @@ import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:ionicons/ionicons.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -15,9 +17,13 @@ class _SignupPageState extends State<SignupPage> {
   late List<RxDouble> opacityManager;
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  String email = '';
-  String password = '';
-  String error = '';
+  late String _email;
+  late RxString emailProperties;
+  late String _password;
+  late RxString passwordProperties;
+  late RxString _error;
+  late List<RxString> color;
+  late RxBool obscureText;
 
   void manageOpacity() async {
     int i = 0;
@@ -45,6 +51,40 @@ class _SignupPageState extends State<SignupPage> {
     ];
 
     manageOpacity();
+    _email = '';
+    emailProperties = 'Email'.obs;
+    _password = '';
+    passwordProperties = 'Email'.obs;
+    _error = ''.obs;
+    color = [
+      'white'.obs,
+      'white'.obs
+    ]; // first one is for email, second one for password
+    obscureText = false.obs;
+  }
+
+  @override
+  void didUpdateWidget(covariant SignupPage oldWidget) {
+    if (_email == '') {
+      emailProperties.value = 'Email';
+      color[0].value = 'white';
+    }
+    if (_password == '') {
+      passwordProperties.value = 'Password';
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_email == '') {
+      emailProperties.value = 'Email';
+      color[0].value = 'white';
+    }
+    if (_password == '') {
+      passwordProperties.value = 'Password';
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -122,28 +162,60 @@ class _SignupPageState extends State<SignupPage> {
                         () => AnimatedOpacity(
                           duration: const Duration(milliseconds: 350),
                           opacity: opacityManager[2].value,
-                          child: TextFormField(
-                            onChanged: (val) {
-                              setState(() {
-                                email = val;
-                              });
-                            },
-                            cursorColor: Colors.white,
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 2, color: Colors.white),
-                                ),
-                                focusedBorder: OutlineInputBorder(
+                          child: Obx(
+                            () => TextFormField(
+                              enableInteractiveSelection: true,
+                              enableIMEPersonalizedLearning: true,
+                              enableSuggestions: true,
+                              keyboardType: TextInputType.emailAddress,
+                              onChanged: (val) async {
+                                setState(() {
+                                  _email = val;
+                                });
+                                setState(() => _email = val);
+                                if (_email.contains('@') &&
+                                    _email.contains('.')) {
+                                  List<String> userSignInMethods = [];
+                                  userSignInMethods = await _auth
+                                      .checkIfUserExists(email: _email);
+                                  if (userSignInMethods.isEmpty &&
+                                      _email != '') {
+                                    emailProperties.value = 'New Account';
+                                    color[0].value = 'green';
+                                  } else {
+                                    emailProperties.value =
+                                        'Account already exists';
+                                    color[0].value = 'red';
+                                  }
+                                }
+                              },
+                              cursorColor: Colors.white,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        width: 3, color: Colors.white)),
-                                labelText: 'Email',
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Nexa',
-                                  fontWeight: FontWeight.bold,
-                                )),
+                                        width: 2,
+                                        color: color[0].value == 'red'
+                                            ? Colors.red
+                                            : color[0].value == 'green'
+                                                ? Colors.green
+                                                : Colors.white),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 3,
+                                          color: color[0].value == 'red'
+                                              ? Colors.red
+                                              : color[0].value == 'green'
+                                                  ? Colors.green
+                                                  : Colors.white)),
+                                  labelText: emailProperties.value,
+                                  labelStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Nexa',
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
                           ),
                         ),
                       ),
@@ -157,29 +229,73 @@ class _SignupPageState extends State<SignupPage> {
                         () => AnimatedOpacity(
                           duration: const Duration(milliseconds: 350),
                           opacity: opacityManager[3].value,
-                          child: TextFormField(
-                            onChanged: (val) {
-                              setState(() {
-                                password = val;
-                              });
-                            },
-                            // todo implement obscure text (kingshuk)
-                            cursorColor: Colors.white,
-                            obscureText: true,
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 2, color: Colors.white),
-                                ),
-                                focusedBorder: OutlineInputBorder(
+                          child: Obx(
+                            () => TextFormField(
+                              keyboardType: TextInputType.visiblePassword,
+                              onChanged: (val) {
+                                setState(() {
+                                  _password = val;
+                                });
+                                if (_password.length <= 6) {
+                                  passwordProperties.value = 'Weak Password';
+                                  color[1].value = 'red';
+                                } else if (_password.length > 6 &&
+                                    _password.length <= 8) {
+                                  passwordProperties.value = 'Medium Password';
+                                  color[1].value = 'yellow';
+                                } else {
+                                  passwordProperties.value = 'Strong Password';
+                                  color[1].value = 'green';
+                                }
+                              },
+                              // todo implement obscure text (kingshuk)
+                              cursorColor: Colors.white,
+                              obscureText: obscureText.value,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  suffixIcon: _password == ''
+                                      ? null
+                                      : IconButton(
+                                          onPressed: () {
+                                            obscureText.value =
+                                                !obscureText.value;
+                                          },
+                                          icon: obscureText.value
+                                              ? const Icon(
+                                                  Ionicons.eye_outline,
+                                                  color: Colors.white,
+                                                )
+                                              : const Icon(
+                                                  Ionicons.eye_off_outline,
+                                                  color: Colors.white,
+                                                )),
+                                  enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        width: 3, color: Colors.white)),
-                                labelText: 'Password',
-                                labelStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Nexa',
-                                    fontWeight: FontWeight.bold)),
+                                        width: 2,
+                                        color: color[1].value == 'red'
+                                            ? Colors.red
+                                            : color[1].value == 'green'
+                                                ? Colors.green
+                                                : color[1].value == 'yellow'
+                                                    ? Colors.yellowAccent
+                                                    : Colors.white),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 3,
+                                          color: color[1].value == 'red'
+                                              ? Colors.red
+                                              : color[1].value == 'green'
+                                              ? Colors.green
+                                              : color[1].value == 'yellow'
+                                              ? Colors.yellowAccent
+                                              : Colors.white)),
+                                  labelText: passwordProperties.value,
+                                  labelStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Nexa',
+                                      fontWeight: FontWeight.bold)),
+                            ),
                           ),
                         ),
                       ),
@@ -196,24 +312,21 @@ class _SignupPageState extends State<SignupPage> {
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width / 3.07,
                           vertical: MediaQuery.of(context).size.height / 41.7),
-                      side: BorderSide(color: Colors.transparent),
+                      side: const BorderSide(color: Colors.transparent),
                       elevation: 0,
-                      primary: Color(0xff8ab6fd),
+                      primary: const Color(0xff8ab6fd),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
                     onPressed: () async {
                       HapticFeedback.lightImpact();
-                      if (_formKey.currentState!.validate()) {
-                        dynamic result =
-                            await _auth.registerWithEmailAndPassword(
-                                email: email, password: password);
-                        if (result == null) {
-                          setState(() {
-                            error = 'Please supply a valid email';
-                          });
-                        }
-                        Navigator.pushReplacementNamed(context, '/login');
+                      try {
+                        _error.value =
+                        await _auth.registerWithEmailAndPassword(
+                            email: _email, password: _password);
+                      } catch (e) {
+                        await Hive.openBox('${_auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
+                        await Future.delayed(Duration(seconds: 1));
                       }
                     },
                     child: Text(
@@ -234,18 +347,23 @@ class _SignupPageState extends State<SignupPage> {
                   opacity: opacityManager[5].value,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      side: BorderSide(color: Colors.transparent),
+                      side: const BorderSide(color: Colors.transparent),
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width / 4.8,
                           vertical: MediaQuery.of(context).size.height / 35.6),
                       elevation: 0,
-                      primary: Color(0xff63c54f),
+                      primary: const Color(0xff63c54f),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       HapticFeedback.lightImpact();
-                      //Navigator.pushReplacementNamed(context, '/navigationBar');
+                      try {
+                      _error.value = await _auth.loginWithGoogle();
+                      } catch (e) {
+                        await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) => Navigator.pop(context));
+                        await Future.delayed(Duration(seconds: 1));
+                      }
                     },
                     child: Text(
                       "Login With Google",

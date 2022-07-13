@@ -92,7 +92,6 @@ class _ImageViewState extends State<ImageView>
         await updateProgressValue(newProgressValue: 40, currentProgressValue: progressValue.value);
         setState(() {});
       });
-      //print('Download Complete');
       int location;
       if (place == 'homescreen') {
         location = WallpaperManager.HOME_SCREEN;
