@@ -48,14 +48,14 @@ class SplashScreen extends StatelessWidget {
                 builder: (context, snapshot) {
                   if(snapshot.connectionState == ConnectionState.done) {
                     if(snapshot.hasData) {
-                      return AppBottomNavigationBar();
+                      return const AppBottomNavigationBar();
                     } else {
-                      return Scaffold(
+                      return const Scaffold(
                         backgroundColor: Colors.black87,
                       );
                   }
                   } else {
-                    return Scaffold(
+                    return const Scaffold(
                       backgroundColor: Colors.black87,
                     );
                   }

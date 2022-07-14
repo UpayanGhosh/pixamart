@@ -323,10 +323,13 @@ class _SignupPageState extends State<SignupPage> {
                       try {
                         _error.value =
                         await _auth.registerWithEmailAndPassword(
-                            email: _email, password: _password);
+                            email: _email, password: _password).then((value) async {
+                              await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) => Navigator.pop(context));
+                              return value;
+                        });
+                        print(_error.value);
                       } catch (e) {
-                        await Hive.openBox('${_auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
-                        await Future.delayed(Duration(seconds: 1));
+
                       }
                     },
                     child: Text(
@@ -358,12 +361,9 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     onPressed: () async {
                       HapticFeedback.lightImpact();
-                      try {
-                      _error.value = await _auth.loginWithGoogle();
-                      } catch (e) {
+                      await _auth.loginWithGoogle().then((value) async {
                         await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) => Navigator.pop(context));
-                        await Future.delayed(Duration(seconds: 1));
-                      }
+                        });
                     },
                     child: Text(
                       "Login With Google",
