@@ -371,8 +371,11 @@ class _LoginPageState extends State<LoginPage> {
                                       _error.value =
                                           await auth.loginWithEmailAndPassword(
                                               email: _email,
-                                              password: _password);
-
+                                              password: _password).then((value) async {
+                                                await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
+                                                return value;
+                                          });
+                                      print(_error.value);
                                       if (_error.value == 'wrong-password') {
                                         color[1].value = 'red';
                                         passwordProperties.value =
@@ -380,8 +383,7 @@ class _LoginPageState extends State<LoginPage> {
                                         HapticFeedback.vibrate();
                                       }
                                     } catch (e) {
-                                      await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
-                                      await Future.delayed(Duration(seconds: 1));
+
                                     }
                                   },
                                   child: Obx(
@@ -428,9 +430,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   onPressed: () async {
                                     HapticFeedback.lightImpact();
-                                    await auth.loginWithGoogle();
-                                    await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context)); // use alert dialogue to engage the user while hive initializes
-                                    await Future.delayed(Duration(seconds: 1));
+                                    await auth.loginWithGoogle().then((value) async {
+                                      await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
+                                    }); // use alert dialogue to engage the user while hive initializes
                                   },
                                   child: Text(
                                     "Login With Google",

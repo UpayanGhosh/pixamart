@@ -170,7 +170,7 @@ class _CategoryPageState extends State<CategoryPage> {
     if (index == -1) {
       Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Added to Favourites!!', style: TextStyle(
+        content: const Text('Added to Favourites!!', style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontFamily: 'Nexa'
@@ -180,7 +180,7 @@ class _CategoryPageState extends State<CategoryPage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('f${auth.currentUser?.uid}-avourites').length - 1);
+            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
             setState(() {});
           },
         ),
@@ -188,7 +188,7 @@ class _CategoryPageState extends State<CategoryPage> {
     } else {
       Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Removed from Favourites!!', style: TextStyle(
+        content: const Text('Removed from Favourites!!', style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontFamily: 'Nexa'

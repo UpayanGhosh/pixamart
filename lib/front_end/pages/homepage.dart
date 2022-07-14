@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('${user?.uid}-favourites').deleteAt(Hive.box('favourites').length - 1);
+            Hive.box('${user?.uid}-favourites').deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
             setState(() {});
           },
         ),

@@ -173,7 +173,7 @@ class _SearchPageState extends State<SearchPage> {
     if (index == -1) {
       Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
+        content: const Text(
           'Added to Favourites!!',
           style: TextStyle(
               color: Colors.white,
@@ -193,7 +193,7 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
+        content: const Text(
           'Removed from Favourites!!',
           style: TextStyle(
               color: Colors.white,
