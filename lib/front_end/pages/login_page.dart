@@ -222,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 onPressed: () async {
                                   HapticFeedback.lightImpact();
-                                  await auth.loginWithEmailAndPassword(
+                                     await auth.loginWithEmailAndPassword(
                                       email: email, password: password);
                                 },
                                 child: Obx(

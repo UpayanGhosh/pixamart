@@ -37,4 +37,4 @@ class PixaMartApp extends StatelessWidget {
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
-}
+} 
