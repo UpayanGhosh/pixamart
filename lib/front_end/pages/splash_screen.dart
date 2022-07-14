@@ -3,6 +3,7 @@ import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:PixaMart/backend/model/auth_model.dart';
+import 'package:hive/hive.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -39,13 +40,30 @@ class SplashScreen extends StatelessWidget {
         backgroundColor: Colors.black,
         splashTransition: SplashTransition.fadeTransition,
         nextScreen: StreamBuilder(
-          stream: _auth.credential.authStateChanges(),
+          stream: _auth.auth.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              // print(snapshot.data);
-              return AppBottomNavigationBar();
+              return FutureBuilder(
+                future: Hive.openBox('${_auth.auth.currentUser?.uid}-favourites'),
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    if(snapshot.hasData) {
+                      return AppBottomNavigationBar();
+                    } else {
+                      return Scaffold(
+                        backgroundColor: Colors.black87,
+                      );
+                  }
+                  } else {
+                    return Scaffold(
+                      backgroundColor: Colors.black87,
+                    );
+                  }
+                },
+              );
+              return const AppBottomNavigationBar();
             } else {
-              return WelcomePage();
+              return const WelcomePage();
             }
           },
         ));

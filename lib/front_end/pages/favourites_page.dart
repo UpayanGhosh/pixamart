@@ -1,4 +1,5 @@
 import 'package:PixaMart/backend/model/favourites_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
@@ -23,7 +24,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   @override
   Widget build(BuildContext context) {
-    Box<dynamic> favouritesBox = Hive.box('favourites');
+    Box<dynamic> favouritesBox = Hive.box('${FirebaseAuth.instance.currentUser?.uid}-favourites');
     if (favouritesBox.length > 4) {
       return Scaffold(
         backgroundColor: Colors.black,

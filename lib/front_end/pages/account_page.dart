@@ -35,16 +35,17 @@ class AccountPage extends StatelessWidget {
                     child: Stack(
                       children: [
                         Stack(
+                          alignment: Alignment.center,
                           children: [
                             Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50)),
                               ),
                             ),
                             Text(
-                              'U',
+                              '${_auth.auth.currentUser?.email!.substring(0, 1).toUpperCase()}',
                               style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.height / 25,
@@ -53,7 +54,6 @@ class AccountPage extends StatelessWidget {
                               ),
                             ),
                           ],
-                          alignment: Alignment.center,
                         ),
                         Align(
                           alignment: Alignment.bottomRight,
@@ -79,9 +79,9 @@ class AccountPage extends StatelessWidget {
                     margin: EdgeInsets.only(
                         right: MediaQuery.of(context).size.width / 16),
                     child: Text(
-                      'Upayan Ghosh',
+                      '${_auth.auth.currentUser?.displayName ?? _auth.auth.currentUser?.email}',
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 35,
+                        fontSize: MediaQuery.of(context).size.height / 40,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -92,7 +92,7 @@ class AccountPage extends StatelessWidget {
                     margin: EdgeInsets.only(
                         right: MediaQuery.of(context).size.width / 16),
                     child: Text(
-                      'upayan1231@gmail.com',
+                      '${_auth.auth.currentUser?.email}',
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height / 80,
                         fontWeight: FontWeight.w100,

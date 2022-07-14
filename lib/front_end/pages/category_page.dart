@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
@@ -105,6 +106,7 @@ class _CategoryPageState extends State<CategoryPage> {
   late double currentMaxScrollExtent;
   late Future<Box> favouritesBox;
   late Box<dynamic> favouritesList;
+  late FirebaseAuth auth;
 
   Future<List<dynamic>> getSearchWallpapers(String query) async {
     Response url = await get(
@@ -166,7 +168,7 @@ class _CategoryPageState extends State<CategoryPage> {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
-      Hive.box('favourites').add(fav);
+      Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Added to Favourites!!', style: TextStyle(
             color: Colors.white,
@@ -178,13 +180,13 @@ class _CategoryPageState extends State<CategoryPage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('favourites').deleteAt(Hive.box('favourites').length - 1);
+            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('f${auth.currentUser?.uid}-avourites').length - 1);
             setState(() {});
           },
         ),
       ));
     } else {
-      Hive.box('favourites').deleteAt(index);
+      Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Removed from Favourites!!', style: TextStyle(
             color: Colors.white,
@@ -210,12 +212,13 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   void initState() {
-    favouritesBox = Hive.openBox('favourites');
+    auth = FirebaseAuth.instance;
+    favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
     getSearchWallpapers(widget.categoryName);
     page = 2;
     currentMaxScrollExtent = 0.0;
     scrollController = ScrollController();
-    favouritesList = Hive.box('favourites');
+    favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
     super.initState();
   }
 
