@@ -468,95 +468,13 @@ class _LoginPageState extends State<LoginPage> {
                                               )),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Obx(
-                                () => AnimatedOpacity(
-                              duration: const Duration(milliseconds: 250),
-                              opacity: opacityManager[4].value,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  side: BorderSide(color: Colors.transparent),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                      MediaQuery.of(context).size.width / 2.8,
-                                      vertical:
-                                      MediaQuery.of(context).size.height / 41.7),
-                                  elevation: 0,
-                                  primary: Color(0xfff07371),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
-                                ),
-                                onPressed: () async {
-                                  HapticFeedback.lightImpact();
-                                     await auth.loginWithEmailAndPassword(
-                                      email: email, password: password);
-                                },
-                                child: Obx(
-                                      () => AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 250),
-                                    opacity: opacityManager[5].value,
-                                    child: Text(
-                                      "Log In",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize:
-                                          MediaQuery.of(context).size.height /
-                                              46.33,
-                                          color: Colors.white,
-                                          fontFamily: 'Nexa'),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Obx(
-                                () => AnimatedOpacity(
-                              duration: const Duration(milliseconds: 250),
-                              opacity: opacityManager[6].value,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  side: BorderSide(color: Colors.transparent),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                      MediaQuery.of(context).size.width / 4.35,
-                                      vertical:
-                                      MediaQuery.of(context).size.height / 41.7),
-                                  elevation: 0,
-                                  primary: Color(0xff63c54f),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
-                                ),
-                                onPressed: () {
-                                  HapticFeedback.lightImpact();
-                                },
-                                child: Text(
-                                  "Login With Google",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize:
-                                      MediaQuery.of(context).size.height / 46.33,
-                                      color: Colors.white,
-                                      fontFamily: 'Nexa'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacementNamed(context, '/signUp');
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Obx(
-                                      () => AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 250),
-                                    opacity: opacityManager[7].value,
-                                    child: Text("Don't have an account?",
+                                  Obx(
+                                    () => AnimatedOpacity(
+                                      duration:
+                                          const Duration(milliseconds: 250),
+                                      opacity: opacityManager[8].value,
+                                      child: Text(
+                                        "Sign up",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: MediaQuery.of(context)

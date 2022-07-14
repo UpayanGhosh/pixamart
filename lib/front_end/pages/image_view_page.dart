@@ -87,7 +87,7 @@ class _ImageViewState extends State<ImageView>
       opacity = 1.0;
       var dir = await getExternalStorageDirectory();
       String filePath = '${dir?.path}/${widget.alt}.jpg';
-      await Dio().download('widget.imgDownloadUrl', filePath).then((value) async {
+      await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
         dialogue = 'Setting as Wallpaper'.obs;
         await updateProgressValue(newProgressValue: 40, currentProgressValue: progressValue.value);
         setState(() {});
