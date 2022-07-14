@@ -114,7 +114,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       duration: const Duration(milliseconds: 800),
                       opacity: opacityManager[1].value,
                       child: Text(
-                        "Automatic identity verification which \n enables us to verify your identity", // todo find better greeting text(upayan)
+                        "We would like you to make an account \n with us before you use our service", // todo find better greeting text(upayan)
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
