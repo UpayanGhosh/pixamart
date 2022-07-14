@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
   late final favouritesRef;
   late final User? user;
   late final FirebaseAuth auth;
-
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {
     Response url = await get(
         Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),

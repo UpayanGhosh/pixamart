@@ -16,6 +16,8 @@ import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
+import 'dart:ui';
+import 'package:simple_shadow/simple_shadow.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
@@ -46,7 +48,7 @@ class _ImageViewState extends State<ImageView>
   }
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
-    while(currentProgressValue != newProgressValue) {
+    while (currentProgressValue != newProgressValue) {
       currentProgressValue += 1;
       progressValue.value = currentProgressValue;
       await Future.delayed(const Duration(milliseconds: 10));
@@ -64,13 +66,18 @@ class _ImageViewState extends State<ImageView>
     final result =
         await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Wallpaper saved to gallery Successfully', style: TextStyle(
-          fontFamily: 'Nexa',
-          fontWeight: FontWeight.bold,
-        ),),
+        content: Text(
+          'Wallpaper saved to gallery Successfully',
+          style: TextStyle(
+            fontFamily: 'Nexa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-    await updateProgressValue(newProgressValue: 1.0, currentProgressValue: progressValue.value);
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+    await updateProgressValue(
+        newProgressValue: 1.0, currentProgressValue: progressValue.value);
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 500));
     opacity = 1.0;
@@ -89,7 +96,8 @@ class _ImageViewState extends State<ImageView>
       String filePath = '${dir?.path}/${widget.alt}.jpg';
       await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
         dialogue = 'Setting as Wallpaper'.obs;
-        await updateProgressValue(newProgressValue: 40, currentProgressValue: progressValue.value);
+        await updateProgressValue(
+            newProgressValue: 40, currentProgressValue: progressValue.value);
         setState(() {});
       });
       int location;
@@ -105,14 +113,17 @@ class _ImageViewState extends State<ImageView>
       await WallpaperManager.setWallpaperFromFile(filePath, location);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set', style: const TextStyle(
-        fontFamily: 'Nexa',
-          fontWeight: FontWeight.bold,
-        ),),
+          '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set',
+          style: const TextStyle(
+            fontFamily: 'Nexa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ));
-      await updateProgressValue(newProgressValue: 100, currentProgressValue: progressValue.value);
+      await updateProgressValue(
+          newProgressValue: 100, currentProgressValue: progressValue.value);
       setState(() {});
       await Future.delayed(const Duration(milliseconds: 500));
       opacity = 0.0;
@@ -127,31 +138,72 @@ class _ImageViewState extends State<ImageView>
 
   @override
   Widget build(BuildContext context) {
+    var _opacity = 0.8;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Hero(
-            tag: widget.imgShowUrl,
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(
+                sigmaX: 15,
+                sigmaY: 15,
+              ),
+              child: Opacity(
+                opacity: _opacity,
                 child: Image.network(
                   widget.imgShowUrl,
                   fit: BoxFit.cover,
-                )),
+                ),
+              ),
+            ),
+          ),
+          SimpleShadow(
+            opacity: 0.8, // Default: 0.5
+            color: Colors.black, // Default: Black
+            offset: Offset(10, 10), // Default: Offset(2, 2)
+            sigma: 7,
+            child: Container(
+              child: Image.asset('assets/Mobile_Outline.png',
+                  height: MediaQuery.of(context).size.height / 0.2,
+                  fit: BoxFit.contain),
+            ),
+          ),
+          SimpleShadow(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(75, 126, 75, 145),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Hero(
+                  tag: widget.imgShowUrl,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      widget.imgShowUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
           AnimatedOpacity(
             opacity: opacity,
             duration: const Duration(milliseconds: 400),
             child: AlertDialog(
               backgroundColor: Colors.transparent,
-              title: Obx(() => Text('$dialogue', style: TextStyle(
-                fontFamily: 'Nexa',
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-              ),textAlign: TextAlign.center,)),
+              title: Obx(() => Text(
+                    '$dialogue',
+                    style: TextStyle(
+                        fontFamily: 'Nexa',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  )),
               content: SizedBox(
                 height: MediaQuery.of(context).size.height / 26,
                 width: MediaQuery.of(context).size.width / 2,
@@ -162,11 +214,13 @@ class _ImageViewState extends State<ImageView>
                     borderRadius: 30,
                     borderWidth: 0,
                     direction: Axis.horizontal,
-                    center: Text('${(progressValue.value).toStringAsFixed(1)}%', style: TextStyle(
-                    fontFamily: 'Nexa',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    ),),
+                    center: Text(
+                      '${(progressValue.value).toStringAsFixed(1)}%',
+                      style: TextStyle(
+                          fontFamily: 'Nexa',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
                   ),
                 ),
               ),
@@ -183,7 +237,8 @@ class _ImageViewState extends State<ImageView>
         spaceBetweenChildren: 12,
         children: [
           SpeedDialChild(
-              child: const Icon(Icons.add_to_home_screen), //todo try ionicons or lineawesomeicons (upayan)
+              child: const Icon(Icons
+                  .add_to_home_screen), //todo try ionicons or lineawesomeicons (upayan)
               backgroundColor: Colors.white,
               label: 'Homescreen',
               labelStyle: TextStyle(

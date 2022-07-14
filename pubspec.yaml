@@ -51,6 +51,7 @@ dependencies:
   firebase_auth: ^3.4.1
   firebase_database: ^9.0.18
   google_sign_in: ^5.4.0
+  simple_shadow: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +89,7 @@ flutter:
     - assets/lottie/Help.json
     - assets/lottie/ThankYou.json
     - assets/lottie/Working.json
+    - assets/Mobile_Outline.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
