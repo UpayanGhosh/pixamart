@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -17,6 +18,7 @@ class _DownloadPageState extends State<DownloadPage> {
   late final User? user;
   late Future<Box<dynamic>> downloadsBox;
   late Box<dynamic> downloadsList;
+  late final CollectionReference cloudDownloads;
 
   @override
   void initState() {
@@ -25,6 +27,21 @@ class _DownloadPageState extends State<DownloadPage> {
     user = auth.currentUser;
     downloadsBox = Hive.openBox('${user?.uid}-downloads');
     downloadsList = Hive.box('${user?.uid}-downloads');
+    cloudDownloads = FirebaseFirestore.instance.collection('${user?.uid}-downloads/');
+    syncDownloads();
+  }
+
+  syncDownloads() async {
+    await downloadsBox.then((value) async {
+      if(value.isEmpty) {
+        final snapshot = await cloudDownloads.get();
+        for (var element in snapshot.docs) {
+          var download = element.data() as Map;
+          Favourites fav = Favourites(download['imgShowUrl'], download['imgDownloadUrl'], download['alt']);
+          downloadsList.add(fav);
+        }
+      }
+    });
   }
 
   @override

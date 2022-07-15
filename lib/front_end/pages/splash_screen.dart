@@ -5,9 +5,21 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:hive/hive.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
-  final AuthService _auth = AuthService();
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  late final AuthService _auth;
+
+  @override
+  void initState() {
+    super.initState();
+    _auth = AuthService();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +55,8 @@ class SplashScreen extends StatelessWidget {
           stream: _auth.auth.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              Hive.openBox('${_auth.auth.currentUser?.uid}-favourites');
+              Hive.openBox('${_auth.auth.currentUser?.uid}-downloads');
               return FutureBuilder(
                 future: Hive.openBox('${_auth.auth.currentUser?.uid}-favourites'),
                 builder: (context, snapshot) {
