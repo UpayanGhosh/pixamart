@@ -371,7 +371,6 @@ class _LoginPageState extends State<LoginPage> {
                                             email: _email,
                                             password: _password).then((value) async {
                                           await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) async {
-                                            await Hive.openBox('${auth.auth.currentUser?.uid}-downloads');
                                             Future.delayed(const Duration(milliseconds: 300));
                                           });
                                           if (value == 'wrong-password') {
