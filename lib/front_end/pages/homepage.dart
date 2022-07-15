@@ -40,6 +40,9 @@ class _HomePageState extends State<HomePage> {
   late final User? user;
   late final DatabaseReference userFavouritesDatabase;
   late final CollectionReference removedFromLiked;
+  late Future<Box<dynamic>> downloadsBox;
+  late Box<dynamic> downloadsList;
+  late final CollectionReference cloudDownloads;
 
   @override
   void initState() {
@@ -57,26 +60,35 @@ class _HomePageState extends State<HomePage> {
     photoList = [];
     removedFromLiked =
         FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    downloadsBox = Hive.openBox('${user?.uid}-downloads');
+    downloadsList = Hive.box('${user?.uid}-downloads');
+    cloudDownloads =
+        FirebaseFirestore.instance.collection('${user?.uid}-downloads/');
     syncData();
   }
 
 
-
   syncData() async {
-    print('starting');
     if (favouritesList.isEmpty) {
       final snapshot = await userFavouritesDatabase.get();
-      print('getting data');
       final cloudFavourites = snapshot.children;
-      print('got data');
       for(int i = 0; i < cloudFavourites.length; i++) {
         var favourite = cloudFavourites.elementAt(i).value as Map;
         Favourites fav = Favourites(favourite['imgShowUrl'], favourite['imgDownloadUrl'], favourite['alt']);
         Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
       }
-      print('synced');
-      setState(() {});
     }
+    await downloadsBox.then((value) async {
+      if(value.isEmpty) {
+        final snapshot = await cloudDownloads.get();
+        for (var element in snapshot.docs) {
+          var download = element.data() as Map;
+          Favourites fav = Favourites(download['imgShowUrl'], download['imgDownloadUrl'], download['alt']);
+          downloadsList.add(fav);
+        }
+      }
+    });
+    setState(() {});
   }
 
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {

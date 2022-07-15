@@ -4,10 +4,14 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:PixaMart/backend/model/favourites_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
@@ -38,6 +42,11 @@ class _ImageViewState extends State<ImageView>
   late RxDouble progressValue;
   late double startPosition;
   late RxDouble updatePosition;
+  late Box<dynamic> downloadsList;
+  late final FirebaseAuth auth;
+  late final User? user;
+  late Favourites fav;
+  late final CollectionReference cloudDownloads;
 
   @override
   void initState() {
@@ -47,6 +56,12 @@ class _ImageViewState extends State<ImageView>
     progressValue = 0.0.obs;
     startPosition = 0.0;
     updatePosition = 0.0.obs;
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    downloadsList = Hive.box('${user?.uid}-downloads');
+    fav = Favourites(widget.imgShowUrl, widget.imgDownloadUrl, widget.alt);
+    cloudDownloads =
+        FirebaseFirestore.instance.collection('${user?.uid}-downloads/');
   }
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
@@ -57,34 +72,60 @@ class _ImageViewState extends State<ImageView>
     }
   }
 
+  checkIfDownloaded({required String imgShowUrl}) {
+    int alreadyLikedAt = -1;
+    for (int i = 0; i < downloadsList.length; i++) {
+      if (imgShowUrl == (downloadsList.getAt(i) as Favourites).imgShowUrl) {
+        alreadyLikedAt = i;
+      }
+    } // Todo find a better searching solution (Kingshuk/upayan)
+    return alreadyLikedAt;
+  }
+
   saveToGallery() async {
-    opacity = 1.0;
-    var response = await Dio().get(
-      widget.imgDownloadUrl,
-      options: Options(
-        responseType: ResponseType.bytes,
-      ),
-    );
-    final result =
-        await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'Wallpaper saved to gallery Successfully',
-          style: TextStyle(
-            fontFamily: 'Nexa',
-            fontWeight: FontWeight.bold,
-          ),
+    Map<Permission, PermissionStatus> status = await [
+      Permission.storage,
+    ].request();
+    if (status[Permission.storage]!.isGranted) {
+      opacity = 1.0;
+      int index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
+      if (index == -1) {
+        downloadsList.add(fav);
+        cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
+          'imgShowUrl': widget.imgShowUrl,
+          'imgDownloadUrl': widget.imgDownloadUrl,
+          'alt': widget.alt,
+        });
+      }
+      var response = await Dio().get(
+        widget.imgDownloadUrl,
+        options: Options(
+          responseType: ResponseType.bytes,
         ),
-        behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-    await updateProgressValue(
-        newProgressValue: 1.0, currentProgressValue: progressValue.value);
-    setState(() {});
-    await Future.delayed(const Duration(milliseconds: 500));
-    opacity = 1.0;
-    setState(() {});
-    await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.pop(context));
+      );
+      final result =
+      await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+            'Wallpaper saved to gallery Successfully',
+            style: TextStyle(
+              fontFamily: 'Nexa',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+      await updateProgressValue(
+          newProgressValue: 100, currentProgressValue: progressValue.value);
+      setState(() {});
+      await Future.delayed(const Duration(milliseconds: 500));
+      opacity = 1.0;
+      setState(() {});
+      await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.pop(context));
+    } else {
+      Permission.storage.request();
+    }
   }
 
   Future<void> setWallpaper(String place) async {
@@ -93,8 +134,17 @@ class _ImageViewState extends State<ImageView>
     ].request();
     if (status[Permission.storage]!.isGranted) {
       opacity = 1.0;
+      int index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
+      if (index == -1) {
+        downloadsList.add(fav);
+        cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
+          'imgShowUrl': widget.imgShowUrl,
+          'imgDownloadUrl': widget.imgDownloadUrl,
+          'alt': widget.alt,
+        });
+      }
       var dir = await getExternalStorageDirectory();
-      String filePath = '${dir?.path}/${widget.alt}.jpg';
+      String filePath = '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
       await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
         dialogue = 'Setting as Wallpaper'.obs;
         await updateProgressValue(
@@ -107,10 +157,8 @@ class _ImageViewState extends State<ImageView>
       } else if (place == 'lockscreen') {
         location = WallpaperManager.LOCK_SCREEN;
       } else {
-        //Todo change both screen code
         location = WallpaperManager.BOTH_SCREEN;
       }
-      //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
       await WallpaperManager.setWallpaperFromFile(filePath, location).then((value) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
@@ -260,7 +308,7 @@ class _ImageViewState extends State<ImageView>
             children: [
               SpeedDialChild(
                   child: const Icon(Icons
-                      .add_to_home_screen), //todo try ionicons or lineawesomeicons (upayan)
+                      .add_to_home_screen),
                   backgroundColor: Colors.white,
                   label: 'Homescreen',
                   labelStyle: const TextStyle(

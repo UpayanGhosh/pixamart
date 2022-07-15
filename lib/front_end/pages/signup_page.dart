@@ -248,7 +248,6 @@ class _SignupPageState extends State<SignupPage> {
                                   color[1].value = 'green';
                                 }
                               },
-                              // todo implement obscure text (kingshuk)
                               cursorColor: Colors.white,
                               obscureText: obscureText.value,
                               style: const TextStyle(color: Colors.white),
@@ -325,7 +324,9 @@ class _SignupPageState extends State<SignupPage> {
                           _error.value =
                           await _auth.registerWithEmailAndPassword(
                               email: _email, password: _password).then((value) async {
-                            await Hive.openBox('${_auth.auth.currentUser?.uid}favourites');
+                            await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) async {
+                              await Future.delayed(const Duration(milliseconds: 300));
+                            });
                             return value;
                           });
                         }
@@ -363,7 +364,9 @@ class _SignupPageState extends State<SignupPage> {
                     onPressed: () async {
                       HapticFeedback.lightImpact();
                       await _auth.loginWithGoogle().then((value) async {
-                        await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) => Navigator.pop(context));
+                        await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) async {
+                          await Future.delayed(const Duration(milliseconds: 300)).then((value) => Navigator.pop(context));
+                        });
                         });
                     },
                     child: Text(

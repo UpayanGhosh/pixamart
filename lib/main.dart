@@ -1,5 +1,5 @@
-// Todo try and add a notification system
-// Todo try adding a showcase system for new users
+// Todo try and add a notification system (kingshuk)
+// Todo try adding a showcase system for new users (kingshuk)
 import 'package:PixaMart/front_end/pages/download_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +20,6 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   Hive.registerAdapter(FavouritesAdapter());
-  //await Hive.openBox('currentUser');
-  //Hive.box('currentUser').putAt(0, FirebaseAuth.instance.currentUser?.uid);
-  //FirebaseAuth.instance.currentUser == null ? await Hive.openBox('favourites') : await Hive.openBox('${FirebaseAuth.instance.currentUser?.uid}-favourites');
   runApp(PixaMartApp());
 }
 
