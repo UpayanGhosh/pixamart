@@ -1,5 +1,7 @@
 import 'package:PixaMart/backend/model/favourites_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
@@ -14,12 +16,20 @@ class FavouritesPage extends StatefulWidget {
 class _FavouritesPageState extends State<FavouritesPage> {
   late ScrollController scrollController;
   late double currentMaxScrollExtent;
+  late final FirebaseAuth auth;
+  late final User? user;
+  late final DatabaseReference userFavouritesDatabase;
+  late final CollectionReference removedFromLiked;
 
   @override
   void initState() {
     super.initState();
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
     scrollController = ScrollController();
     currentMaxScrollExtent = 0.0;
+    userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
+    removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
   }
 
   @override
@@ -80,6 +90,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               favourites.imgShowUrl,
                               favourites.imgDownloadUrl,
                               favourites.alt);
+                          userFavouritesDatabase.child(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).remove();
+                          removedFromLiked.doc(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).set({
+                            'imgShowUrl': lastDeleted.imgShowUrl,
+                            'imgDownloadUrl': lastDeleted.imgDownloadUrl,
+                            'alt': lastDeleted.alt,
+                          }); // when user removes an image from liked it goes to firestore
                           favouritesBox.deleteAt(favouritesBox.length - index - 1);
                           setState(() {});
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -94,6 +110,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               label: 'Undo',
                               onPressed: () {
                                 favouritesBox.add(lastDeleted);
+                                userFavouritesDatabase.child(lastDeleted.imgDownloadUrl.split('/')[4]).set({
+                                  'imgShowUrl': lastDeleted.imgShowUrl,
+                                  'imgDownloadUrl': lastDeleted.imgDownloadUrl,
+                                  'alt': lastDeleted.alt,
+                                }); // RD write complete
                                 setState(() {});
                               },
                             ),
@@ -110,7 +131,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
               child: ElevatedButton(
                 onPressed: () {
                   scrollController.animateTo(-170,
-                      duration: Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.easeOutSine); // easeinexpo, easeoutsine
                 },
                 style: ElevatedButton.styleFrom(
@@ -172,6 +193,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     onTap: () {
                       Favourites lastDeleted = Favourites(favourites.imgShowUrl,
                           favourites.imgDownloadUrl, favourites.alt);
+                      userFavouritesDatabase.child(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).remove();
+                      removedFromLiked.doc(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).set({
+                        'imgShowUrl': favouritesBox.getAt(favouritesBox.length - index - 1).imgShowUrl,
+                        'imgDownloadUrl': favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl,
+                        'alt': favouritesBox.getAt(favouritesBox.length - index - 1).alt,
+                      }); // when user removes an image from liked it goes to firestore
                       favouritesBox.deleteAt(index);
                       setState(() {});
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -186,6 +213,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           label: 'Undo',
                           onPressed: () {
                             favouritesBox.add(lastDeleted);
+                            userFavouritesDatabase.child(lastDeleted.imgDownloadUrl.split('/')[4]).set({
+                              'imgShowUrl': lastDeleted.imgShowUrl,
+                              'imgDownloadUrl': lastDeleted.imgDownloadUrl,
+                              'alt': lastDeleted.alt,
+                            }); // RD write complete
                             setState(() {});
                           },
                         ),

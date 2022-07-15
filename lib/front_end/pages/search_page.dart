@@ -2,8 +2,10 @@
 
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
@@ -110,6 +112,24 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
   late Box<dynamic> favouritesList;
   late FirebaseAuth auth;
+  late final DatabaseReference userFavouritesDatabase;
+  late final CollectionReference removedFromLiked;
+  late final User? user;
+
+  @override
+  void initState() {
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
+    favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
+    getSearchWallpapers(widget.searchQuery.text);
+    page = 2;
+    scrollController = ScrollController();
+    currentMaxScrollExtent = 0.0;
+    userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
+    removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    super.initState();
+  }
 
   Future<List<dynamic>> getSearchWallpapers(String query) async {
     Response url = await get(
@@ -171,7 +191,13 @@ class _SearchPageState extends State<SearchPage> {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
+      HapticFeedback.lightImpact(); // may remove later
       Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
+      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': imgShowUrl,
+        'imgDownloadUrl': imgDownloadUrl,
+        'alt': alt,
+      }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
           'Added to Favourites!!',
@@ -186,12 +212,24 @@ class _SearchPageState extends State<SearchPage> {
           label: 'Undo',
           onPressed: () {
             Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
+            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
+            removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            }); // when user removes an image from liked it goes to firestore
             setState(() {});
           },
         ),
       ));
     } else {
       Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
+      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove(); // RD deletion code
+      removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': imgShowUrl,
+        'imgDownloadUrl': imgDownloadUrl,
+        'alt': alt,
+      }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
           'Removed from Favourites!!',
@@ -208,6 +246,11 @@ class _SearchPageState extends State<SearchPage> {
             Favourites lastDeleted =
                 Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
             favouritesList.add(lastDeleted);
+            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            });
             setState(() {});
           },
         ),
@@ -215,18 +258,6 @@ class _SearchPageState extends State<SearchPage> {
     }
     setState(() {});
     HapticFeedback.lightImpact();
-  }
-
-  @override
-  void initState() {
-    auth = FirebaseAuth.instance;
-    getSearchWallpapers(widget.searchQuery.text);
-    page = 2;
-    scrollController = ScrollController();
-    currentMaxScrollExtent = 0.0;
-    favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
-    favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
-    super.initState();
   }
 
   @override
@@ -431,7 +462,9 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               );
             } else {
-              return const Text('data');
+              return const Scaffold(
+                backgroundColor: Colors.black,
+              );
             }
           } else {
             return const Scaffold(
