@@ -440,8 +440,7 @@ class _SearchPageState extends State<SearchPage> {
                           );
                         } else if (snapshot.hasError) {
                           return Container(
-                              margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
-                              //Todo: make this responsive to screen size.(Kingshuk)
+                              margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height / 8.34, 0, 0),
                               child: Lottie.asset(
                                   'assets/lottie/Server_Error.json'));
                         }

@@ -1,5 +1,3 @@
-//todo implement focus nodes
-
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
@@ -281,7 +279,6 @@ class _LoginPageState extends State<LoginPage> {
                                           onChanged: (val) {
                                             setState(() => _password = val);
                                           },
-                                          // todo add code to obscure text
                                           cursorColor: Colors.white,
                                           style: const TextStyle(
                                               color: Colors.white),
@@ -373,7 +370,10 @@ class _LoginPageState extends State<LoginPage> {
                                         await auth.loginWithEmailAndPassword(
                                             email: _email,
                                             password: _password).then((value) async {
-                                          await Hive.openBox('${auth.auth.currentUser?.uid}-favourites');
+                                          await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) async {
+                                            await Hive.openBox('${auth.auth.currentUser?.uid}-downloads');
+                                            Future.delayed(const Duration(milliseconds: 300));
+                                          });
                                           if (value == 'wrong-password') {
                                             color[1].value = 'red';
                                             passwordProperties.value =
@@ -432,7 +432,9 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: () async {
                                     HapticFeedback.lightImpact();
                                     await auth.loginWithGoogle().then((value) async {
-                                      await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
+                                      await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) async {
+                                        await Future.delayed(Duration(milliseconds: 300)).then((value) => Navigator.pop(context));
+                                      });
                                     }); // use alert dialogue to engage the user while hive initializes
                                   },
                                   child: Text(

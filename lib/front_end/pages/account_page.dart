@@ -178,7 +178,7 @@ class AccountPage extends StatelessWidget {
                 const ProfileListItem(
                   icon: LineAwesomeIcons.user_plus,
                   text: 'Invite a Friend',
-                  page: '', //Todo Add a system to invite new users
+                  page: '',
                 ),
                 Padding(
                   padding:
