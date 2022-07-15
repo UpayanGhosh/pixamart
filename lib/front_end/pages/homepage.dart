@@ -1,5 +1,4 @@
 // This is the HomePage of the application
-//todo fix old images appear with new images issue (kingshuk)
 //todo find info about limitedbox widget (kingshuk)
 
 import 'dart:convert';
@@ -20,6 +19,7 @@ import 'package:PixaMart/front_end/widget/categories.dart';
 import 'package:PixaMart/front_end/widget/category_tile.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -32,14 +32,31 @@ class _HomePageState extends State<HomePage> {
   List<CategoriesModel> categories = [];
   late int page;
   late ScrollController scrollController;
-  List<dynamic> photoList = [];
+  late List<dynamic> photoList;
   late double currentMaxScrollExtent;
   late Future<Box<dynamic>> favouritesBox;
   late Box<dynamic> favouritesList;
-  late final DatabaseReference database;
-  late final favouritesRef;
-  late final User? user;
   late final FirebaseAuth auth;
+  late final User? user;
+  late final DatabaseReference userFavouritesDatabase;
+  late final CollectionReference removedFromLiked;
+
+  @override
+  void initState() {
+    super.initState();
+    page = 1;
+    categories = getCategory();
+    scrollController = ScrollController();
+    currentMaxScrollExtent = 0.0;
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    favouritesBox = Hive.openBox('${user?.uid}-favourites');
+    favouritesList = Hive.box('${user?.uid}-favourites');
+    userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
+    photoList = [];
+    removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+  }
+
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {
     Response url = await get(
         Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
@@ -50,26 +67,24 @@ class _HomePageState extends State<HomePage> {
           .map((dynamic item) => Photos.fromJson(item))
           .toList();
       photoList.addAll(photos);
+      photos.removeRange(0, photos.length); // added new line
       scrollController.addListener(() async {
-        if (scrollController.offset >=
-                scrollController.position.maxScrollExtent &&
-            !scrollController.position.outOfRange) {
-          if (currentMaxScrollExtent <
-              scrollController.position.maxScrollExtent) {
+        if (scrollController.offset >= scrollController.position.maxScrollExtent && !scrollController.position.outOfRange) {
+          if (currentMaxScrollExtent < scrollController.position.maxScrollExtent) {
             currentMaxScrollExtent = scrollController.position.maxScrollExtent;
+            page++;
             Response url = await get(
                 Uri.parse(
                     'https://api.pexels.com/v1/curated/?page=$page&per_page=80'),
                 headers: {"Authorization": getPexelsApiKey()});
-            page++;
             if (url.statusCode == 200) {
-              Map<String, dynamic> curated = jsonDecode(url.body);
-              List<dynamic> newPhotos = curated['photos']
-                  .map((dynamic item) => Photos.fromJson(item))
-                  .toList();
+              print(page);
+              Map<String, dynamic> nextPage = jsonDecode(url.body);
               setState(() {
-                photoList.addAll(newPhotos);
-                photoList.reversed;
+                photoList.addAll(nextPage['photos']
+                    .map((dynamic item) => Photos.fromJson(item))
+                    .toList());
+                print(photoList.length);
               });
             } else {
               throw Exception('Failed to Fetch Curated');
@@ -102,21 +117,13 @@ class _HomePageState extends State<HomePage> {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
-      Hive.box('${user?.uid}-favourites').add(fav);
-      try{
-        favouritesRef.push().update(
-            {
-              'imgShowUrl': imgShowUrl,
-              'imgDownloadUrl': imgDownloadUrl,
-              'alt': alt,
-            }
-        );
-        await favouritesRef.onValue.listen((DatabaseEvent event) {
-          final data = event.snapshot.value;
-        });
-      } catch (e) {
-        print(e);
-      }
+      HapticFeedback.lightImpact(); // may remove later
+      Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
+      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': imgShowUrl,
+        'imgDownloadUrl': imgDownloadUrl,
+        'alt': alt,
+      }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
           'Added to Favourites!!',
@@ -131,12 +138,24 @@ class _HomePageState extends State<HomePage> {
           label: 'Undo',
           onPressed: () {
             Hive.box('${user?.uid}-favourites').deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
+            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
+            removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            }); // when user removes an image from liked it goes to firestore
             setState(() {});
           },
         ),
       ));
     } else {
       Hive.box('${user?.uid}-favourites').deleteAt(index);
+      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove(); // RD deletion code
+      removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': imgShowUrl,
+        'imgDownloadUrl': imgDownloadUrl,
+        'alt': alt,
+      }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
           'Removed from Favourites!!',
@@ -153,28 +172,17 @@ class _HomePageState extends State<HomePage> {
             Favourites lastDeleted =
                 Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
             favouritesList.add(lastDeleted);
+            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            });
             setState(() {});
           },
         ),
       ));
     }
     setState(() {});
-    HapticFeedback.lightImpact();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    page = 2;
-    categories = getCategory();
-    scrollController = ScrollController();
-    currentMaxScrollExtent = 0.0;
-    auth = FirebaseAuth.instance;
-    user = auth.currentUser;
-    favouritesBox = Hive.openBox('${user?.uid}-favourites');
-    favouritesList = Hive.box('${user?.uid}-favourites');
-    database = FirebaseDatabase.instance.ref('users/${user?.uid}/');
-    favouritesRef = database.child('${user?.uid}-favourites/');
   }
 
   @override

@@ -1,5 +1,4 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
-// Todo Solve Image Cropping Issue through calling proper height and width in image view page
 // Todo Build UI for Image Sharing (Upayan)
 // Todo Build System to share Images through App (Kingshuk)
 // Todo Drag Down Page to go to the previous page (Kingshuk/Upayan)
@@ -241,7 +240,7 @@ class _ImageViewState extends State<ImageView>
                   .add_to_home_screen), //todo try ionicons or lineawesomeicons (upayan)
               backgroundColor: Colors.white,
               label: 'Homescreen',
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontFamily: 'Nexa',
                 fontWeight: FontWeight.bold,
               ),
@@ -253,7 +252,7 @@ class _ImageViewState extends State<ImageView>
               child: const Icon(Icons.lock),
               backgroundColor: Colors.white,
               label: 'Lockscreen',
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontFamily: 'Nexa',
                 fontWeight: FontWeight.bold,
               ),
@@ -265,7 +264,7 @@ class _ImageViewState extends State<ImageView>
               child: const Icon(Icons.now_wallpaper),
               backgroundColor: Colors.white,
               label: 'Both',
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontFamily: 'Nexa',
                 fontWeight: FontWeight.bold,
               ),
@@ -277,7 +276,7 @@ class _ImageViewState extends State<ImageView>
               child: const Icon(Icons.download),
               backgroundColor: Colors.white,
               label: 'Save',
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontFamily: 'Nexa',
                 fontWeight: FontWeight.bold,
               ),

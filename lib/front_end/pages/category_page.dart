@@ -1,8 +1,10 @@
 // This Page is for when the user clicks on a Category tile and lands on the page where all of the images of the same category is shown
 
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
@@ -107,6 +109,24 @@ class _CategoryPageState extends State<CategoryPage> {
   late Future<Box> favouritesBox;
   late Box<dynamic> favouritesList;
   late FirebaseAuth auth;
+  late final User? user;
+  late final DatabaseReference userFavouritesDatabase;
+  late final CollectionReference removedFromLiked;
+
+  @override
+  void initState() {
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
+    favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
+    userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
+    removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    getSearchWallpapers(widget.categoryName);
+    page = 2;
+    currentMaxScrollExtent = 0.0;
+    scrollController = ScrollController();
+    super.initState();
+  }
 
   Future<List<dynamic>> getSearchWallpapers(String query) async {
     Response url = await get(
@@ -131,12 +151,10 @@ class _CategoryPageState extends State<CategoryPage> {
             page++;
             if (url.statusCode == 200) {
               Map<String, dynamic> newPhotos = jsonDecode(url.body);
-              List<dynamic> photos = newPhotos['photos']
-                  .map((dynamic item) => Photos.fromJson(item))
-                  .toList();
-              setState(() {
-                photoList.addAll(photos);
-              });
+              photoList.addAll(newPhotos['photos']
+                  .map((dynamic item) => Photos.fromJson(item)).toList());
+
+              setState(() {});
             } else {
               throw Exception('Failed to Fetch Curated');
             }
@@ -168,7 +186,13 @@ class _CategoryPageState extends State<CategoryPage> {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
+      HapticFeedback.lightImpact(); // may remove later
       Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
+      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': imgShowUrl,
+        'imgDownloadUrl': imgDownloadUrl,
+        'alt': alt,
+      }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Added to Favourites!!', style: TextStyle(
             color: Colors.white,
@@ -181,12 +205,24 @@ class _CategoryPageState extends State<CategoryPage> {
           label: 'Undo',
           onPressed: () {
             Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
+            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
+            removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            }); // when user removes an image from liked it goes to firestore
             setState(() {});
           },
         ),
       ));
     } else {
       Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
+      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove(); // RD deletion code
+      removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': imgShowUrl,
+        'imgDownloadUrl': imgDownloadUrl,
+        'alt': alt,
+      }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Removed from Favourites!!', style: TextStyle(
             color: Colors.white,
@@ -201,25 +237,17 @@ class _CategoryPageState extends State<CategoryPage> {
             Favourites lastDeleted =
                 Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
             favouritesList.add(lastDeleted);
+            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+              'imgShowUrl': imgShowUrl,
+              'imgDownloadUrl': imgDownloadUrl,
+              'alt': alt,
+            }); // add to RD again
             setState(() {});
           },
         ),
       ));
     }
     setState(() {});
-    HapticFeedback.lightImpact();
-  }
-
-  @override
-  void initState() {
-    auth = FirebaseAuth.instance;
-    favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
-    getSearchWallpapers(widget.categoryName);
-    page = 2;
-    currentMaxScrollExtent = 0.0;
-    scrollController = ScrollController();
-    favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
-    super.initState();
   }
 
   @override
@@ -419,8 +447,9 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
               );
             } else {
-              return const Text(
-                  'data'); // Todo add Code for when Hive doensn't initialize(Kingshuk)
+              return const Scaffold(
+                backgroundColor: Colors.black,
+              );
             }
           } else {
             return const Scaffold(
