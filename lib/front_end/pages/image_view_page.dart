@@ -12,6 +12,7 @@ import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
@@ -262,9 +263,9 @@ class _ImageViewState extends State<ImageView>
                 setState(() {});
               }),
           SpeedDialChild(
-              child: const Icon(Icons.now_wallpaper),
+              child: Icon(Icons.share),
               backgroundColor: Colors.white,
-              label: 'Both',
+              label: 'Share',
               labelStyle: TextStyle(
                 fontFamily: 'Nexa',
                 fontWeight: FontWeight.bold,
