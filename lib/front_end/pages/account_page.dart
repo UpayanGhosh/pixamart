@@ -1,6 +1,7 @@
 // Todo Add Random avatar when user signs up
 
 import 'package:PixaMart/backend/model/auth_model.dart';
+import 'package:PixaMart/front_end/pages/download_page.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:PixaMart/front_end/widget/profile_list_item.dart';
@@ -129,10 +130,40 @@ class AccountPage extends StatelessWidget {
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: [
-                const ProfileListItem(
-                  icon: LineAwesomeIcons.download,
-                  text: 'Downloads',
-                  page: '', // Todo add downloads page (Kingshuk/Upayan)
+                Padding(
+                  padding:
+                      EdgeInsets.all(MediaQuery.of(context).size.width / 24.5),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DownloadPage()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blueAccent,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          padding: const EdgeInsets.all(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(LineAwesomeIcons.download),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 24.5,
+                          ),
+                          Text(
+                            'Downloads',
+                            style: TextStyle(
+                              fontFamily: 'Nexa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )),
                 ),
                 const ProfileListItem(
                   icon: LineAwesomeIcons.question_circle,

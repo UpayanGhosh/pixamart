@@ -90,6 +90,7 @@ flutter:
     - assets/lottie/ThankYou.json
     - assets/lottie/Working.json
     - assets/Mobile_Outline.png
+    - assets/lottie/Downloads.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
