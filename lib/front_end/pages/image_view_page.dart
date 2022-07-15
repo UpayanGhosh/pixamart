@@ -10,7 +10,10 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:ionicons/ionicons.dart';
+
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -66,7 +69,7 @@ class _ImageViewState extends State<ImageView>
     final result =
         await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
+        content: const Text(
           'Wallpaper saved to gallery Successfully',
           style: TextStyle(
             fontFamily: 'Nexa',
@@ -82,8 +85,7 @@ class _ImageViewState extends State<ImageView>
     await Future.delayed(const Duration(milliseconds: 500));
     opacity = 1.0;
     setState(() {});
-    await Future.delayed(const Duration(milliseconds: 500));
-    Navigator.pop(context);
+    await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.pop(context));
   }
 
   Future<void> setWallpaper(String place) async {
@@ -110,27 +112,26 @@ class _ImageViewState extends State<ImageView>
         location = WallpaperManager.BOTH_SCREEN;
       }
       //Todo Spawn a seperate Isolate to set the wallpaper from the downloaded file.
-      await WallpaperManager.setWallpaperFromFile(filePath, location);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set',
-          style: const TextStyle(
-            fontFamily: 'Nexa',
-            fontWeight: FontWeight.bold,
+      await WallpaperManager.setWallpaperFromFile(filePath, location).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set',
+            style: const TextStyle(
+              fontFamily: 'Nexa',
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      ));
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ));
+      });
       await updateProgressValue(
           newProgressValue: 100, currentProgressValue: progressValue.value);
       setState(() {});
       await Future.delayed(const Duration(milliseconds: 500));
       opacity = 0.0;
       setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500));
-      //Todo Pop an Alert Dialogue saying Wait until Wallpaper is set
-      Navigator.pop(context);
+      await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.pop(context));
     } else {
       Permission.storage.request();
     }
@@ -144,7 +145,7 @@ class _ImageViewState extends State<ImageView>
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: ImageFiltered(
@@ -161,31 +162,42 @@ class _ImageViewState extends State<ImageView>
               ),
             ),
           ),
-          SimpleShadow(
+          /*SimpleShadow(
             opacity: 0.8, // Default: 0.5
             color: Colors.black, // Default: Black
             offset: Offset(10, 10), // Default: Offset(2, 2)
             sigma: 7,
-            child: Container(
-              child: Image.asset('assets/Mobile_Outline.png',
-                  height: MediaQuery.of(context).size.height / 0.2,
-                  fit: BoxFit.contain),
+            child: Image.asset('assets/Mobile_Outline.png',
+                height: MediaQuery.of(context).size.height / 0.2,
+                fit: BoxFit.contain),
+          ),*/
+          Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  spreadRadius: 0,
+                  blurRadius: 50,
+                  color: Colors.black.withOpacity(0.1),
+                  offset: Offset(10, 10),
+                ),
+              ],
             ),
+            child: Image.asset('assets/Mobile_Outline.png',
+                height: MediaQuery.of(context).size.height / 0.2,
+                fit: BoxFit.contain),
           ),
-          SimpleShadow(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(75, 126, 75, 145),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Hero(
-                  tag: widget.imgShowUrl,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      widget.imgShowUrl,
-                      fit: BoxFit.cover,
-                    ),
+          Container(
+            margin: MediaQuery.of(context).orientation == Orientation.portrait ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 6.55, MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 5.9) : EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 7.55, MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 6.9),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Hero(
+                tag: widget.imgShowUrl,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.network(
+                    widget.imgShowUrl,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -198,7 +210,7 @@ class _ImageViewState extends State<ImageView>
               backgroundColor: Colors.transparent,
               title: Obx(() => Text(
                     '$dialogue',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontFamily: 'Nexa',
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -216,7 +228,7 @@ class _ImageViewState extends State<ImageView>
                     direction: Axis.horizontal,
                     center: Text(
                       '${(progressValue.value).toStringAsFixed(1)}%',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontFamily: 'Nexa',
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
@@ -262,15 +274,14 @@ class _ImageViewState extends State<ImageView>
                 setState(() {});
               }),
           SpeedDialChild(
-              child: Icon(Icons.share),
+              child: const Icon(Ionicons.share_social),
               backgroundColor: Colors.white,
               label: 'Share',
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontFamily: 'Nexa',
                 fontWeight: FontWeight.bold,
               ),
               onTap: () {
-                setWallpaper('bothscreen');
                 setState(() {});
               }),
           SpeedDialChild(

@@ -420,8 +420,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             } else {
-              return const Text(
-                  'data'); //Todo add code for when Hive doesn't initialize
+              return const Scaffold(
+                backgroundColor: Colors.black,
+              );
             }
           } else {
             return const Scaffold(
