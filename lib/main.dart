@@ -1,6 +1,6 @@
-//Todo try and add a notification system
+// Todo try and add a notification system
+// Todo try adding a showcase system for new users
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/routing/route_generator.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';

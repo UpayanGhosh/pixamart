@@ -1,7 +1,5 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
-// Todo Build UI for Image Sharing (Upayan)
 // Todo Build System to share Images through App (Kingshuk)
-// Todo Drag Down Page to go to the previous page (Kingshuk/Upayan)
 // Todo try different sounds with actions (Kingshuk)
 
 import 'dart:async';
@@ -146,7 +144,6 @@ class _ImageViewState extends State<ImageView>
           startPosition = details.globalPosition.dy;
         },
         onVerticalDragUpdate: (DragUpdateDetails details) {
-          print(details.globalPosition.dy - startPosition);
           updatePosition.value = details.globalPosition.dy;
           if ((updatePosition.value - startPosition > MediaQuery.of(context).size.height / 20.85) || updatePosition.value - startPosition < (-1 * MediaQuery.of(context).size.height / 20.85)) {
             Navigator.pop(context);

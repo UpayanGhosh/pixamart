@@ -321,15 +321,16 @@ class _SignupPageState extends State<SignupPage> {
                     onPressed: () async {
                       HapticFeedback.lightImpact();
                       try {
-                        _error.value =
-                        await _auth.registerWithEmailAndPassword(
-                            email: _email, password: _password).then((value) async {
-                              await Hive.openBox('${_auth.auth.currentUser?.uid}favourites').then((value) => Navigator.pop(context));
-                              return value;
-                        });
-                        print(_error.value);
+                        if (_email.isNotEmpty && _password.isNotEmpty) {
+                          _error.value =
+                          await _auth.registerWithEmailAndPassword(
+                              email: _email, password: _password).then((value) async {
+                            await Hive.openBox('${_auth.auth.currentUser?.uid}favourites');
+                            return value;
+                          });
+                        }
                       } catch (e) {
-
+                        Navigator.pop(context);
                       }
                     },
                     child: Text(
