@@ -2,7 +2,6 @@
 
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:PixaMart/front_end/widget/profile_list_item.dart';
 
@@ -130,22 +129,22 @@ class AccountPage extends StatelessWidget {
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: [
-                ProfileListItem(
+                const ProfileListItem(
                   icon: LineAwesomeIcons.download,
                   text: 'Downloads',
                   page: '', // Todo add downloads page (Kingshuk/Upayan)
                 ),
-                ProfileListItem(
+                const ProfileListItem(
                   icon: LineAwesomeIcons.question_circle,
                   text: 'Help & Support',
                   page: '/helpSupport',
                 ),
-                ProfileListItem(
+                const ProfileListItem(
                   icon: LineAwesomeIcons.cog,
                   text: 'Settings',
                   page: '/settings',
                 ),
-                ProfileListItem(
+                const ProfileListItem(
                   icon: LineAwesomeIcons.user_plus,
                   text: 'Invite a Friend',
                   page: '', //Todo Add a system to invite new users

@@ -52,9 +52,31 @@ class _HomePageState extends State<HomePage> {
     user = auth.currentUser;
     favouritesBox = Hive.openBox('${user?.uid}-favourites');
     favouritesList = Hive.box('${user?.uid}-favourites');
-    userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
+    userFavouritesDatabase =
+        FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
     photoList = [];
-    removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    removedFromLiked =
+        FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    syncData();
+  }
+
+
+
+  syncData() async {
+    print('starting');
+    if (favouritesList.isEmpty) {
+      final snapshot = await userFavouritesDatabase.get();
+      print('getting data');
+      final cloudFavourites = snapshot.children;
+      print('got data');
+      for(int i = 0; i < cloudFavourites.length; i++) {
+        var favourite = cloudFavourites.elementAt(i).value as Map;
+        Favourites fav = Favourites(favourite['imgShowUrl'], favourite['imgDownloadUrl'], favourite['alt']);
+        Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
+      }
+      print('synced');
+      setState(() {});
+    }
   }
 
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {
@@ -69,8 +91,11 @@ class _HomePageState extends State<HomePage> {
       photoList.addAll(photos);
       photos.removeRange(0, photos.length); // added new line
       scrollController.addListener(() async {
-        if (scrollController.offset >= scrollController.position.maxScrollExtent && !scrollController.position.outOfRange) {
-          if (currentMaxScrollExtent < scrollController.position.maxScrollExtent) {
+        if (scrollController.offset >=
+                scrollController.position.maxScrollExtent &&
+            !scrollController.position.outOfRange) {
+          if (currentMaxScrollExtent <
+              scrollController.position.maxScrollExtent) {
             currentMaxScrollExtent = scrollController.position.maxScrollExtent;
             page++;
             Response url = await get(
@@ -78,7 +103,6 @@ class _HomePageState extends State<HomePage> {
                     'https://api.pexels.com/v1/curated/?page=$page&per_page=80'),
                 headers: {"Authorization": getPexelsApiKey()});
             if (url.statusCode == 200) {
-              print(page);
               Map<String, dynamic> nextPage = jsonDecode(url.body);
               setState(() {
                 photoList.addAll(nextPage['photos']
@@ -137,7 +161,8 @@ class _HomePageState extends State<HomePage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('${user?.uid}-favourites').deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
+            Hive.box('${user?.uid}-favourites')
+                .deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
             userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
             removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
               'imgShowUrl': imgShowUrl,
@@ -150,7 +175,9 @@ class _HomePageState extends State<HomePage> {
       ));
     } else {
       Hive.box('${user?.uid}-favourites').deleteAt(index);
-      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove(); // RD deletion code
+      userFavouritesDatabase
+          .child(imgDownloadUrl.split('/')[4])
+          .remove(); // RD deletion code
       removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
         'imgShowUrl': imgShowUrl,
         'imgDownloadUrl': imgDownloadUrl,

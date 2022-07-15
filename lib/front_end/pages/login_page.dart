@@ -130,15 +130,15 @@ class _LoginPageState extends State<LoginPage> {
                             Column(
                               children: [
                                 Obx(
-                                  () => AnimatedOpacity(
+                                      () => AnimatedOpacity(
                                     duration: const Duration(milliseconds: 150),
                                     opacity: opacityManager[0].value,
                                     child: Text(
                                       "Login",
                                       style: TextStyle(
                                           fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
+                                              .size
+                                              .height /
                                               20.85,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
@@ -148,18 +148,18 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height / 41.7,
+                                  MediaQuery.of(context).size.height / 41.7,
                                 ),
                                 Obx(
-                                  () => AnimatedOpacity(
+                                      () => AnimatedOpacity(
                                     duration: const Duration(milliseconds: 250),
                                     opacity: opacityManager[1].value,
                                     child: Text(
                                       "Login to your account",
                                       style: TextStyle(
                                           fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
+                                              .size
+                                              .height /
                                               55.6,
                                           color: Colors.white,
                                           fontFamily: 'Nexa',
@@ -172,41 +172,41 @@ class _LoginPageState extends State<LoginPage> {
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal:
-                                      MediaQuery.of(context).size.width / 9.8),
+                                  MediaQuery.of(context).size.width / 9.8),
                               child: Column(
                                 children: [
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height /
                                         13.9,
                                     child: Obx(
-                                      () => AnimatedOpacity(
+                                          () => AnimatedOpacity(
                                         duration:
-                                            const Duration(milliseconds: 250),
+                                        const Duration(milliseconds: 250),
                                         opacity: opacityManager[2].value,
                                         child: Obx(
-                                          () => TextFormField(
+                                              () => TextFormField(
                                             enableInteractiveSelection: true,
                                             enableIMEPersonalizedLearning: true,
                                             enableSuggestions: true,
                                             keyboardType:
-                                                TextInputType.emailAddress,
+                                            TextInputType.emailAddress,
                                             onChanged: (val) async {
                                               setState(() => _email = val);
                                               if (_email.contains('@') &&
                                                   _email.contains('.')) {
                                                 List<String> userSignInMethods =
-                                                    [];
+                                                [];
                                                 userSignInMethods = await auth
                                                     .checkIfUserExists(
-                                                        email: _email);
+                                                    email: _email);
                                                 if (userSignInMethods.isEmpty &&
                                                     _email != '') {
                                                   emailProperties.value =
-                                                      'Account does\'nt exist';
+                                                  'Account does\'nt exist';
                                                   color[0].value = 'red';
                                                 } else {
                                                   emailProperties.value =
-                                                      'Account exists';
+                                                  'Account exists';
                                                   color[0].value = 'green';
                                                 }
                                               }
@@ -217,42 +217,42 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: Colors.white),
                                             decoration: InputDecoration(
                                                 enabledBorder:
-                                                    OutlineInputBorder(
+                                                OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                       width: 3,
                                                       color: color[0].value ==
-                                                              'red'
+                                                          'red'
                                                           ? Colors.red
                                                           : color[0].value ==
-                                                                  'green'
-                                                              ? Colors.green
-                                                              : Colors.white),
+                                                          'green'
+                                                          ? Colors.green
+                                                          : Colors.white),
                                                 ),
                                                 focusedBorder:
-                                                    OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            width: 3,
-                                                            color: color[0]
-                                                                        .value ==
-                                                                    'red'
-                                                                ? Colors.red
-                                                                : color[0].value ==
-                                                                        'green'
-                                                                    ? Colors
-                                                                        .green
-                                                                    : Colors
-                                                                        .white)),
+                                                OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 3,
+                                                        color: color[0]
+                                                            .value ==
+                                                            'red'
+                                                            ? Colors.red
+                                                            : color[0].value ==
+                                                            'green'
+                                                            ? Colors
+                                                            .green
+                                                            : Colors
+                                                            .white)),
                                                 labelText:
-                                                    emailProperties.value,
+                                                emailProperties.value,
                                                 labelStyle: TextStyle(
                                                     color: Colors.white,
                                                     fontFamily: 'Nexa',
                                                     fontWeight: FontWeight.bold,
                                                     fontSize:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height /
-                                                            52.125)),
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                        52.125)),
                                           ),
                                         ),
                                       ),
@@ -266,9 +266,9 @@ class _LoginPageState extends State<LoginPage> {
                                     height: MediaQuery.of(context).size.height /
                                         13.9,
                                     child: Obx(
-                                      () => AnimatedOpacity(
+                                          () => AnimatedOpacity(
                                         duration:
-                                            const Duration(milliseconds: 250),
+                                        const Duration(milliseconds: 250),
                                         opacity: opacityManager[3].value,
                                         child: TextFormField(
                                           obscureText: obscureText.value,
@@ -276,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
                                           enableIMEPersonalizedLearning: false,
                                           enableInteractiveSelection: true,
                                           keyboardType:
-                                              TextInputType.visiblePassword,
+                                          TextInputType.visiblePassword,
                                           autocorrect: false,
                                           onChanged: (val) {
                                             setState(() => _password = val);
@@ -289,54 +289,54 @@ class _LoginPageState extends State<LoginPage> {
                                               suffixIcon: _password == ''
                                                   ? null
                                                   : IconButton(
-                                                      onPressed: () {
-                                                        obscureText.value = !obscureText.value;
-                                                      },
-                                                      icon: obscureText.value
-                                                          ? const Icon(
-                                                              Ionicons
-                                                                  .eye_outline,
-                                                              color:
-                                                                  Colors.white,
-                                                            )
-                                                          : const Icon(
-                                                              Ionicons
-                                                                  .eye_off_outline,
-                                                              color:
-                                                                  Colors.white,
-                                                            )),
+                                                  onPressed: () {
+                                                    obscureText.value = !obscureText.value;
+                                                  },
+                                                  icon: obscureText.value
+                                                      ? const Icon(
+                                                    Ionicons
+                                                        .eye_outline,
+                                                    color:
+                                                    Colors.white,
+                                                  )
+                                                      : const Icon(
+                                                    Ionicons
+                                                        .eye_off_outline,
+                                                    color:
+                                                    Colors.white,
+                                                  )),
                                               enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                     width: 3,
                                                     color:
-                                                        color[1].value == 'red'
-                                                            ? Colors.red
-                                                            : color[1].value ==
-                                                                    'green'
-                                                                ? Colors.green
-                                                                : Colors.white),
+                                                    color[1].value == 'red'
+                                                        ? Colors.red
+                                                        : color[1].value ==
+                                                        'green'
+                                                        ? Colors.green
+                                                        : Colors.white),
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                       width: 3,
                                                       color: color[1].value ==
-                                                              'red'
+                                                          'red'
                                                           ? Colors.red
                                                           : color[1].value ==
-                                                                  'green'
-                                                              ? Colors.green
-                                                              : Colors.white)),
+                                                          'green'
+                                                          ? Colors.green
+                                                          : Colors.white)),
                                               labelText:
-                                                  passwordProperties.value,
+                                              passwordProperties.value,
                                               labelStyle: TextStyle(
                                                   color: Colors.white,
                                                   fontFamily: 'Nexa',
                                                   fontWeight: FontWeight.bold,
                                                   fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .height /
-                                                          52.125)),
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                      52.125)),
                                         ),
                                       ),
                                     ),
@@ -345,7 +345,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             Obx(
-                              () => AnimatedOpacity(
+                                  () => AnimatedOpacity(
                                 duration: const Duration(milliseconds: 250),
                                 opacity: opacityManager[4].value,
                                 child: ElevatedButton(
@@ -354,50 +354,51 @@ class _LoginPageState extends State<LoginPage> {
                                         color: Colors.transparent),
                                     padding: EdgeInsets.symmetric(
                                         horizontal:
-                                            MediaQuery.of(context).size.width /
-                                                2.8,
+                                        MediaQuery.of(context).size.width /
+                                            2.8,
                                         vertical:
-                                            MediaQuery.of(context).size.height /
-                                                41.7),
+                                        MediaQuery.of(context).size.height /
+                                            41.7),
                                     elevation: 0,
                                     primary: const Color(0xfff07371),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(50)),
+                                        BorderRadius.circular(50)),
                                   ),
                                   onPressed: () async {
                                     HapticFeedback.lightImpact();
                                     try {
-                                      _error.value =
-                                          await auth.loginWithEmailAndPassword(
-                                              email: _email,
-                                              password: _password).then((value) async {
-                                                await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) => Navigator.pop(context));
-                                                return value;
-                                          });
-                                      print(_error.value);
-                                      if (_error.value == 'wrong-password') {
-                                        color[1].value = 'red';
-                                        passwordProperties.value =
+                                      if(_email.isNotEmpty && _password.isNotEmpty) {
+                                        _error.value =
+                                        await auth.loginWithEmailAndPassword(
+                                            email: _email,
+                                            password: _password).then((value) async {
+                                          await Hive.openBox('${auth.auth.currentUser?.uid}-favourites');
+                                          if (value == 'wrong-password') {
+                                            color[1].value = 'red';
+                                            passwordProperties.value =
                                             'Wrong Password';
-                                        HapticFeedback.vibrate();
+                                            HapticFeedback.vibrate();
+                                          }
+                                          return value;
+                                        });
                                       }
                                     } catch (e) {
-
+                                      Navigator.pop(context);
                                     }
                                   },
                                   child: Obx(
-                                    () => AnimatedOpacity(
+                                        () => AnimatedOpacity(
                                       duration:
-                                          const Duration(milliseconds: 250),
+                                      const Duration(milliseconds: 250),
                                       opacity: opacityManager[5].value,
                                       child: Text(
                                         "Log In",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
+                                                .size
+                                                .height /
                                                 46.33,
                                             color: Colors.white,
                                             fontFamily: 'Nexa'),
@@ -408,7 +409,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             Obx(
-                              () => AnimatedOpacity(
+                                  () => AnimatedOpacity(
                                 duration: const Duration(milliseconds: 250),
                                 opacity: opacityManager[6].value,
                                 child: ElevatedButton(
@@ -417,16 +418,16 @@ class _LoginPageState extends State<LoginPage> {
                                         color: Colors.transparent),
                                     padding: EdgeInsets.symmetric(
                                         horizontal:
-                                            MediaQuery.of(context).size.width /
-                                                4.35,
+                                        MediaQuery.of(context).size.width /
+                                            4.35,
                                         vertical:
-                                            MediaQuery.of(context).size.height /
-                                                41.7),
+                                        MediaQuery.of(context).size.height /
+                                            41.7),
                                     elevation: 0,
                                     primary: const Color(0xff63c54f),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(50)),
+                                        BorderRadius.circular(50)),
                                   ),
                                   onPressed: () async {
                                     HapticFeedback.lightImpact();
@@ -439,8 +440,8 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize:
-                                            MediaQuery.of(context).size.height /
-                                                46.33,
+                                        MediaQuery.of(context).size.height /
+                                            46.33,
                                         color: Colors.white,
                                         fontFamily: 'Nexa'),
                                   ),
@@ -454,34 +455,34 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Obx(
-                                    () => AnimatedOpacity(
+                                        () => AnimatedOpacity(
                                       duration:
-                                          const Duration(milliseconds: 250),
+                                      const Duration(milliseconds: 250),
                                       opacity: opacityManager[7].value,
                                       child:
-                                          const Text("Don't have an account?",
-                                              style: TextStyle(
-                                                fontFamily: 'Nexa',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              )),
+                                      const Text("Don't have an account?",
+                                          style: TextStyle(
+                                            fontFamily: 'Nexa',
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          )),
                                     ),
                                   ),
                                   Obx(
-                                    () => AnimatedOpacity(
+                                        () => AnimatedOpacity(
                                       duration:
-                                          const Duration(milliseconds: 250),
+                                      const Duration(milliseconds: 250),
                                       opacity: opacityManager[8].value,
                                       child: Text(
                                         "Sign up",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
+                                                .size
+                                                .height /
                                                 46.33,
                                             color: Colors.white,
                                             fontFamily: 'Nexa'),
@@ -501,7 +502,7 @@ class _LoginPageState extends State<LoginPage> {
                             duration: const Duration(milliseconds: 250),
                             opacity: opacityManager[9].value,
                             child:
-                                Lottie.asset('assets/lottie/LoginPage.json'))),
+                            Lottie.asset('assets/lottie/LoginPage.json'))),
                       ),
                     ],
                   ),
