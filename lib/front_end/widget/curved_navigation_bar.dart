@@ -1,5 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/account_page.dart';
 import 'package:PixaMart/front_end/pages/favourites_page.dart';
@@ -9,7 +9,8 @@ import 'package:ionicons/ionicons.dart';
 
 
 class AppBottomNavigationBar extends StatefulWidget {
-  const AppBottomNavigationBar({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const AppBottomNavigationBar({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   State<AppBottomNavigationBar> createState() => _AppBottomNavigationBarState();
@@ -25,13 +26,15 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   void initState() {
     super.initState();
     pagesAll = [
-    const HomePage(),
-    const FavouritesPage(),
-     AccountPage()
+      HomePage(initialLink: widget.initialLink),
+      const FavouritesPage(),
+      AccountPage()
     ];
     myIndex = 0;
     iconSize = 0.0.obs;
   }
+
+
   @override
   Widget build(BuildContext context) {
     iconSize.value = MediaQuery.of(context).size.height;

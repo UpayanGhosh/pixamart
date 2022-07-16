@@ -4,6 +4,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Getx;
 import 'package:hive/hive.dart';
@@ -22,7 +23,8 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const HomePage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -41,6 +43,22 @@ class _HomePageState extends State<HomePage> {
   late final DatabaseReference userFavouritesDatabase;
   late final CollectionReference removedFromLiked;
 
+
+  getInitialLink() async {
+    if(widget.initialLink != null) {
+      final String link = widget.initialLink.toString();
+      await FirebaseFirestore.instance.collection('app-details').doc('link').set({
+        'link': link
+          }).then((value) {
+        Navigator.pushNamed(context, '/imageView', arguments: {
+          'imgShowUrl': 'https://images.pexels.com/photos/$link/snake-rainbow-boa-reptile-scale.jpg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
+          'imgDownloadUrl': 'https://images.pexels.com/photos/$link/snake-rainbow-boa-reptile-scale.jpg',
+          'alt': "Shared Image"
+        });
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,10 +72,9 @@ class _HomePageState extends State<HomePage> {
     favouritesList = Hive.box('${user?.uid}-favourites');
     userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
     removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
-    photoList = [];
     syncFavourites();
+    photoList = [];
   }
-
 
   syncFavourites() async {
     if (favouritesList.isEmpty) {
@@ -213,6 +230,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //getInitialLink();
     return FutureBuilder(
         future: favouritesBox,
         builder: (context, snapshot) {

@@ -12,8 +12,8 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        final args = settings.arguments;
-        return MaterialPageRoute(builder: (context) => SplashScreen());
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (context) => SplashScreen(initialLink: args['initialLink'],));
       case '/category':
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -34,12 +34,14 @@ class RouteGenerator {
             builder: (context) =>
                 SearchPageNavigation(searchQuery: args['searchQuery']));
       case '/navigationBar':
+        final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (context) => AppBottomNavigationBar());
+            builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'],));
       case '/signUp':
         return MaterialPageRoute(builder: (context) => SignupPage());
       case '/login':
-        return MaterialPageRoute(builder: (context) => LoginPage());
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (context) => LoginPage(initialLink: args['initialLink']));
       case '/helpSupport':
         return MaterialPageRoute(builder: (context) => HelpSupport());
       default:

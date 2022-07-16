@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
@@ -7,7 +8,8 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const WelcomePage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
@@ -212,7 +214,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       }
                       confettiController.play();
                       await Future.delayed(const Duration(milliseconds: 1700));
-                      Navigator.pushNamed(context, '/login');
+                      Navigator.pushNamed(context, '/login', arguments: {
+                        'initialLink': widget.initialLink,
+                      });
                     },
                     child: Text(
                       "Log In",

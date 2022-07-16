@@ -1,7 +1,7 @@
 // Todo try and add a notification system (kingshuk)
 // Todo try adding a showcase system for new users (kingshuk)
-import 'package:PixaMart/front_end/pages/download_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/routing/route_generator.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -20,16 +20,19 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   Hive.registerAdapter(FavouritesAdapter());
-  runApp(PixaMartApp());
+  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+  print(initialLink.toString());
+  runApp(PixaMartApp(initialLink: initialLink));
 }
 
 class PixaMartApp extends StatelessWidget {
-  const PixaMartApp({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const PixaMartApp({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: SplashScreen(),
+      home: SplashScreen(initialLink: initialLink),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.black),
       title: 'PixaMart',
