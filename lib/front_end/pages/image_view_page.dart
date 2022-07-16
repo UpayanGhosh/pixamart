@@ -3,10 +3,15 @@
 // Todo try different sounds with actions (Kingshuk)
 
 import 'dart:async';
+import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:dio/dio.dart';
@@ -19,6 +24,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'dart:ui';
+
+import 'package:share_plus/share_plus.dart';
 
 class ImageView extends StatefulWidget {
   final String imgShowUrl;
@@ -47,6 +54,7 @@ class _ImageViewState extends State<ImageView>
   late final User? user;
   late Favourites fav;
   late final CollectionReference cloudDownloads;
+  late BaseCacheManager cacheManager;
 
   @override
   void initState() {
@@ -62,6 +70,7 @@ class _ImageViewState extends State<ImageView>
     fav = Favourites(widget.imgShowUrl, widget.imgDownloadUrl, widget.alt);
     cloudDownloads =
         FirebaseFirestore.instance.collection('${user?.uid}-downloads/');
+    cacheManager = DefaultCacheManager();
   }
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
@@ -104,7 +113,7 @@ class _ImageViewState extends State<ImageView>
         ),
       );
       final result =
-      await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+          await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
             'Wallpaper saved to gallery Successfully',
@@ -115,14 +124,15 @@ class _ImageViewState extends State<ImageView>
           ),
           behavior: SnackBarBehavior.floating,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
       await updateProgressValue(
           newProgressValue: 100, currentProgressValue: progressValue.value);
       setState(() {});
       await Future.delayed(const Duration(milliseconds: 500));
       opacity = 1.0;
       setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.pop(context));
+      await Future.delayed(const Duration(milliseconds: 500))
+          .then((value) => Navigator.pop(context));
     } else {
       Permission.storage.request();
     }
@@ -144,7 +154,8 @@ class _ImageViewState extends State<ImageView>
         });
       }
       var dir = await getExternalStorageDirectory();
-      String filePath = '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
+      String filePath =
+          '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
       await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
         dialogue = 'Setting as Wallpaper'.obs;
         await updateProgressValue(
@@ -159,7 +170,8 @@ class _ImageViewState extends State<ImageView>
       } else {
         location = WallpaperManager.BOTH_SCREEN;
       }
-      await WallpaperManager.setWallpaperFromFile(filePath, location).then((value) {
+      await WallpaperManager.setWallpaperFromFile(filePath, location)
+          .then((value) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
             '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set',
@@ -169,7 +181,8 @@ class _ImageViewState extends State<ImageView>
             ),
           ),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ));
       });
       await updateProgressValue(
@@ -178,7 +191,8 @@ class _ImageViewState extends State<ImageView>
       await Future.delayed(const Duration(milliseconds: 500));
       opacity = 0.0;
       setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.pop(context));
+      await Future.delayed(const Duration(milliseconds: 500))
+          .then((value) => Navigator.pop(context));
     } else {
       Permission.storage.request();
     }
@@ -193,7 +207,10 @@ class _ImageViewState extends State<ImageView>
         },
         onVerticalDragUpdate: (DragUpdateDetails details) {
           updatePosition.value = details.globalPosition.dy;
-          if ((updatePosition.value - startPosition > MediaQuery.of(context).size.height / 20.85) || updatePosition.value - startPosition < (-1 * MediaQuery.of(context).size.height / 20.85)) {
+          if ((updatePosition.value - startPosition >
+                  MediaQuery.of(context).size.height / 20.85) ||
+              updatePosition.value - startPosition <
+                  (-1 * MediaQuery.of(context).size.height / 20.85)) {
             Navigator.pop(context);
           }
         },
@@ -201,7 +218,10 @@ class _ImageViewState extends State<ImageView>
           backgroundColor: Colors.transparent,
           body: AnimatedScale(
             duration: const Duration(milliseconds: 500),
-            scale: (1 - updatePosition.value / MediaQuery.of(context).size.height / 1.39),
+            scale: (1 -
+                updatePosition.value /
+                    MediaQuery.of(context).size.height /
+                    1.39),
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -226,7 +246,6 @@ class _ImageViewState extends State<ImageView>
                       ),
                     ),
                   ),
-
                   Container(
                     decoration: BoxDecoration(
                       boxShadow: [
@@ -243,7 +262,18 @@ class _ImageViewState extends State<ImageView>
                         fit: BoxFit.contain),
                   ),
                   Container(
-                    margin: MediaQuery.of(context).orientation == Orientation.portrait ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 6.55, MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 5.9) : EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 7.55, MediaQuery.of(context).size.width / 5.6, MediaQuery.of(context).size.height / 6.9),
+                    margin: MediaQuery.of(context).orientation ==
+                            Orientation.portrait
+                        ? EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width / 5.6,
+                            MediaQuery.of(context).size.height / 6.55,
+                            MediaQuery.of(context).size.width / 5.6,
+                            MediaQuery.of(context).size.height / 5.9)
+                        : EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width / 5.6,
+                            MediaQuery.of(context).size.height / 7.55,
+                            MediaQuery.of(context).size.width / 5.6,
+                            MediaQuery.of(context).size.height / 6.9),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Hero(
@@ -307,8 +337,7 @@ class _ImageViewState extends State<ImageView>
             spaceBetweenChildren: 12,
             children: [
               SpeedDialChild(
-                  child: const Icon(Icons
-                      .add_to_home_screen),
+                  child: const Icon(Icons.add_to_home_screen),
                   backgroundColor: Colors.white,
                   label: 'Homescreen',
                   labelStyle: const TextStyle(
@@ -339,7 +368,24 @@ class _ImageViewState extends State<ImageView>
                     fontFamily: 'Nexa',
                     fontWeight: FontWeight.bold,
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    final dynamicLinkParams = DynamicLinkParameters(
+                      link:
+                          Uri.parse("${widget.imgDownloadUrl.split('/')[4]}/"),
+                      uriPrefix: "https://pixa.page.link/image/",
+                      /*androidParameters: const AndroidParameters(
+                          packageName: "com.wallpaper.pixamart"),
+                      iosParameters:
+                          const IOSParameters(bundleId: "com.example.pixamart"),*/
+                      /*socialMetaTagParameters: SocialMetaTagParameters(
+                        imageUrl: Uri.parse('${widget.imgShowUrl}'),
+                      ),*/
+                    );
+                    final dynamicLink = await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
+                    print('hi');
+                    //await Share.share('https://pixa.page.link/image/?link=https://www.pixamart.com/?${widget.imgDownloadUrl.split('/')[4]}&si=${widget.imgShowUrl}');
+                    List beautifulSynonyms = ['beautiful', 'aesthetic', 'cute', 'lovely', 'stunning'];
+                    await Share.share('${dynamicLink}\nHey Ya! ╚(″⚈ᴗ⚈)╗ \n${auth.currentUser?.email} just sent you this ${beautifulSynonyms[Random().nextInt(5)]} wallpaper (❁´◡`❁) \n however we are sorry to say, you cannot currently see it! (╥╯ᗝ╰╥) \n We were too dumb to write the code for that ฅ^•ﻌ•^ฅ \n But we promise we would fix it as soon as we get smart and in the meantime perhaps you would check out some more wallpapers like this on our app 乁(´•‿•`)ㄏ');
                     setState(() {});
                   }),
               SpeedDialChild(
@@ -356,7 +402,8 @@ class _ImageViewState extends State<ImageView>
                   }),
             ],
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
         ),
       ),
     );

@@ -1,12 +1,14 @@
 import 'package:PixaMart/front_end/pages/welcome_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:hive/hive.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const SplashScreen({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -62,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 builder: (context, snapshot) {
                   if(snapshot.connectionState == ConnectionState.done) {
                     if(snapshot.hasData) {
-                      return const AppBottomNavigationBar();
+                      return AppBottomNavigationBar(initialLink: widget.initialLink,);
                     } else {
                       return const Scaffold(
                         backgroundColor: Colors.black87,
@@ -75,9 +77,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   }
                 },
               );
-              return const AppBottomNavigationBar();
             } else {
-              return const WelcomePage();
+              return WelcomePage(initialLink: widget.initialLink);
             }
           },
         ));

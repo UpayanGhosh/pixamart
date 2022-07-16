@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const LoginPage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -97,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
         stream: auth.auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const AppBottomNavigationBar();
+            return AppBottomNavigationBar(initialLink: widget.initialLink,);
           } else {
             return Scaffold(
               resizeToAvoidBottomInset: false,
