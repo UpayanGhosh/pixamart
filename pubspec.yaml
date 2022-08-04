@@ -1,5 +1,5 @@
 name: PixaMart
-description: Pixamart
+description: Pixamart is a Wallpaper App!
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -15,7 +15,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+4
+version: 2.2.0+15
+# Remember to change buildNumber in Firestore
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -35,7 +36,6 @@ dependencies:
   page_transition: ^2.0.5
   lottie: ^1.3.0
   flutter_speed_dial: ^6.0.0
-  permission_handler: ^10.0.0
   path_provider: ^2.0.11
   curved_navigation_bar: ^1.0.3
   hive: ^2.2.3
@@ -52,8 +52,10 @@ dependencies:
   firebase_database: ^9.0.18
   google_sign_in: ^5.4.0
   cloud_firestore: ^3.3.0
-  firebase_dynamic_links: ^4.3.2
+  firebase_dynamic_links: ^4.3.3
   share_plus: ^4.0.10
+  package_info_plus: ^1.4.3
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:
@@ -81,18 +83,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/rive/Welcome.riv
-    - assets/rive/Bear.riv
-    - assets/lottie/Rocket.json
-    - assets/lottie/Loading.json
-    - assets/lottie/Server_Error.json
-    - assets/lottie/SearchIcon.json
-    - assets/lottie/LoginPage.json
-    - assets/lottie/Help.json
-    - assets/lottie/ThankYou.json
-    - assets/lottie/Working.json
-    - assets/Mobile_Outline.png
-    - assets/lottie/Downloads.json
+    - assets/rive/
+    - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

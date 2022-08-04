@@ -80,7 +80,7 @@ class _DownloadPageState extends State<DownloadPage> {
                               borderRadius: BorderRadius.circular(16),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/imageView',
+                                  Navigator.pushNamed(context, '/imageView/',
                                       arguments: {
                                         'imgShowUrl': downloads.imgShowUrl,
                                         'imgDownloadUrl': downloads.imgDownloadUrl,

@@ -345,7 +345,7 @@ class _SearchPageState extends State<SearchPage> {
                                                   },
                                                   onTap: () {
                                                     Navigator.pushNamed(
-                                                        context, '/imageView',
+                                                        context, '/imageView/',
                                                         arguments: {
                                                           'imgShowUrl': photo
                                                               .src.portrait,

@@ -3,14 +3,12 @@
 // Todo try different sounds with actions (Kingshuk)
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
@@ -20,7 +18,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'dart:ui';
@@ -92,110 +89,96 @@ class _ImageViewState extends State<ImageView>
   }
 
   saveToGallery() async {
-    Map<Permission, PermissionStatus> status = await [
-      Permission.storage,
-    ].request();
-    if (status[Permission.storage]!.isGranted) {
-      opacity = 1.0;
-      int index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
-      if (index == -1) {
-        downloadsList.add(fav);
-        cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
-          'imgShowUrl': widget.imgShowUrl,
-          'imgDownloadUrl': widget.imgDownloadUrl,
-          'alt': widget.alt,
-        });
-      }
-      var response = await Dio().get(
-        widget.imgDownloadUrl,
-        options: Options(
-          responseType: ResponseType.bytes,
-        ),
-      );
-      final result =
-          await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text(
-            'Wallpaper saved to gallery Successfully',
-            style: TextStyle(
-              fontFamily: 'Nexa',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
-      await updateProgressValue(
-          newProgressValue: 100, currentProgressValue: progressValue.value);
-      setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500));
-      opacity = 1.0;
-      setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500))
-          .then((value) => Navigator.pop(context));
-    } else {
-      Permission.storage.request();
+    opacity = 1.0;
+    int index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
+    if (index == -1) {
+      downloadsList.add(fav);
+      cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': widget.imgShowUrl,
+        'imgDownloadUrl': widget.imgDownloadUrl,
+        'alt': widget.alt,
+      });
     }
+    var response = await Dio().get(
+      widget.imgDownloadUrl,
+      options: Options(
+        responseType: ResponseType.bytes,
+      ),
+    );
+    final result =
+        await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text(
+          'Wallpaper saved to gallery Successfully',
+          style: TextStyle(
+            fontFamily: 'Nexa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))));
+    await updateProgressValue(
+        newProgressValue: 100, currentProgressValue: progressValue.value);
+    setState(() {});
+    await Future.delayed(const Duration(milliseconds: 500));
+    opacity = 1.0;
+    setState(() {});
+    await Future.delayed(const Duration(milliseconds: 500))
+        .then((value) => Navigator.pop(context));
   }
 
   Future<void> setWallpaper(String place) async {
-    Map<Permission, PermissionStatus> status = await [
-      Permission.storage,
-    ].request();
-    if (status[Permission.storage]!.isGranted) {
-      opacity = 1.0;
-      int index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
-      if (index == -1) {
-        downloadsList.add(fav);
-        cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
-          'imgShowUrl': widget.imgShowUrl,
-          'imgDownloadUrl': widget.imgDownloadUrl,
-          'alt': widget.alt,
-        });
-      }
-      var dir = await getExternalStorageDirectory();
-      String filePath =
-          '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
-      await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
-        dialogue = 'Setting as Wallpaper'.obs;
-        await updateProgressValue(
-            newProgressValue: 40, currentProgressValue: progressValue.value);
-        setState(() {});
+    opacity = 1.0;
+    int index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
+    if (index == -1) {
+      downloadsList.add(fav);
+      cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
+        'imgShowUrl': widget.imgShowUrl,
+        'imgDownloadUrl': widget.imgDownloadUrl,
+        'alt': widget.alt,
       });
-      int location;
-      if (place == 'homescreen') {
-        location = WallpaperManager.HOME_SCREEN;
-      } else if (place == 'lockscreen') {
-        location = WallpaperManager.LOCK_SCREEN;
-      } else {
-        location = WallpaperManager.BOTH_SCREEN;
-      }
-      await WallpaperManager.setWallpaperFromFile(filePath, location)
-          .then((value) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set',
-            style: const TextStyle(
-              fontFamily: 'Nexa',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ));
-      });
-      await updateProgressValue(
-          newProgressValue: 100, currentProgressValue: progressValue.value);
-      setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500));
-      opacity = 0.0;
-      setState(() {});
-      await Future.delayed(const Duration(milliseconds: 500))
-          .then((value) => Navigator.pop(context));
-    } else {
-      Permission.storage.request();
     }
+    var dir = await getExternalStorageDirectory();
+    int midProgressValue = Random().nextInt(16) + 25;
+    String filePath = '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
+    await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
+      dialogue = 'Setting as Wallpaper'.obs;
+      await updateProgressValue(
+          newProgressValue: midProgressValue,
+          currentProgressValue: progressValue.value);
+      setState(() {});
+    });
+    int location;
+    if (place == 'homescreen') {
+      location = WallpaperManager.HOME_SCREEN;
+    } else if (place == 'lockscreen') {
+      location = WallpaperManager.LOCK_SCREEN;
+    } else {
+      location = WallpaperManager.BOTH_SCREEN;
+    }
+    await WallpaperManager.setWallpaperFromFile(filePath, location)
+        .then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          '${location == 1 ? "HomeScreen" : location == 2 ? "LockScreen" : ""} Wallpaper is set',
+          style: const TextStyle(
+            fontFamily: 'Nexa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ));
+    });
+    await updateProgressValue(
+        newProgressValue: 100, currentProgressValue: progressValue.value);
+    setState(() {});
+    await Future.delayed(const Duration(milliseconds: 500));
+    opacity = 0.0;
+    setState(() {});
+    await Future.delayed(const Duration(milliseconds: 500))
+        .then((value) => Navigator.pop(context));
   }
 
   @override
@@ -324,6 +307,7 @@ class _ImageViewState extends State<ImageView>
                       ),
                     ),
                   ),
+                  Transform.translate(offset: Offset(0, -(MediaQuery.of(context).size.height / 6.5)), child: Transform.scale(scale: MediaQuery.of(context).size.width / 520, child: Image.asset('assets/apps.png'))),
                 ],
               ),
             ),
@@ -381,11 +365,18 @@ class _ImageViewState extends State<ImageView>
                         imageUrl: Uri.parse('${widget.imgShowUrl}'),
                       ),*/
                     );
-                    final dynamicLink = await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
-                    print('hi');
+                    final dynamicLink = await FirebaseDynamicLinks.instance
+                        .buildLink(dynamicLinkParams);
                     //await Share.share('https://pixa.page.link/image/?link=https://www.pixamart.com/?${widget.imgDownloadUrl.split('/')[4]}&si=${widget.imgShowUrl}');
-                    List beautifulSynonyms = ['beautiful', 'aesthetic', 'cute', 'lovely', 'stunning'];
-                    await Share.share('${dynamicLink}\nHey Ya! ╚(″⚈ᴗ⚈)╗ \n${auth.currentUser?.email} just sent you this ${beautifulSynonyms[Random().nextInt(5)]} wallpaper (❁´◡`❁) \n however we are sorry to say, you cannot currently see it! (╥╯ᗝ╰╥) \n We were too dumb to write the code for that ฅ^•ﻌ•^ฅ \n But we promise we would fix it as soon as we get smart and in the meantime perhaps you would check out some more wallpapers like this on our app 乁(´•‿•`)ㄏ');
+                    List beautifulSynonyms = [
+                      'beautiful',
+                      'aesthetic',
+                      'cute',
+                      'lovely',
+                      'stunning'
+                    ];
+                    await Share.share(
+                        '${dynamicLink}\nHey Ya! ╚(″⚈ᴗ⚈)╗ \n${auth.currentUser?.email} just sent you this ${beautifulSynonyms[Random().nextInt(5)]} wallpaper (❁´◡`❁) \n however we are sorry to say, you cannot currently see it! (╥╯ᗝ╰╥) \n We were too dumb to write the code for that ฅ^•ﻌ•^ฅ \n But we promise we would fix it as soon as we get smart and in the meantime perhaps you would check out some more wallpapers like this on our app 乁(´•‿•`)ㄏ');
                     setState(() {});
                   }),
               SpeedDialChild(

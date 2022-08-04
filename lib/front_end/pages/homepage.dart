@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   getInitialLink() async {
     if(widget.initialLink != null) {
       final String link = widget.initialLink.toString();
+      print('link = $link');
       await FirebaseFirestore.instance.collection('app-details').doc('link').set({
         'link': link
           }).then((value) {
@@ -341,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                                                       onTap: () {
                                                         Navigator.pushNamed(
                                                             context,
-                                                            '/imageView',
+                                                            '/imageView/${photo.src.portrait.split('/')[4]}',
                                                             arguments: {
                                                               'imgShowUrl':
                                                                   photo.src

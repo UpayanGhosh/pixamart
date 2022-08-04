@@ -64,7 +64,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         borderRadius: BorderRadius.circular(16),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, '/imageView',
+                            Navigator.pushNamed(context, '/imageView/',
                                 arguments: {
                                   'imgShowUrl': favourites.imgShowUrl,
                                   'imgDownloadUrl': favourites.imgDownloadUrl,
@@ -170,7 +170,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     borderRadius: BorderRadius.circular(16),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/imageView', arguments: {
+                        Navigator.pushNamed(context, '/imageView/', arguments: {
                           'imgShowUrl': favourites.imgShowUrl,
                           'imgDownloadUrl': favourites.imgDownloadUrl,
                           'alt': favourites.alt,

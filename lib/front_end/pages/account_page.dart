@@ -170,7 +170,7 @@ class AccountPage extends StatelessWidget {
                   text: 'Help & Support',
                   page: '/helpSupport',
                 ),
-                const ProfileListItem(
+                /*const ProfileListItem(
                   icon: LineAwesomeIcons.cog,
                   text: 'Settings',
                   page: '/settings',
@@ -179,7 +179,7 @@ class AccountPage extends StatelessWidget {
                   icon: LineAwesomeIcons.user_plus,
                   text: 'Invite a Friend',
                   page: '',
-                ),
+                ),*/
                 Padding(
                   padding:
                       EdgeInsets.all(MediaQuery.of(context).size.width / 24.5),
