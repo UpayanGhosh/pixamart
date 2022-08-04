@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,8 @@ import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+  final PendingDynamicLinkData? initialLink;
+  const SignupPage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -144,7 +146,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: TextStyle(
                           fontFamily: 'Nexa',
                           fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                          fontSize: MediaQuery.of(context).size.height / 55.628,
                           color: Colors.white,
                         ),
                       ),
@@ -190,7 +192,7 @@ class _SignupPageState extends State<SignupPage> {
                                 }
                               },
                               cursorColor: Colors.white,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
@@ -210,7 +212,7 @@ class _SignupPageState extends State<SignupPage> {
                                                   ? Colors.green
                                                   : Colors.white)),
                                   labelText: emailProperties.value,
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Nexa',
                                     fontWeight: FontWeight.bold,
@@ -221,7 +223,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: MediaQuery.of(context).size.height / 27.814,
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 13.9,
@@ -290,7 +292,7 @@ class _SignupPageState extends State<SignupPage> {
                                               ? Colors.yellowAccent
                                               : Colors.white)),
                                   labelText: passwordProperties.value,
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Nexa',
                                       fontWeight: FontWeight.bold)),
@@ -339,7 +341,7 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Nexa',
-                        fontSize: MediaQuery.of(context).size.height / 49.2,
+                        fontSize: MediaQuery.of(context).size.height / 50.879,
                         color: Colors.white,
                       ),
                     ),
@@ -374,7 +376,7 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(
                         fontFamily: 'Nexa',
                         fontWeight: FontWeight.bold,
-                        fontSize: MediaQuery.of(context).size.height / 49.05,
+                        fontSize: MediaQuery.of(context).size.height / 50.571,
                         color: Colors.white,
                       ),
                     ),
@@ -383,7 +385,9 @@ class _SignupPageState extends State<SignupPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacementNamed(context, '/login');
+                  Navigator.pushReplacementNamed(context, '/login', arguments: {
+                    'initialLink': widget.initialLink,
+                  });
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

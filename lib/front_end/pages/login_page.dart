@@ -434,7 +434,7 @@ class _LoginPageState extends State<LoginPage> {
                                     HapticFeedback.lightImpact();
                                     await auth.loginWithGoogle().then((value) async {
                                       await Hive.openBox('${auth.auth.currentUser?.uid}-favourites').then((value) async {
-                                        await Future.delayed(Duration(milliseconds: 300)).then((value) => Navigator.pop(context));
+                                        await Future.delayed(const Duration(milliseconds: 300)).then((value) => Navigator.pop(context));
                                       });
                                     }); // use alert dialogue to engage the user while hive initializes
                                   },
@@ -454,7 +454,9 @@ class _LoginPageState extends State<LoginPage> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.pushReplacementNamed(
-                                    context, '/signUp');
+                                    context, '/signUp', arguments: {
+                                      'initialLink': widget.initialLink,
+                                });
                               },
                               child: Row(
                                 mainAxisAlignment:
@@ -505,7 +507,7 @@ class _LoginPageState extends State<LoginPage> {
                             duration: const Duration(milliseconds: 250),
                             opacity: opacityManager[9].value,
                             child:
-                            Lottie.asset('assets/lottie/LoginPage.json'))),
+                            Lottie.asset('assets/lottie/Loginpage.json'))),
                       ),
                     ],
                   ),

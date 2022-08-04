@@ -10,7 +10,52 @@ import 'package:PixaMart/front_end/pages/splash_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
+    if(settings.name == '/') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(builder: (context) => SplashScreen(initialLink: args['initialLink'],));
+    }
+    if(settings.name == '/category') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => CategoryPageNavigation(
+            categoryName: args['categoryName'],
+          ));
+    }
+    if(settings.name?.split('/')[1] == 'imageView') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => ImageView(
+            imgShowUrl: args['imgShowUrl'],
+            imgDownloadUrl: args['imgDownloadUrl'],
+            alt: args['alt'],
+          ));
+    }
+    if(settings.name == '/search') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) =>
+              SearchPageNavigation(searchQuery: args['searchQuery']));
+    }
+    if(settings.name == '/navigationBar') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'],));
+    }
+    if(settings.name == '/signUp') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(builder: (context) => SignupPage(initialLink: args['initialLink']));
+    }
+    if(settings.name == '/login') {
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(builder: (context) => LoginPage(initialLink: args['initialLink']));
+    }
+    if(settings.name == '/helpSupport') {
+      return MaterialPageRoute(builder: (context) => const HelpSupport());
+    }
+    else {
+      return MaterialPageRoute(builder: (context) => const ErrorPage());
+    }
+    /*switch (settings.name) {
       case '/':
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => SplashScreen(initialLink: args['initialLink'],));
@@ -20,7 +65,9 @@ class RouteGenerator {
             builder: (context) => CategoryPageNavigation(
                   categoryName: args['categoryName'],
                 ));
-      case '/imageView':
+      case settings.name.split('/')[1] == 'imageView':
+        print('args = ${settings.arguments}');
+        print('name = ${settings.name}');
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
             builder: (context) => ImageView(
@@ -46,7 +93,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => HelpSupport());
       default:
         return MaterialPageRoute(builder: (context) => ErrorPage());
-    }
+    }*/
   }
 }
 

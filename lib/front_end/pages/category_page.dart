@@ -334,7 +334,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                                     },
                                                     onTap: () {
                                                       Navigator.pushNamed(
-                                                          context, '/imageView',
+                                                          context, '/imageView/',
                                                           arguments: {
                                                             'imgShowUrl': photo
                                                                 .src.portrait,

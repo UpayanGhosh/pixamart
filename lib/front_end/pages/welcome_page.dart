@@ -57,6 +57,7 @@ class _WelcomePageState extends State<WelcomePage> {
       0.0.obs,
       0.0.obs,
       0.0.obs,
+      0.0.obs
     ];
     colorManager = [
       const Color(0xfff07371),
@@ -78,199 +79,205 @@ class _WelcomePageState extends State<WelcomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width / 13.06,
-              vertical: MediaQuery.of(context).size.height / 16.68),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 20,
-                  ),
-                  Obx(
-                    () => AnimatedOpacity(
-                      duration: const Duration(milliseconds: 800),
-                      opacity: opacityManager[0].value,
-                      child: Text(
-                        "W E L C O M E",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize:
-                                MediaQuery.of(context).size.height / 20.85,
-                            color: Colors.white,
-                            fontFamily: 'Nexa'),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 41.7,
-                  ),
-                  Obx(
-                    () => AnimatedOpacity(
-                      duration: const Duration(milliseconds: 800),
-                      opacity: opacityManager[1].value,
-                      child: Text(
-                        "We would like you to make an account \n with us before you use our service",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height / 55.6,
-                            fontFamily: 'Nexa'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 20,
-              ),
-              Obx(
-                () => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 800),
-                  opacity: opacityManager[2].value,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: bearBackgroundColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    height: MediaQuery.of(context).size.height / 2.15,
-                    width: MediaQuery.of(context).size.height / 2,
-                    margin: EdgeInsets.fromLTRB(
-                        0, 0, 0, MediaQuery.of(context).size.height / 16.68),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: GestureDetector(
-                        onDoubleTap: () async {
-                          if (idleAnimationController.isActive) {
-                            handsUpAnimationController.isActive = true;
-                          }
-                          Future.delayed(Duration(milliseconds: 900), () {
-                            handsDownAnimationController.isActive = true;
-                          });
-                        },
-                        child: Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            ConfettiWidget(
-                              confettiController: confettiController,
-                              blastDirectionality:
-                                  BlastDirectionality.explosive,
-                              numberOfParticles: 30,
-                              //emissionFrequency: 0.0,
-                              gravity: 0.5,
-                              shouldLoop: false,
-                              colors: const [
-                                Colors.red,
-                                Colors.blue,
-                                Colors.yellow,
-                                Colors.green,
-                                Colors.pink,
-                                Colors.purple,
-                                Colors.orange,
-                              ],
+            body: SingleChildScrollView(
+              clipBehavior: Clip.antiAlias,
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width / 13.06,
+                    vertical: MediaQuery.of(context).size.height / 16.68),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 20,
+                        ),
+                        Obx(
+                              () => AnimatedOpacity(
+                            duration: const Duration(milliseconds: 800),
+                            opacity: opacityManager[0].value,
+                            child: Text(
+                              "W E L C O M E",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize:
+                                  MediaQuery.of(context).size.height / 20.85,
+                                  color: Colors.white,
+                                  fontFamily: 'Nexa'),
                             ),
-                            RiveAnimation.asset(
-                              'assets/rive/Bear.riv',
-                              controllers: [
-                                idleAnimationController,
-                                successAnimationController,
-                                handsUpAnimationController,
-                                handsDownAnimationController,
-                              ],
-                              fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 41.7,
+                        ),
+                        Obx(
+                              () => AnimatedOpacity(
+                            duration: const Duration(milliseconds: 800),
+                            opacity: opacityManager[1].value,
+                            child: Text(
+                              "We would like you to make an account \n with us before you use our service",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: MediaQuery.of(context).size.height / 55.6,
+                                  fontFamily: 'Nexa'),
                             ),
-                          ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 20,
+                    ),
+                    Obx(
+                          () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 800),
+                        opacity: opacityManager[2].value,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: bearBackgroundColor,
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                          height: MediaQuery.of(context).size.height / 2.15,
+                          width: MediaQuery.of(context).size.height / 2,
+                          margin: EdgeInsets.fromLTRB(
+                              0, 0, 0, MediaQuery.of(context).size.height / 16.68),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            child: GestureDetector(
+                              onDoubleTap: () async {
+                                if (idleAnimationController.isActive) {
+                                  handsUpAnimationController.isActive = true;
+                                }
+                                Future.delayed(const Duration(milliseconds: 900), () {
+                                  handsDownAnimationController.isActive = true;
+                                });
+                              },
+                              child: Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  ConfettiWidget(
+                                    confettiController: confettiController,
+                                    blastDirectionality:
+                                    BlastDirectionality.explosive,
+                                    numberOfParticles: 30,
+                                    //emissionFrequency: 0.0,
+                                    gravity: 0.5,
+                                    shouldLoop: false,
+                                    colors: const [
+                                      Colors.red,
+                                      Colors.blue,
+                                      Colors.yellow,
+                                      Colors.green,
+                                      Colors.pink,
+                                      Colors.purple,
+                                      Colors.orange,
+                                    ],
+                                  ),
+                                  RiveAnimation.asset(
+                                    'assets/rive/Bear.riv',
+                                    controllers: [
+                                      idleAnimationController,
+                                      successAnimationController,
+                                      handsUpAnimationController,
+                                      handsDownAnimationController,
+                                    ],
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    Obx(
+                          () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 800),
+                        opacity: opacityManager[3].value,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            side: const BorderSide(color: Colors.transparent),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: MediaQuery.of(context).size.width / 2.8,
+                                vertical: MediaQuery.of(context).size.height / 41.7),
+                            elevation: 0,
+                            primary: const Color(0xfff07371),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                          onPressed: () async {
+                            HapticFeedback.lightImpact();
+                            if (!successAnimationController.isActive) {
+                              successAnimationController.isActive = true;
+                            }
+                            confettiController.play();
+                            await Future.delayed(const Duration(milliseconds: 1700)).then((value) {
+                              Navigator.pushNamed(context, '/login', arguments: {
+                                'initialLink': widget.initialLink,
+                              });
+                            });
+                          },
+                          child: Text(
+                            "Log In",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: MediaQuery.of(context).size.height / 47.681,
+                                color: Colors.white,
+                                fontFamily: 'Nexa'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 41.7,
+                    ),
+                    Obx(
+                          () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 800),
+                        opacity: opacityManager[4].value,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            side: const BorderSide(color: Colors.transparent),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: MediaQuery.of(context).size.width / 2.92,
+                                vertical: MediaQuery.of(context).size.height / 41.7),
+                            elevation: 0,
+                            primary: const Color(0xff8ab6fd),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                          onPressed: () async {
+                            HapticFeedback.lightImpact();
+                            if (!successAnimationController.isActive) {
+                              successAnimationController.isActive = true;
+                            }
+                            confettiController.play();
+                            await Future.delayed(const Duration(milliseconds: 1750)).then((value) {
+                              Navigator.pushNamed(context, '/signUp', arguments: {
+                                'initialLink': widget.initialLink,
+                              });
+                            });
+                          },
+                          child: Text(
+                            "SignUp",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: MediaQuery.of(context).size.height / 46.33,
+                                color: Colors.white,
+                                fontFamily: 'Nexa'),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-              Obx(
-                () => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 800),
-                  opacity: opacityManager[3].value,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      side: const BorderSide(color: Colors.transparent),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width / 2.8,
-                          vertical: MediaQuery.of(context).size.height / 41.7),
-                      elevation: 0,
-                      primary: const Color(0xfff07371),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                    ),
-                    onPressed: () async {
-                      HapticFeedback.lightImpact();
-                      if (!successAnimationController.isActive) {
-                        successAnimationController.isActive = true;
-                      }
-                      confettiController.play();
-                      await Future.delayed(const Duration(milliseconds: 1700));
-                      Navigator.pushNamed(context, '/login', arguments: {
-                        'initialLink': widget.initialLink,
-                      });
-                    },
-                    child: Text(
-                      "Log In",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: MediaQuery.of(context).size.height / 46.33,
-                          color: Colors.white,
-                          fontFamily: 'Nexa'),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 41.7,
-              ),
-              Obx(
-                () => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 800),
-                  opacity: opacityManager[4].value,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      side: const BorderSide(color: Colors.transparent),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width / 2.92,
-                          vertical: MediaQuery.of(context).size.height / 41.7),
-                      elevation: 0,
-                      primary: const Color(0xff8ab6fd),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                    ),
-                    onPressed: () async {
-                      HapticFeedback.lightImpact();
-                      if (!successAnimationController.isActive) {
-                        successAnimationController.isActive = true;
-                      }
-                      confettiController.play();
-                      await Future.delayed(const Duration(milliseconds: 1750));
-                      Navigator.pushNamed(context, '/signUp');
-                    },
-                    child: Text(
-                      "SignUp",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: MediaQuery.of(context).size.height / 46.33,
-                          color: Colors.white,
-                          fontFamily: 'Nexa'),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
+
