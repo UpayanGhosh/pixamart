@@ -15,6 +15,9 @@ import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:PixaMart/private/api_key.dart';
 import 'package:flutter/services.dart';
+import 'package:PixaMart/front_end/widget/categories.dart';
+import 'package:PixaMart/backend/model/categories_model.dart';
+import 'package:PixaMart/front_end/widget/category_tile.dart';
 
 class SearchPage extends StatefulWidget {
   final TextEditingController searchQuery;
@@ -25,6 +28,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  late List<CategoriesModel> categories;
   late int page;
   late ScrollController scrollController;
   List<dynamic> photoList = [];
@@ -49,6 +53,7 @@ class _SearchPageState extends State<SearchPage> {
     currentMaxScrollExtent = 0.0;
     userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
     removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    categories = getCategory();
     super.initState();
   }
 
@@ -200,18 +205,67 @@ class _SearchPageState extends State<SearchPage> {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.transparent,
-                  title: AppTitle(
-                      padLeft: MediaQuery.of(context).size.width / 8,
-                      padTop: MediaQuery.of(context).size.height / 15,
-                      padRight: MediaQuery.of(context).size.width / 10,
-                      padBottom: 0),
+                  title: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        MediaQuery.of(context).size.width / 4,
+                        MediaQuery.of(context).size.height / 15,
+                        0,
+                        0),
+                    child: ShaderMask(
+                      shaderCallback: (Rect bounds) =>
+                          const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.1, 0.5],
+                              colors: [
+                                Colors.white,
+                                Colors.blue,
+                              ]).createShader(bounds),
+                      child: Text(
+                        'PixaMart',
+                        style: TextStyle(
+                          fontSize:
+                          MediaQuery.of(context).size.height / 18.53,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Raunchies',
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 body: Column(
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),
-                    const SearchBar(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SearchBar(),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 16.68,
+                            child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                    MediaQuery.of(context).size.width / 98),
+                                itemCount: categories.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return CategoryTile(
+                                    title: categories[index].categoriesName,
+                                    imgUrl: categories[index].imgUrl,
+                                  );
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),

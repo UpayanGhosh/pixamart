@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<CategoriesModel> categories = [];
+  late List<CategoriesModel> categories;
   late int page;
   late ScrollController scrollController;
   late List<dynamic> photoList;

@@ -1,8 +1,8 @@
 // This Page is for when the user clicks on a Category tile and lands on the page where all of the images of the same category is shown
 
 import 'dart:convert';
+import 'package:PixaMart/front_end/widget/categories.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,8 @@ import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/private/api_key.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:flutter/services.dart';
+import 'package:PixaMart/backend/model/categories_model.dart';
+import 'package:PixaMart/front_end/widget/category_tile.dart';
 
 class CategoryPage extends StatefulWidget {
   final String categoryName;
@@ -36,6 +38,7 @@ class _CategoryPageState extends State<CategoryPage> {
   late final User? user;
   late final DatabaseReference userFavouritesDatabase;
   late final CollectionReference removedFromLiked;
+  List<CategoriesModel> categories = [];
 
   @override
   void initState() {
@@ -43,12 +46,15 @@ class _CategoryPageState extends State<CategoryPage> {
     user = auth.currentUser;
     favouritesBox = Hive.openBox('${auth.currentUser?.uid}-favourites');
     favouritesList = Hive.box('${auth.currentUser?.uid}-favourites');
-    userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
-    removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    userFavouritesDatabase =
+        FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
+    removedFromLiked =
+        FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
     getSearchWallpapers(widget.categoryName);
     page = 2;
     currentMaxScrollExtent = 0.0;
     scrollController = ScrollController();
+    categories = getCategory();
     super.initState();
   }
 
@@ -76,7 +82,8 @@ class _CategoryPageState extends State<CategoryPage> {
             if (url.statusCode == 200) {
               Map<String, dynamic> newPhotos = jsonDecode(url.body);
               photoList.addAll(newPhotos['photos']
-                  .map((dynamic item) => Photos.fromJson(item)).toList());
+                  .map((dynamic item) => Photos.fromJson(item))
+                  .toList());
 
               setState(() {});
             } else {
@@ -118,17 +125,20 @@ class _CategoryPageState extends State<CategoryPage> {
         'alt': alt,
       }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Added to Favourites!!', style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nexa'
-        ),),
+        content: const Text(
+          'Added to Favourites!!',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Nexa'),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
+            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(
+                Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
             userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
             removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
               'imgShowUrl': imgShowUrl,
@@ -141,18 +151,22 @@ class _CategoryPageState extends State<CategoryPage> {
       ));
     } else {
       Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
-      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove(); // RD deletion code
+      userFavouritesDatabase
+          .child(imgDownloadUrl.split('/')[4])
+          .remove(); // RD deletion code
       removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
         'imgShowUrl': imgShowUrl,
         'imgDownloadUrl': imgDownloadUrl,
         'alt': alt,
       }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Removed from Favourites!!', style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nexa'
-        ),),
+        content: const Text(
+          'Removed from Favourites!!',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Nexa'),
+        ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         action: SnackBarAction(
@@ -191,27 +205,79 @@ class _CategoryPageState extends State<CategoryPage> {
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.black,
                 appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  centerTitle: true,
-                  elevation: 0.0,
-                  backgroundColor: Colors.transparent,
-                  title: AppTitle(
-                      padLeft: MediaQuery.of(context).size.width / 8,
-                      padTop: MediaQuery.of(context).size.height / 15,
-                      padRight: MediaQuery.of(context).size.width / 10,
-                      padBottom: 0),
-                ),
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                    elevation: 0.0,
+                    backgroundColor: Colors.transparent,
+                    title: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width / 8,
+                          MediaQuery.of(context).size.height / 15,
+                          MediaQuery.of(context).size.width / 10,
+                          0),
+                      child: ShaderMask(
+                        shaderCallback: (Rect bounds) =>
+                            const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0.1, 0.5],
+                                colors: [
+                          Colors.white,
+                          Colors.blue,
+                        ]).createShader(bounds),
+                        child: Text(
+                          'PixaMart',
+                          style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height / 18.53,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Raunchies',
+                          ),
+                        ),
+                      ),
+                    )),
                 body: Column(
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),
-                    const SearchBar(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SearchBar(),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 16.68,
+                            child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width / 98),
+                                itemCount: categories.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return CategoryTile(
+                                    title: categories[index].categoriesName,
+                                    imgUrl: categories[index].imgUrl,
+                                  );
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height / (MediaQuery.of(context).orientation == Orientation.portrait ? 1.45 : 1.68),
+                      height: MediaQuery.of(context).size.height /
+                          (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 1.45
+                              : 1.68),
                       child: FutureBuilder(
                         future: getSearchWallpapers(widget.categoryName),
                         builder:
@@ -258,7 +324,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                                     },
                                                     onTap: () {
                                                       Navigator.pushNamed(
-                                                          context, '/imageView/',
+                                                          context,
+                                                          '/imageView/',
                                                           arguments: {
                                                             'imgShowUrl': photo
                                                                 .src.portrait,

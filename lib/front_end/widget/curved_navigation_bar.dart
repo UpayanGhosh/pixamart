@@ -1,18 +1,16 @@
-import 'package:PixaMart/front_end/pages/category_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/account_page.dart';
 import 'package:PixaMart/front_end/pages/favourites_page.dart';
-import 'package:PixaMart/front_end/pages/homepage.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final PendingDynamicLinkData? initialLink;
   final Widget firstPage;
-  final String? categoryName;
-  const AppBottomNavigationBar({this.initialLink, required this.firstPage, this.categoryName, Key? key})
+  const AppBottomNavigationBar(
+      {this.initialLink, required this.firstPage, Key? key})
       : super(key: key);
 
   @override
@@ -26,7 +24,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   late RxInt myIndex;
   late PageController pageController;
   late int currentPage;
-  late String categoryName;
+  late String page;
 
   @override
   void initState() {
@@ -34,15 +32,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     pageController = PageController(
       initialPage: 0,
     );
-    pagesAll = [
-      widget.firstPage,
-      const FavouritesPage(),
-      AccountPage()
-    ];
+    pagesAll = [widget.firstPage, const FavouritesPage(), AccountPage()];
     myIndex = 0.obs;
     iconSize = 0.0.obs;
     currentPage = 0;
-    categoryName = widget.categoryName ?? '';
   }
 
   @override
@@ -72,26 +65,30 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           index: myIndex.value,
           height: MediaQuery.of(context).size.height <= 845
               ? MediaQuery.of(context).size.height / 11.27
-              : 74,
+              : MediaQuery.of(context).size.height / 11.4,
           backgroundColor: Colors.black,
           color: Colors.black,
           key: _navKey,
           items: [
             Icon(
-                widget.firstPage == HomePage(initialLink: widget.initialLink) ? Ionicons.home_outline : widget.firstPage == CategoryPage(categoryName: categoryName,) ? Icons.category_outlined : Icons.search_outlined,
-                color: Colors.blue,
-                size: iconSize / 37.90,
-              ),
+              widget.firstPage.toString() == 'HomePage'
+                  ? Ionicons.home_outline
+                  : widget.firstPage.toString() == 'CategoryPage'
+                      ? Icons.category_outlined
+                      : Icons.search_outlined,
+              color: Colors.blue,
+              size: iconSize / 44.90,
+            ),
             Icon(
-                Ionicons.heart_outline,
-                color: Colors.blue,
-                size: iconSize / 37.90,
-              ),
+              Ionicons.heart_outline,
+              color: Colors.blue,
+              size: iconSize / 44.90,
+            ),
             Icon(
-                Icons.account_circle_outlined,
-                color: Colors.blue,
-                size: iconSize / 37.90,
-              ),
+              Icons.account_circle_outlined,
+              color: Colors.blue,
+              size: iconSize / 44.90,
+            ),
           ],
           buttonBackgroundColor: Colors.white,
           onTap: (index) {
