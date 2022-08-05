@@ -6,7 +6,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' as getx;
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -16,82 +15,7 @@ import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/private/api_key.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
-import 'package:PixaMart/front_end/pages/account_page.dart';
-import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:flutter/services.dart';
-
-class CategoryPageNavigation extends StatefulWidget {
-  final String categoryName;
-  const CategoryPageNavigation({Key? key, required this.categoryName})
-      : super(key: key);
-
-  @override
-  State<CategoryPageNavigation> createState() => _CategoryPageNavigationState();
-}
-
-class _CategoryPageNavigationState extends State<CategoryPageNavigation> {
-  late getx.RxDouble iconSize;
-  late GlobalKey<CurvedNavigationBarState> _navKey;
-  late List<Widget> pagesAll;
-  late int myIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _navKey = GlobalKey();
-    pagesAll = [
-      CategoryPage(categoryName: widget.categoryName),
-      const FavouritesPage(),
-       AccountPage()
-    ];
-    myIndex = 0;
-    iconSize = 0.0.obs;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    iconSize.value = MediaQuery.of(context).size.height;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: pagesAll[myIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        height: MediaQuery.of(context).size.height <=845 ? MediaQuery.of(context).size.height / 11.27 : 74,
-        backgroundColor: Colors.black,
-        color: Colors.black,
-        key: _navKey,
-        items: [
-          getx.Obx(
-            () => Icon(
-              Icons.category_outlined,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-          getx.Obx(
-            () => Icon(
-              Icons.favorite_outline,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-          getx.Obx(
-            () => Icon(
-              Icons.account_circle_outlined,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-        ],
-        buttonBackgroundColor: Colors.white,
-        onTap: (index) {
-          setState(() {
-            myIndex = index;
-          });
-        },
-      ),
-    );
-  }
-}
 
 class CategoryPage extends StatefulWidget {
   final String categoryName;

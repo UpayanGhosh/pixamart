@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,85 +14,7 @@ import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:PixaMart/private/api_key.dart';
-import 'package:PixaMart/front_end/pages/account_page.dart';
-import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart' as getx;
-
-class SearchPageNavigation extends StatefulWidget {
-  final TextEditingController searchQuery;
-  const SearchPageNavigation({Key? key, required this.searchQuery})
-      : super(key: key);
-
-  @override
-  State<SearchPageNavigation> createState() => _SearchPageNavigationState();
-}
-
-class _SearchPageNavigationState extends State<SearchPageNavigation> {
-  late getx.RxDouble iconSize;
-  late List<Widget> pagesAll;
-  late int myIndex;
-  late GlobalKey<CurvedNavigationBarState> _navKey;
-
-  @override
-  void initState() {
-    super.initState();
-    _navKey = GlobalKey();
-    pagesAll = [
-      SearchPage(
-        searchQuery: widget.searchQuery,
-      ),
-      const FavouritesPage(),
-       AccountPage()
-    ];
-    myIndex = 0;
-    iconSize = 0.0.obs;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    iconSize.value = MediaQuery.of(context).size.height;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: pagesAll[myIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        height: MediaQuery.of(context).size.height <=845 ? MediaQuery.of(context).size.height / 11.27 : 74,
-        backgroundColor: Colors.black,
-        color: Colors.black,
-        buttonBackgroundColor: Colors.white,
-        key: _navKey,
-        items: [
-          getx.Obx(
-            () => Icon(
-              Icons.search_outlined,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-          getx.Obx(
-            () => Icon(
-              Icons.favorite_outline,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-          getx.Obx(
-            () => Icon(
-              Icons.account_circle_outlined,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            myIndex = index;
-          });
-        },
-      ),
-    );
-  }
-}
 
 class SearchPage extends StatefulWidget {
   final TextEditingController searchQuery;

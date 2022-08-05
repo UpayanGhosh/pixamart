@@ -17,7 +17,8 @@ class RouteGenerator {
     if(settings.name == '/category') {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
-          builder: (context) => CategoryPageNavigation(
+          builder: (context) => AppBottomNavigationBar(
+            firstPage: CategoryPage(categoryName: args['categoryName'],),
             categoryName: args['categoryName'],
           ));
     }
@@ -34,12 +35,12 @@ class RouteGenerator {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) =>
-              SearchPageNavigation(searchQuery: args['searchQuery']));
+              SearchPage(searchQuery: args['searchQuery']));
     }
     if(settings.name == '/navigationBar') {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
-          builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'],));
+          builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'], firstPage: args['firstPage'],));
     }
     if(settings.name == '/signUp') {
       final args = settings.arguments as Map<String, dynamic>;

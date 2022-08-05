@@ -1,4 +1,3 @@
-import 'package:PixaMart/front_end/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfileListItem extends StatelessWidget {
@@ -32,7 +31,7 @@ class ProfileListItem extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width / 24.5,
               ),
-              Text(text,style: TextStyle(fontFamily:'Nexa',fontWeight: FontWeight.bold,),),
+              Text(text,style: const TextStyle(fontFamily:'Nexa',fontWeight: FontWeight.bold,),),
             ],
           )),
     );

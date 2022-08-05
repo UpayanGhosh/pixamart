@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' as Getx;
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -47,7 +46,6 @@ class _HomePageState extends State<HomePage> {
   getInitialLink() async {
     if(widget.initialLink != null) {
       final String link = widget.initialLink.toString();
-      print('link = $link');
       await FirebaseFirestore.instance.collection('app-details').doc('link').set({
         'link': link
           }).then((value) {

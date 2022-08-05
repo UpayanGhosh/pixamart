@@ -9,6 +9,8 @@ import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 
+import 'homepage.dart';
+
 class LoginPage extends StatefulWidget {
   final PendingDynamicLinkData? initialLink;
   const LoginPage({required this.initialLink, Key? key}) : super(key: key);
@@ -99,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         stream: auth.auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return AppBottomNavigationBar(initialLink: widget.initialLink,);
+            return AppBottomNavigationBar(initialLink: widget.initialLink, firstPage: HomePage(initialLink: widget.initialLink,),);
           } else {
             return Scaffold(
               resizeToAvoidBottomInset: false,
@@ -117,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               body: SingleChildScrollView(
+                clipBehavior: Clip.antiAlias,
                 physics: const BouncingScrollPhysics(),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height,

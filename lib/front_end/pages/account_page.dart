@@ -151,11 +151,11 @@ class AccountPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(LineAwesomeIcons.download),
+                          const Icon(LineAwesomeIcons.download),
                           SizedBox(
                             width: MediaQuery.of(context).size.width / 24.5,
                           ),
-                          Text(
+                          const Text(
                             'Downloads',
                             style: TextStyle(
                               fontFamily: 'Nexa',
