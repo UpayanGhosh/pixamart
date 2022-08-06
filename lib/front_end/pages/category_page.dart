@@ -12,7 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:PixaMart/private/get_pexels_api_key.dart';
 import 'package:PixaMart/backend/model/wallpaper_model.dart';
-import 'package:PixaMart/front_end/widget/app_title.dart';
+import 'package:get/get.dart' as Getx;
 import 'package:PixaMart/private/api_key.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:flutter/services.dart';
