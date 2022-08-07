@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
-import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
