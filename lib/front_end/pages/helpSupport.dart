@@ -20,17 +20,15 @@ class HelpSupport extends StatelessWidget {
                 fit: BoxFit.fill),
           ),
           SizedBox(height: MediaQuery.of(context).size.height / 15),
-          Container(
-            child: Column(
-              children: [
-                Text('    STILL WORKING ON IT',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontFamily: 'Nexa')),
-              ],
-            ),
+          Column(
+            children: const [
+              Text('    STILL WORKING ON IT',
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'Nexa')),
+            ],
           ),
         ],
       ),

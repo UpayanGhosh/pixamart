@@ -110,6 +110,7 @@ class _SignupPageState extends State<SignupPage> {
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
+        clipBehavior: Clip.antiAlias,
         child: Container(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width / 9.8),

@@ -67,14 +67,15 @@ class _DownloadPageState extends State<DownloadPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData && downloadsList.isNotEmpty) {
                 return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  clipBehavior: Clip.antiAlias,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                     ),
                   itemCount: downloadsList.length,
                   itemBuilder: (context, index) {
                     final downloads = downloadsList.getAt(downloadsList.length - index - 1) as Favourites;
                       return Padding(
-                        padding: EdgeInsets.all(1),
+                        padding: const EdgeInsets.all(1),
                         child: GridTile(
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),

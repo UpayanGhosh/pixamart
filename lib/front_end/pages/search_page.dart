@@ -1,99 +1,24 @@
 // When user searches something he/she lands on this page
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' as Getx;
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:PixaMart/private/get_pexels_api_key.dart';
 import 'package:PixaMart/backend/model/wallpaper_model.dart';
-import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:PixaMart/private/api_key.dart';
-import 'package:PixaMart/front_end/pages/account_page.dart';
-import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart' as getx;
-
-class SearchPageNavigation extends StatefulWidget {
-  final TextEditingController searchQuery;
-  const SearchPageNavigation({Key? key, required this.searchQuery})
-      : super(key: key);
-
-  @override
-  State<SearchPageNavigation> createState() => _SearchPageNavigationState();
-}
-
-class _SearchPageNavigationState extends State<SearchPageNavigation> {
-  late getx.RxDouble iconSize;
-  late List<Widget> pagesAll;
-  late int myIndex;
-  late GlobalKey<CurvedNavigationBarState> _navKey;
-
-  @override
-  void initState() {
-    super.initState();
-    _navKey = GlobalKey();
-    pagesAll = [
-      SearchPage(
-        searchQuery: widget.searchQuery,
-      ),
-      const FavouritesPage(),
-       AccountPage()
-    ];
-    myIndex = 0;
-    iconSize = 0.0.obs;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    iconSize.value = MediaQuery.of(context).size.height;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: pagesAll[myIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        height: MediaQuery.of(context).size.height <=845 ? MediaQuery.of(context).size.height / 11.27 : 74,
-        backgroundColor: Colors.black,
-        color: Colors.black,
-        buttonBackgroundColor: Colors.white,
-        key: _navKey,
-        items: [
-          getx.Obx(
-            () => Icon(
-              Icons.search_outlined,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-          getx.Obx(
-            () => Icon(
-              Icons.favorite_outline,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-          getx.Obx(
-            () => Icon(
-              Icons.account_circle_outlined,
-              color: Colors.blue,
-              size: iconSize / 37.90,
-            ),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            myIndex = index;
-          });
-        },
-      ),
-    );
-  }
-}
+import 'package:PixaMart/front_end/widget/categories.dart';
+import 'package:PixaMart/backend/model/categories_model.dart';
+import 'package:PixaMart/front_end/widget/category_tile.dart';
 
 class SearchPage extends StatefulWidget {
   final TextEditingController searchQuery;
@@ -104,6 +29,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  late List<CategoriesModel> categories;
   late int page;
   late ScrollController scrollController;
   List<dynamic> photoList = [];
@@ -115,6 +41,7 @@ class _SearchPageState extends State<SearchPage> {
   late final DatabaseReference userFavouritesDatabase;
   late final CollectionReference removedFromLiked;
   late final User? user;
+  late List<Getx.RxDouble> opacityManager;
 
   @override
   void initState() {
@@ -128,7 +55,25 @@ class _SearchPageState extends State<SearchPage> {
     currentMaxScrollExtent = 0.0;
     userFavouritesDatabase = FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
     removedFromLiked = FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
+    categories = getCategory();
+    opacityManager = [
+      0.0.obs,
+      0.0.obs,
+      0.0.obs,
+    ];
+    manageOpacity();
     super.initState();
+  }
+
+  void manageOpacity() async {
+    int i = 0;
+    await Future.delayed(const Duration(milliseconds: 250));
+    Timer.periodic(const Duration(milliseconds: 250), (timer) {
+      if (i < opacityManager.length) {
+        opacityManager[i].value = 1.0;
+        i++;
+      }
+    });
   }
 
   Future<List<dynamic>> getSearchWallpapers(String query) async {
@@ -279,183 +224,250 @@ class _SearchPageState extends State<SearchPage> {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.transparent,
-                  title: AppTitle(
-                      padLeft: MediaQuery.of(context).size.width / 8,
-                      padTop: MediaQuery.of(context).size.height / 15,
-                      padRight: MediaQuery.of(context).size.width / 10,
-                      padBottom: 0),
+                  title: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        MediaQuery.of(context).size.width / 4,
+                        MediaQuery.of(context).size.height / 15,
+                        0,
+                        0),
+                    child: Getx.Obx(
+                          () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 350),
+                        opacity: opacityManager[0].value,
+                        child: ShaderMask(
+                          shaderCallback: (Rect bounds) =>
+                              const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [0.1, 0.5],
+                                  colors: [
+                                    Colors.white,
+                                    Colors.blue,
+                                  ]).createShader(bounds),
+                          child: Text(
+                            'PixaMart',
+                            style: TextStyle(
+                              fontSize:
+                              MediaQuery.of(context).size.height / 18.53,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Raunchies',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 body: Column(
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),
-                    const SearchBar(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(0.0),
+                      child: Getx.Obx(
+                            () => AnimatedOpacity(
+                          duration: const Duration(milliseconds: 350),
+                          opacity: opacityManager[1].value,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SearchBar(),
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height / 16.68,
+                                child: ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                        MediaQuery.of(context).size.width / 98),
+                                    itemCount: categories.length,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return CategoryTile(
+                                        title: categories[index].categoriesName,
+                                        imgUrl: categories[index].imgUrl,
+                                      );
+                                    }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),
-                    FutureBuilder(
-                      future: getSearchWallpapers(widget.searchQuery.text),
-                      builder:
-                          (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                        if (snapshot.hasData) {
-                          List<dynamic> photos = snapshot.data!;
-                          return Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height /
-                                    (MediaQuery.of(context).orientation ==
-                                            Orientation.portrait
-                                        ? 1.45
-                                        : 1.68),
-                                color: Colors.black,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        MediaQuery.of(context).size.width /
-                                            24.5),
-                                child: GridView.count(
-                                  controller: scrollController,
-                                  physics: const BouncingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  clipBehavior: Clip.antiAlias,
-                                  childAspectRatio: 0.61,
-                                  scrollDirection: Axis.vertical,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing:
-                                      MediaQuery.of(context).size.width / 39.2,
-                                  mainAxisSpacing: 0,
-                                  children: photoList
-                                      .map(
-                                        (dynamic photo) => GridTile(
-                                          child: Stack(
-                                            alignment: Alignment.bottomRight,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                child: GestureDetector(
-                                                  onDoubleTap: () {
-                                                    handleLiked(
-                                                        imgShowUrl:
-                                                            photo.src.portrait,
-                                                        imgDownloadUrl:
-                                                            photo.src.original,
-                                                        alt: photo.alt);
-                                                  },
-                                                  onTap: () {
-                                                    Navigator.pushNamed(
-                                                        context, '/imageView/',
-                                                        arguments: {
-                                                          'imgShowUrl': photo
-                                                              .src.portrait,
-                                                          'imgDownloadUrl':
-                                                              photo
-                                                                  .src.original,
-                                                          'alt': photo.alt
-                                                        });
-                                                  },
-                                                  child: Hero(
-                                                    tag: photo.src.portrait,
-                                                    child: Image.network(
-                                                      '${photo.src.portrait}',
-                                                      fit: BoxFit.cover,
+                    Getx.Obx(
+                      () => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 550),
+                        opacity: opacityManager[1].value,
+                        child: FutureBuilder(
+                          future: getSearchWallpapers(widget.searchQuery.text),
+                          builder:
+                              (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                            if (snapshot.hasData) {
+                              List<dynamic> photos = snapshot.data!;
+                              return Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height /
+                                        (MediaQuery.of(context).orientation ==
+                                                Orientation.portrait
+                                            ? 1.45
+                                            : 1.68),
+                                    color: Colors.black,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            MediaQuery.of(context).size.width /
+                                                24.5),
+                                    child: GridView.count(
+                                      controller: scrollController,
+                                      physics: const BouncingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      clipBehavior: Clip.antiAlias,
+                                      childAspectRatio: 0.61,
+                                      scrollDirection: Axis.vertical,
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing:
+                                          MediaQuery.of(context).size.width / 39.2,
+                                      mainAxisSpacing: 0,
+                                      children: photoList
+                                          .map(
+                                            (dynamic photo) => GridTile(
+                                              child: Stack(
+                                                alignment: Alignment.bottomRight,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(16),
+                                                    child: GestureDetector(
+                                                      onDoubleTap: () {
+                                                        handleLiked(
+                                                            imgShowUrl:
+                                                                photo.src.portrait,
+                                                            imgDownloadUrl:
+                                                                photo.src.original,
+                                                            alt: photo.alt);
+                                                      },
+                                                      onTap: () {
+                                                        Navigator.pushNamed(
+                                                            context, '/imageView/',
+                                                            arguments: {
+                                                              'imgShowUrl': photo
+                                                                  .src.portrait,
+                                                              'imgDownloadUrl':
+                                                                  photo
+                                                                      .src.original,
+                                                              'alt': photo.alt
+                                                            });
+                                                      },
+                                                      child: Hero(
+                                                        tag: photo.src.portrait,
+                                                        child: Image.network(
+                                                          '${photo.src.portrait}',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(8.0),
+                                                    child: GestureDetector(
+                                                      child: Builder(
+                                                          builder: (context) {
+                                                        if (checkIfLiked(
+                                                                imgShowUrl: photo
+                                                                    .src
+                                                                    .portrait) ==
+                                                            -1) {
+                                                          return const Icon(
+                                                            Icons
+                                                                .favorite_outline_rounded,
+                                                            color: Colors.pink,
+                                                          );
+                                                        } else {
+                                                          return const Icon(
+                                                            Icons.favorite_outlined,
+                                                            color: Colors.pink,
+                                                          );
+                                                        }
+                                                      }),
+                                                      onTap: () {
+                                                        handleLiked(
+                                                            imgShowUrl:
+                                                                photo.src.portrait,
+                                                            imgDownloadUrl:
+                                                                photo.src.original,
+                                                            alt: photo.alt);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: GestureDetector(
-                                                  child: Builder(
-                                                      builder: (context) {
-                                                    if (checkIfLiked(
-                                                            imgShowUrl: photo
-                                                                .src
-                                                                .portrait) ==
-                                                        -1) {
-                                                      return const Icon(
-                                                        Icons
-                                                            .favorite_outline_rounded,
-                                                        color: Colors.pink,
-                                                      );
-                                                    } else {
-                                                      return const Icon(
-                                                        Icons.favorite_outlined,
-                                                        color: Colors.pink,
-                                                      );
-                                                    }
-                                                  }),
-                                                  onTap: () {
-                                                    handleLiked(
-                                                        imgShowUrl:
-                                                            photo.src.portrait,
-                                                        imgDownloadUrl:
-                                                            photo.src.original,
-                                                        alt: photo.alt);
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        MediaQuery.of(context).size.width /
-                                            24.5,
-                                    vertical:
-                                        MediaQuery.of(context).size.height /
-                                            50.15),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    scrollController.animateTo(
-                                        (MediaQuery.of(context).size.height /
-                                                4.7) *
-                                            -1,
-                                        duration:
-                                            const Duration(milliseconds: 400),
-                                        curve: Curves
-                                            .easeOutSine); // easeinexpo, easeoutsine
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Colors.black54,
-                                      shape: const CircleBorder()),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            MediaQuery.of(context).size.width /
+                                                24.5,
+                                        vertical:
+                                            MediaQuery.of(context).size.height /
+                                                50.15),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        scrollController.animateTo(
+                                            (MediaQuery.of(context).size.height /
+                                                    4.7) *
+                                                -1,
+                                            duration:
+                                                const Duration(milliseconds: 400),
+                                            curve: Curves
+                                                .easeOutSine); // easeinexpo, easeoutsine
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.black54,
+                                          shape: const CircleBorder()),
+                                      child: Lottie.asset(
+                                          'assets/lottie/Rocket.json',
+                                          height:
+                                              MediaQuery.of(context).size.width /
+                                                  6.53,
+                                          width: MediaQuery.of(context).size.width /
+                                              12.5,
+                                          fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (snapshot.hasError) {
+                              return Container(
+                                  margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height / 8.34, 0, 0),
                                   child: Lottie.asset(
-                                      'assets/lottie/Rocket.json',
-                                      height:
-                                          MediaQuery.of(context).size.width /
-                                              6.53,
-                                      width: MediaQuery.of(context).size.width /
-                                          12.5,
-                                      fit: BoxFit.fill),
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return Container(
-                              margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height / 8.34, 0, 0),
-                              child: Lottie.asset(
-                                  'assets/lottie/Server_Error.json'));
-                        }
-                        return Container(
-                          margin: EdgeInsets.fromLTRB(
-                              0,
-                              MediaQuery.of(context).size.height / 6.5,
-                              MediaQuery.of(context).size.width / 5.2,
-                              0),
-                          child: Lottie.asset('assets/lottie/Loading.json',
-                              height: MediaQuery.of(context).size.height / 4,
-                              width: MediaQuery.of(context).size.width / 1.96,
-                              fit: BoxFit.cover),
-                        );
-                      },
+                                      'assets/lottie/Server_Error.json'));
+                            }
+                            return Container(
+                              margin: EdgeInsets.fromLTRB(
+                                  0,
+                                  MediaQuery.of(context).size.height / 6.5,
+                                  MediaQuery.of(context).size.width / 5.2,
+                                  0),
+                              child: Lottie.asset('assets/lottie/Loading.json',
+                                  height: MediaQuery.of(context).size.height / 4,
+                                  width: MediaQuery.of(context).size.width / 1.96,
+                                  fit: BoxFit.cover),
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ],
                 ),

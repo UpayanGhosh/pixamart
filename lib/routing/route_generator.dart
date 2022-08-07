@@ -17,8 +17,8 @@ class RouteGenerator {
     if(settings.name == '/category') {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
-          builder: (context) => CategoryPageNavigation(
-            categoryName: args['categoryName'],
+          builder: (context) => AppBottomNavigationBar(
+            firstPage: CategoryPage(categoryName: args['categoryName'],)
           ));
     }
     if(settings.name?.split('/')[1] == 'imageView') {
@@ -34,12 +34,12 @@ class RouteGenerator {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) =>
-              SearchPageNavigation(searchQuery: args['searchQuery']));
+              AppBottomNavigationBar(firstPage: SearchPage(searchQuery: args['searchQuery'])));
     }
     if(settings.name == '/navigationBar') {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
-          builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'],));
+          builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'], firstPage: args['firstPage'],));
     }
     if(settings.name == '/signUp') {
       final args = settings.arguments as Map<String, dynamic>;
@@ -55,45 +55,6 @@ class RouteGenerator {
     else {
       return MaterialPageRoute(builder: (context) => const ErrorPage());
     }
-    /*switch (settings.name) {
-      case '/':
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => SplashScreen(initialLink: args['initialLink'],));
-      case '/category':
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (context) => CategoryPageNavigation(
-                  categoryName: args['categoryName'],
-                ));
-      case settings.name.split('/')[1] == 'imageView':
-        print('args = ${settings.arguments}');
-        print('name = ${settings.name}');
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (context) => ImageView(
-                  imgShowUrl: args['imgShowUrl'],
-                  imgDownloadUrl: args['imgDownloadUrl'],
-                  alt: args['alt'],
-                ));
-      case '/search':
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (context) =>
-                SearchPageNavigation(searchQuery: args['searchQuery']));
-      case '/navigationBar':
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (context) => AppBottomNavigationBar(initialLink: args['initialLink'],));
-      case '/signUp':
-        return MaterialPageRoute(builder: (context) => SignupPage());
-      case '/login':
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => LoginPage(initialLink: args['initialLink']));
-      case '/helpSupport':
-        return MaterialPageRoute(builder: (context) => HelpSupport());
-      default:
-        return MaterialPageRoute(builder: (context) => ErrorPage());
-    }*/
   }
 }
 

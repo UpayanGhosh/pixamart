@@ -1,17 +1,17 @@
 // Todo try and add a notification system (kingshuk)
 // Todo try adding a showcase system for new users (kingshuk)
 
-import 'dart:io';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/routing/route_generator.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:open_store/open_store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:PixaMart/front_end/pages/splash_screen.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:upgrader/upgrader.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -116,9 +116,12 @@ class _PixaMartAppState extends State<PixaMartApp> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                if(Platform.isAndroid) {
-                                  launchUrl(Uri.parse('https://play.google.com/store/apps/details?id=com.wallpaper.pixamart'));
-                                }
+                                OpenStore.instance.open(
+                                  androidAppBundleId: 'com.wallpaper.pixamart'
+                                );
+                                /*UpgradeAlert(
+                                  upgrader: Upgrader(),
+                                );*/
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen(initialLink: widget.initialLink)));
                               },
                               style: ElevatedButton.styleFrom(
