@@ -85,7 +85,6 @@ class _HomePageState extends State<HomePage> {
       0.0.obs,
       0.0.obs,
     ];
-    print('initiate');
     manageOpacity();
   }
 
@@ -127,7 +126,7 @@ class _HomePageState extends State<HomePage> {
       photos.removeRange(0, photos.length); // added new line
       scrollController.addListener(() async {
         if (scrollController.offset >=
-                scrollController.position.maxScrollExtent &&
+                scrollController.position.maxScrollExtent / 2 &&
             !scrollController.position.outOfRange) {
           if (currentMaxScrollExtent <
               scrollController.position.maxScrollExtent) {
@@ -143,7 +142,6 @@ class _HomePageState extends State<HomePage> {
                 photoList.addAll(nextPage['photos']
                     .map((dynamic item) => Photos.fromJson(item))
                     .toList());
-                print(photoList.length);
               });
             } else {
               throw Exception('Failed to Fetch Curated');
