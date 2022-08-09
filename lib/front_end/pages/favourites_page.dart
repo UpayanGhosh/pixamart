@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 
