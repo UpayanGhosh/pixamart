@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,7 @@ class _DownloadPageState extends State<DownloadPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData && downloadsList.isNotEmpty) {
                 return GridView.builder(
+                  physics: const BouncingScrollPhysics(),
                   clipBehavior: Clip.antiAlias,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
@@ -90,8 +92,9 @@ class _DownloadPageState extends State<DownloadPage> {
                                 },
                                 child: Hero(
                                     tag: downloads.imgShowUrl.toString(),
-                                    child: Image.network(
-                                      downloads.imgShowUrl.toString(),
+                                    child: CachedNetworkImage(
+                                      imageUrl: downloads.imgShowUrl.toString(),
+                                      placeholder: (context, url) => const Icon(Icons.add),
                                       fit: BoxFit.cover,
                                     )),
                               )),

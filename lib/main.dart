@@ -11,7 +11,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:PixaMart/front_end/pages/splash_screen.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:upgrader/upgrader.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -119,9 +118,6 @@ class _PixaMartAppState extends State<PixaMartApp> {
                                 OpenStore.instance.open(
                                   androidAppBundleId: 'com.wallpaper.pixamart'
                                 );
-                                /*UpgradeAlert(
-                                  upgrader: Upgrader(),
-                                );*/
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen(initialLink: widget.initialLink)));
                               },
                               style: ElevatedButton.styleFrom(

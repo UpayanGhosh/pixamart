@@ -29,7 +29,6 @@ class _AccountPageState extends State<AccountPage> {
       0.0.obs,
       0.0.obs,
       0.0.obs,
-      0.0.obs,
     ];
     manageOpacity();
   }
@@ -192,7 +191,7 @@ class _AccountPageState extends State<AccountPage> {
                 Obx(
                   () => AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
-                    opacity: opacityManager[3].value,
+                    opacity: opacityManager[4].value,
                     child: Padding(
                       padding:
                           EdgeInsets.all(MediaQuery.of(context).size.width / 24.5),
@@ -254,7 +253,7 @@ class _AccountPageState extends State<AccountPage> {
                 Obx(
                   () => AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
-                    opacity: opacityManager[5].value,
+                    opacity: opacityManager[4].value,
                     child: Padding(
                       padding:
                           EdgeInsets.all(MediaQuery.of(context).size.width / 24.5),

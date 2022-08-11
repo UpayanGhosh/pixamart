@@ -32,7 +32,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     pageController = PageController(
       initialPage: 0,
     );
-    pagesAll = [widget.firstPage, const FavouritesPage(), AccountPage()];
+    pagesAll = [widget.firstPage, const FavouritesPage(), const AccountPage()];
     myIndex = 0.obs;
     iconSize = 0.0.obs;
     currentPage = 0;
@@ -58,7 +58,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
             //HomePage(initialLink: widget.initialLink),
             widget.firstPage,
             const FavouritesPage(),
-            AccountPage(),
+            const AccountPage(),
           ]),
       bottomNavigationBar: Obx(
         () => CurvedNavigationBar(
@@ -92,7 +92,11 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           ],
           buttonBackgroundColor: Colors.white,
           onTap: (index) {
-            myIndex.value = index;
+            if (myIndex.value != index) {
+              myIndex.value = index;
+            } else {
+              // Todo add code to scroll to top of page
+            }
             pageController.animateToPage(myIndex.value,
                 duration: const Duration(milliseconds: 600),
                 curve: Curves.easeOut);
