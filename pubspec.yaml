@@ -57,7 +57,8 @@ dependencies:
   package_info_plus: ^1.4.3
   url_launcher: ^6.1.5
   open_store: ^0.2.4
-
+  connectivity_plus: ^2.3.6+1
+  cached_network_image: ^3.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:PixaMart/front_end/widget/categories.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -19,6 +20,7 @@ import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:flutter/services.dart';
 import 'package:PixaMart/backend/model/categories_model.dart';
 import 'package:PixaMart/front_end/widget/category_tile.dart';
+import 'package:PixaMart/backend/functions/animate_to_top.dart';
 
 class CategoryPage extends StatefulWidget {
   final String categoryName;
@@ -84,11 +86,11 @@ class _CategoryPageState extends State<CategoryPage> {
     if (url.statusCode == 200) {
       dynamic body = jsonDecode(url.body);
       List<dynamic> photos =
-          body['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
+      body['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
       photoList.addAll(photos);
       scrollController.addListener(() async {
         if (scrollController.offset >=
-                scrollController.position.maxScrollExtent &&
+            scrollController.position.maxScrollExtent &&
             !scrollController.position.outOfRange) {
           if (currentMaxScrollExtent <
               scrollController.position.maxScrollExtent) {
@@ -131,8 +133,8 @@ class _CategoryPageState extends State<CategoryPage> {
 
   handleLiked(
       {required String imgShowUrl,
-      required String imgDownloadUrl,
-      required String alt}) {
+        required String imgDownloadUrl,
+        required String alt}) {
     Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
@@ -192,7 +194,7 @@ class _CategoryPageState extends State<CategoryPage> {
           label: 'Undo',
           onPressed: () {
             Favourites lastDeleted =
-                Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
+            Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
             favouritesList.add(lastDeleted);
             userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
               'imgShowUrl': imgShowUrl,
@@ -235,7 +237,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           MediaQuery.of(context).size.width / 10,
                           0),
                       child: Getx.Obx(
-                          () => AnimatedOpacity(
+                            () => AnimatedOpacity(
                           duration: const Duration(milliseconds: 350),
                           opacity: opacityManager[0].value,
                           child: ShaderMask(
@@ -245,14 +247,14 @@ class _CategoryPageState extends State<CategoryPage> {
                                     end: Alignment.bottomCenter,
                                     stops: [0.1, 0.5],
                                     colors: [
-                              Colors.white,
-                              Colors.blue,
-                            ]).createShader(bounds),
+                                      Colors.white,
+                                      Colors.blue,
+                                    ]).createShader(bounds),
                             child: Text(
                               'PixaMart',
                               style: TextStyle(
                                 fontSize:
-                                    MediaQuery.of(context).size.height / 18.53,
+                                MediaQuery.of(context).size.height / 18.53,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Raunchies',
                               ),
@@ -267,7 +269,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       height: MediaQuery.of(context).size.height / 80,
                     ),
                     Getx.Obx(
-                    () => AnimatedOpacity(
+                          () => AnimatedOpacity(
                         duration: const Duration(milliseconds: 350),
                         opacity: opacityManager[1].value,
                         child: SingleChildScrollView(
@@ -284,7 +286,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                     physics: const BouncingScrollPhysics(),
                                     padding: EdgeInsets.symmetric(
                                         horizontal:
-                                            MediaQuery.of(context).size.width / 98),
+                                        MediaQuery.of(context).size.width / 98),
                                     itemCount: categories.length,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
@@ -304,13 +306,13 @@ class _CategoryPageState extends State<CategoryPage> {
                       height: MediaQuery.of(context).size.height / 80,
                     ),
                     Getx.Obx(
-                      () => AnimatedOpacity(
+                          () => AnimatedOpacity(
                         duration: const Duration(milliseconds: 350),
                         opacity: opacityManager[2].value,
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height /
                               (MediaQuery.of(context).orientation ==
-                                      Orientation.portrait
+                                  Orientation.portrait
                                   ? 1.45
                                   : 1.68),
                           child: FutureBuilder(
@@ -325,8 +327,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                     Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal:
-                                              MediaQuery.of(context).size.width /
-                                                  24.5),
+                                          MediaQuery.of(context).size.width /
+                                              24.5),
                                       child: GridView.count(
                                         controller: scrollController,
                                         physics: const BouncingScrollPhysics(),
@@ -336,68 +338,69 @@ class _CategoryPageState extends State<CategoryPage> {
                                         clipBehavior: Clip.antiAlias,
                                         crossAxisCount: 2,
                                         crossAxisSpacing:
-                                            MediaQuery.of(context).size.width /
-                                                39.2,
+                                        MediaQuery.of(context).size.width /
+                                            39.2,
                                         mainAxisSpacing: 0,
                                         children: photoList
                                             .map(
                                               (dynamic photo) => GridTile(
-                                                child: Stack(
-                                                  alignment: Alignment.bottomRight,
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(16),
-                                                      child: GestureDetector(
-                                                        onDoubleTap: () {
-                                                          handleLiked(
-                                                              imgShowUrl: photo
-                                                                  .src.portrait,
-                                                              imgDownloadUrl: photo
-                                                                  .src.original,
-                                                              alt: photo.alt);
-                                                        },
-                                                        onTap: () {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              '/imageView/',
-                                                              arguments: {
-                                                                'imgShowUrl': photo
-                                                                    .src.portrait,
-                                                                'imgDownloadUrl':
-                                                                    photo.src
-                                                                        .original,
-                                                                'alt': photo.alt
-                                                              });
-                                                        },
-                                                        child: Hero(
-                                                          tag: photo.src.portrait,
-                                                          child: Image.network(
-                                                            '${photo.src.portrait}',
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
+                                            child: Stack(
+                                              alignment: Alignment.bottomRight,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                  BorderRadius.circular(16),
+                                                  child: GestureDetector(
+                                                    onDoubleTap: () {
+                                                      handleLiked(
+                                                          imgShowUrl: photo
+                                                              .src.portrait,
+                                                          imgDownloadUrl: photo
+                                                              .src.original,
+                                                          alt: photo.alt);
+                                                    },
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                          context,
+                                                          '/imageView/',
+                                                          arguments: {
+                                                            'imgShowUrl': photo
+                                                                .src.portrait,
+                                                            'imgDownloadUrl':
+                                                            photo.src
+                                                                .original,
+                                                            'alt': photo.alt
+                                                          });
+                                                    },
+                                                    child: Hero(
+                                                      tag: photo.src.portrait,
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: '${photo.src.portrait}',
+                                                        placeholder: (context, url) => const Icon(Icons.add),
+                                                        fit: BoxFit.cover,
                                                       ),
                                                     ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        handleLiked(
-                                                            imgShowUrl:
-                                                                photo.src.portrait,
-                                                            imgDownloadUrl:
-                                                                photo.src.original,
-                                                            alt: photo.alt);
-                                                      },
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets.all(
-                                                                8.0),
-                                                        child: Builder(
-                                                            builder: (context) {
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    handleLiked(
+                                                        imgShowUrl:
+                                                        photo.src.portrait,
+                                                        imgDownloadUrl:
+                                                        photo.src.original,
+                                                        alt: photo.alt);
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                    const EdgeInsets.all(
+                                                        8.0),
+                                                    child: Builder(
+                                                        builder: (context) {
                                                           if (checkIfLiked(
-                                                                  imgShowUrl: photo
-                                                                      .src
-                                                                      .portrait) ==
+                                                              imgShowUrl: photo
+                                                                  .src
+                                                                  .portrait) ==
                                                               -1) {
                                                             return const Icon(
                                                               Icons
@@ -412,33 +415,28 @@ class _CategoryPageState extends State<CategoryPage> {
                                                             );
                                                           }
                                                         }),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
-                                            )
+                                              ],
+                                            ),
+                                          ),
+                                        )
                                             .toList(),
                                       ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal:
-                                              MediaQuery.of(context).size.width /
-                                                  24.5,
+                                          MediaQuery.of(context).size.width /
+                                              24.5,
                                           vertical:
-                                              MediaQuery.of(context).size.height /
-                                                  50.15),
+                                          MediaQuery.of(context).size.height /
+                                              50.15),
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          scrollController.animateTo(
-                                              (MediaQuery.of(context).size.height /
-                                                      4.7) *
-                                                  -1,
-                                              duration:
-                                                  const Duration(milliseconds: 400),
-                                              curve: Curves
-                                                  .easeOutSine); // easeinexpo, easeoutsine
+                                          animateToTop(scrollController, MediaQuery.of(context).size.height /
+                                              4.7 *
+                                              -1);
                                         },
                                         style: ElevatedButton.styleFrom(
                                             primary: Colors.black54,
@@ -446,11 +444,11 @@ class _CategoryPageState extends State<CategoryPage> {
                                         child: Lottie.asset(
                                             'assets/lottie/Rocket.json',
                                             height:
-                                                MediaQuery.of(context).size.width /
-                                                    6.53,
+                                            MediaQuery.of(context).size.width /
+                                                6.53,
                                             width:
-                                                MediaQuery.of(context).size.width /
-                                                    12.5,
+                                            MediaQuery.of(context).size.width /
+                                                12.5,
                                             fit: BoxFit.fill),
                                       ),
                                     ),
@@ -462,10 +460,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               }
                               return Center(
                                   child: Lottie.asset(
-                                'assets/lottie/Loading.json',
-                                height: MediaQuery.of(context).size.height / 4,
-                                width: MediaQuery.of(context).size.width / 1.96,
-                              ));
+                                    'assets/lottie/Loading.json',
+                                    height: MediaQuery.of(context).size.height / 4,
+                                    width: MediaQuery.of(context).size.width / 1.96,
+                                  ));
                             },
                           ),
                         ),

@@ -1,11 +1,11 @@
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
 // Todo Build System to share Images through App (Kingshuk)
-// Todo try different sounds with actions (Kingshuk)
 
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:PixaMart/backend/model/favourites_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -21,7 +21,6 @@ import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'dart:ui';
-
 import 'package:share_plus/share_plus.dart';
 
 class ImageView extends StatefulWidget {
@@ -52,6 +51,8 @@ class _ImageViewState extends State<ImageView>
   late Favourites fav;
   late final CollectionReference cloudDownloads;
   late BaseCacheManager cacheManager;
+  late List<RxDouble> opacityManager;
+  late GlobalKey cropperKey;
 
   @override
   void initState() {
@@ -68,6 +69,22 @@ class _ImageViewState extends State<ImageView>
     cloudDownloads =
         FirebaseFirestore.instance.collection('${user?.uid}-downloads/');
     cacheManager = DefaultCacheManager();
+    cropperKey = GlobalKey(debugLabel: 'cropperKey');
+    opacityManager = [
+      0.0.obs,
+    ];
+    manageOpacity();
+  }
+
+  void manageOpacity() async {
+    int i = 0;
+    await Future.delayed(const Duration(milliseconds: 150));
+    Timer.periodic(const Duration(milliseconds: 150), (timer) {
+      if (i < opacityManager.length) {
+        opacityManager[i].value = 1.0;
+        i++;
+      }
+    });
   }
 
   updateProgressValue({required newProgressValue, currentProgressValue}) async {
@@ -140,7 +157,7 @@ class _ImageViewState extends State<ImageView>
       });
     }
     var dir = await getExternalStorageDirectory();
-    int midProgressValue = Random().nextInt(16) + 25;
+    int midProgressValue = Random().nextInt(15) + 55;
     String filePath = '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
     await Dio().download(widget.imgDownloadUrl, filePath).then((value) async {
       dialogue = 'Setting as Wallpaper'.obs;
@@ -222,27 +239,34 @@ class _ImageViewState extends State<ImageView>
                       ),
                       child: Opacity(
                         opacity: 0.8,
-                        child: Image.network(
-                          widget.imgShowUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.imgShowUrl,
+                          placeholder: (context, url) => const Icon(Icons.add),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          spreadRadius: 0,
-                          blurRadius: 50,
-                          color: Colors.black.withOpacity(0.1),
-                          offset: Offset(10, 10),
+                  Obx(
+                    () => AnimatedOpacity(
+                      duration: const Duration(milliseconds: 250),
+                      opacity: opacityManager[0].value,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              spreadRadius: 0,
+                              blurRadius: 50,
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(10, 10), // Todo Experiment
+                            ),
+                          ],
                         ),
-                      ],
+                        child: Image.asset('assets/Mobile_Outline.png',
+                            height: MediaQuery.of(context).size.height / 0.2,
+                            fit: BoxFit.contain),
+                      ),
                     ),
-                    child: Image.asset('assets/Mobile_Outline.png',
-                        height: MediaQuery.of(context).size.height / 0.2,
-                        fit: BoxFit.contain),
                   ),
                   Container(
                     margin: MediaQuery.of(context).orientation ==
@@ -265,9 +289,9 @@ class _ImageViewState extends State<ImageView>
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
                           child: Image.network(
-                            widget.imgShowUrl,
-                            fit: BoxFit.cover,
-                          ),
+                              widget.imgShowUrl,
+                              fit: BoxFit.cover,
+                            ),
                         ),
                       ),
                     ),
