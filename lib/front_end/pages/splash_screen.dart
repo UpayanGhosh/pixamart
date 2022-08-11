@@ -96,7 +96,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 );
               }
             } else {
-              print('hello');
               return Scaffold(
                 backgroundColor: Colors.black,
                 body: Center(
