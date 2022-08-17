@@ -1,7 +1,11 @@
+import 'package:PixaMart/front_end/pages/check_if_logged_in.dart';
 import 'package:PixaMart/front_end/pages/helpSupport.dart';
 import 'package:PixaMart/front_end/pages/login_page.dart';
 import 'package:PixaMart/front_end/pages/signup_page.dart';
+import 'package:PixaMart/front_end/pages/welcome_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/image_view_page.dart';
 import 'package:PixaMart/front_end/pages/search_page.dart';
@@ -9,10 +13,11 @@ import 'package:PixaMart/front_end/pages/category_page.dart';
 import 'package:PixaMart/front_end/pages/splash_screen.dart';
 
 class RouteGenerator {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  PendingDynamicLinkData? initialLink;
+  Route<dynamic> generateRoute(RouteSettings settings) {
     if(settings.name == '/') {
       final args = settings.arguments as Map<String, dynamic>;
-      return MaterialPageRoute(builder: (context) => SplashScreen(initialLink: args['initialLink'],));
+      return MaterialPageRoute(builder: (context) => const SplashScreen());
     }
     if(settings.name == '/category') {
       final args = settings.arguments as Map<String, dynamic>;
@@ -27,7 +32,7 @@ class RouteGenerator {
           builder: (context) => ImageView(
             imgShowUrl: args['imgShowUrl'],
             imgDownloadUrl: args['imgDownloadUrl'],
-            alt: args['alt'],
+            imgTinyUrl: args['imgTinyUrl'], initialLink: null,
           ));
     }
     if(settings.name == '/search') {
@@ -52,7 +57,16 @@ class RouteGenerator {
     if(settings.name == '/helpSupport') {
       return MaterialPageRoute(builder: (context) => const HelpSupport());
     }
+    if(RegExp(r'\/\w+').hasMatch(settings.name!)) {
+      /*if(FirebaseAuth.instance.currentUser?.uid != null) {
+        return MaterialPageRoute(builder: (context) => ImageView(imgShowUrl: 'shared', imgDownloadUrl: 'shared', imgTinyUrl: 'shared', initialLink: initialLink,));
+      } else {
+        return MaterialPageRoute(builder: (context) => WelcomePage(initialLink: initialLink));
+      }*/
+      return MaterialPageRoute(builder: (context) => CheckIfShared(initialLink: initialLink));
+    }
     else {
+      print(settings.name);
       return MaterialPageRoute(builder: (context) => const ErrorPage());
     }
   }

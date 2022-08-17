@@ -1,7 +1,9 @@
+import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 
@@ -38,7 +40,7 @@ class _DownloadPageState extends State<DownloadPage> {
         final snapshot = await cloudDownloads.get();
         for (var element in snapshot.docs) {
           var download = element.data() as Map;
-          Favourites fav = Favourites(download['imgShowUrl'], download['imgDownloadUrl'], download['alt']);
+          Favourites fav = Favourites('https://images.pexels.com/photos/${download['img']}/pexels-photo-${download['img']}.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800', 'https://images.pexels.com/photos/${download['img']}/pexels-photo-2014422.jpeg', 'https://images.pexels.com/photos/${download['img']}/pexels-photo-${download['img']}.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280');
           downloadsList.add(fav);
         }
       }
@@ -82,12 +84,18 @@ class _DownloadPageState extends State<DownloadPage> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: GestureDetector(
+                                onLongPressStart: (longPress) {
+                                  HapticFeedback.lightImpact();
+                                  onShare(
+                                      downloads.imgShowUrl,
+                                      downloads.imgDownloadUrl);
+                                },
                                 onTap: () {
                                   Navigator.pushNamed(context, '/imageView/',
                                       arguments: {
                                         'imgShowUrl': downloads.imgShowUrl,
                                         'imgDownloadUrl': downloads.imgDownloadUrl,
-                                        'alt': downloads.alt,
+                                        'imgTinyUrl': downloads.imgTinyUrl,
                                       });
                                 },
                                 child: Hero(

@@ -21,8 +21,9 @@ class Src{
   String? portrait;
   String? original;
   String? landscape;
-  Src(this.portrait, this.original, this.landscape);
+  String? tiny;
+  Src(this.portrait, this.original, this.landscape, this.tiny);
   factory Src.fromJson(Map<String,dynamic> src){
-    return Src(src['portrait'], src['original'], src['landscape']);
+    return Src(src['portrait'], src['original'], src['landscape'], src['tiny']);
   }
 }
