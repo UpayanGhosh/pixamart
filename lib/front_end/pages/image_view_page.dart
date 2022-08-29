@@ -464,8 +464,8 @@ class _ImageViewState extends State<ImageView>
                             backgroundColor: Colors.white24,
                             overlayColor: Colors.transparent,
                             overlayOpacity: 0.5,
-                            spacing: 17,
-                            spaceBetweenChildren: 12,
+                            spacing: MediaQuery.of(context).size.height / 49.084,
+                            spaceBetweenChildren: MediaQuery.of(context).size.height / 69.535,
                             children: [
                               SpeedDialChild(
                                   child: isLiked == -1 ? const Icon(Icons.favorite_outline_rounded, color: Colors.pink,) : const Icon(Icons.favorite_outlined, color: Colors.pink,),
