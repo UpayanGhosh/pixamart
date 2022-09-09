@@ -32,7 +32,7 @@ class FavouritesAdapter extends TypeAdapter<Favourites> {
       ..writeByte(1)
       ..write(obj.imgDownloadUrl)
       ..writeByte(2)
-      ..write(obj.alt);
+      ..write(obj.imgTinyUrl);
   }
 
   @override

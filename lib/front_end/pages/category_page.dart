@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:PixaMart/front_end/widget/categories.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -134,16 +135,14 @@ class _CategoryPageState extends State<CategoryPage> {
   handleLiked(
       {required String imgShowUrl,
         required String imgDownloadUrl,
-        required String alt}) {
-    Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, alt);
+        required String imgTinyUrl}) async {
+    Favourites fav = Favourites(imgShowUrl, imgDownloadUrl, imgTinyUrl);
     int index = checkIfLiked(imgShowUrl: imgShowUrl);
     if (index == -1) {
       HapticFeedback.lightImpact(); // may remove later
-      Hive.box('${auth.currentUser?.uid}-favourites').add(fav);
+      Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
       userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-        'imgShowUrl': imgShowUrl,
-        'imgDownloadUrl': imgDownloadUrl,
-        'alt': alt,
+        'img': imgDownloadUrl.split('/')[4],
       }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
@@ -158,27 +157,23 @@ class _CategoryPageState extends State<CategoryPage> {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(
-                Hive.box('${auth.currentUser?.uid}-favourites').length - 1);
+            Hive.box('${user?.uid}-favourites')
+                .deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
             userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
             removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-              'imgShowUrl': imgShowUrl,
-              'imgDownloadUrl': imgDownloadUrl,
-              'alt': alt,
+              'img': imgDownloadUrl.split('/')[4],
             }); // when user removes an image from liked it goes to firestore
             setState(() {});
           },
         ),
       ));
     } else {
-      Hive.box('${auth.currentUser?.uid}-favourites').deleteAt(index);
+      Hive.box('${user?.uid}-favourites').deleteAt(index);
       userFavouritesDatabase
           .child(imgDownloadUrl.split('/')[4])
           .remove(); // RD deletion code
       removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-        'imgShowUrl': imgShowUrl,
-        'imgDownloadUrl': imgDownloadUrl,
-        'alt': alt,
+        'img': imgDownloadUrl.split('/')[4],
       }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
@@ -194,13 +189,11 @@ class _CategoryPageState extends State<CategoryPage> {
           label: 'Undo',
           onPressed: () {
             Favourites lastDeleted =
-            Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.alt);
+            Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.imgTinyUrl);
             favouritesList.add(lastDeleted);
             userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-              'imgShowUrl': imgShowUrl,
-              'imgDownloadUrl': imgDownloadUrl,
-              'alt': alt,
-            }); // add to RD again
+              'img': imgDownloadUrl.split('/')[4],
+            });
             setState(() {});
           },
         ),
@@ -351,13 +344,21 @@ class _CategoryPageState extends State<CategoryPage> {
                                                   borderRadius:
                                                   BorderRadius.circular(16),
                                                   child: GestureDetector(
+                                                    onLongPressStart: (longPress) {
+                                                      HapticFeedback.lightImpact();
+                                                      onShare(
+                                                          photo.src
+                                                              .portrait,
+                                                          photo.src
+                                                              .original);
+                                                    },
                                                     onDoubleTap: () {
                                                       handleLiked(
                                                           imgShowUrl: photo
                                                               .src.portrait,
                                                           imgDownloadUrl: photo
                                                               .src.original,
-                                                          alt: photo.alt);
+                                                          imgTinyUrl: photo.src.tiny);
                                                     },
                                                     onTap: () {
                                                       Navigator.pushNamed(
@@ -369,7 +370,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                                             'imgDownloadUrl':
                                                             photo.src
                                                                 .original,
-                                                            'alt': photo.alt
+                                                            'imgTinyUrl': photo.src.tiny
                                                           });
                                                     },
                                                     child: Hero(
@@ -389,7 +390,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                                         photo.src.portrait,
                                                         imgDownloadUrl:
                                                         photo.src.original,
-                                                        alt: photo.alt);
+                                                        imgTinyUrl: photo.src.tiny);
                                                   },
                                                   child: Padding(
                                                     padding:

@@ -1,13 +1,14 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/account_page.dart';
 import 'package:PixaMart/front_end/pages/favourites_page.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:lottie/lottie.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final Uri? initialLink;
   final Widget firstPage;
   const AppBottomNavigationBar(
       {this.initialLink, required this.firstPage, Key? key})
@@ -44,22 +45,44 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     return Scaffold(
       backgroundColor: Colors.black87,
       resizeToAvoidBottomInset: false,
-      body: PageView(
-          physics: const BouncingScrollPhysics(),
-          controller: pageController,
-          clipBehavior: Clip.antiAlias,
-          onPageChanged: (page) {
-            myIndex.value = page;
-            setState(() {
-              currentPage = myIndex.value;
-            });
-          },
-          children: [
-            //HomePage(initialLink: widget.initialLink),
-            widget.firstPage,
-            const FavouritesPage(),
-            const AccountPage(),
-          ]),
+      body: StreamBuilder(
+        stream: Connectivity().onConnectivityChanged,
+        builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectivityResult.none) {
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset('assets/lottie/NoInternet.json'),
+                    Text('You Forgot to turn on the Internet', style: TextStyle(color: Colors.white,fontSize: MediaQuery.of(context).size.height / 41.72,
+                      fontFamily: 'Nexa',
+                      fontWeight: FontWeight.bold,),)
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return PageView(
+                physics: const BouncingScrollPhysics(),
+                controller: pageController,
+                clipBehavior: Clip.antiAlias,
+                onPageChanged: (page) {
+                  myIndex.value = page;
+                  setState(() {
+                    currentPage = myIndex.value;
+                  });
+                },
+                children: [
+                  //HomePage(initialLink: widget.initialLink),
+                  widget.firstPage,
+                  const FavouritesPage(),
+                  const AccountPage(),
+                ]);
+          }
+        }
+      ),
       bottomNavigationBar: Obx(
         () => CurvedNavigationBar(
           index: myIndex.value,

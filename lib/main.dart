@@ -1,6 +1,8 @@
 // Todo try and add a notification system (kingshuk)
 // Todo try adding a showcase system for new users (kingshuk)
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/routing/route_generator.dart';
@@ -23,8 +25,11 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   Hive.registerAdapter(FavouritesAdapter());
-  final PendingDynamicLinkData? initialLink =
-      await FirebaseDynamicLinks.instance.getInitialLink();
+  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+  if(FirebaseAuth.instance.currentUser?.uid != null) {
+    await Hive.openBox('${FirebaseAuth.instance.currentUser?.uid}-downloads');
+    await Hive.openBox('${FirebaseAuth.instance.currentUser?.uid}-favourites');
+  }
   runApp(PixaMartApp(initialLink: initialLink));
 }
 
@@ -40,12 +45,15 @@ class _PixaMartAppState extends State<PixaMartApp> {
   late PackageInfo packageInfo;
   late CollectionReference buildNumber;
   late RxDouble opacityManager = 0.0.obs;
+  late RouteGenerator route;
 
   @override
   void initState() {
     super.initState();
     buildNumber = FirebaseFirestore.instance.collection('version');
     initializePackageInfo();
+    route = RouteGenerator();
+    route.initialLink = widget.initialLink;
   }
 
   initializePackageInfo() async {
@@ -102,7 +110,7 @@ class _PixaMartAppState extends State<PixaMartApp> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen(initialLink: widget.initialLink)));
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen()));
                               },
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.white, elevation: 0),
@@ -116,9 +124,12 @@ class _PixaMartAppState extends State<PixaMartApp> {
                             ElevatedButton(
                               onPressed: () {
                                 OpenStore.instance.open(
-                                  androidAppBundleId: 'com.wallpaper.pixamart'
-                                );
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen(initialLink: widget.initialLink)));
+                                    androidAppBundleId:
+                                        'com.wallpaper.pixamart');
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SplashScreen()));
                               },
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.greenAccent, elevation: 0),
@@ -137,14 +148,14 @@ class _PixaMartAppState extends State<PixaMartApp> {
                   ),
                 );
               }
-              return SplashScreen(initialLink: widget.initialLink);
+              return const SplashScreen();
             }
             return Container();
           }),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.black),
       title: 'PixaMart',
-      onGenerateRoute: RouteGenerator.generateRoute,
+      onGenerateRoute: route.generateRoute,
     );
   }
 }

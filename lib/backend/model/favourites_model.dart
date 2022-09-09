@@ -9,7 +9,7 @@ class Favourites {
   @HiveField(1)
   final String imgDownloadUrl;
   @HiveField(2)
-  final String alt;
+  final String imgTinyUrl;
 
-  Favourites(this.imgShowUrl, this.imgDownloadUrl, this.alt);
+  Favourites(this.imgShowUrl, this.imgDownloadUrl, this.imgTinyUrl);
 }

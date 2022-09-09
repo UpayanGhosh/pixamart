@@ -1,19 +1,13 @@
-import 'dart:async';
-
 import 'package:PixaMart/front_end/pages/homepage.dart';
 import 'package:PixaMart/front_end/pages/welcome_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:PixaMart/backend/model/auth_model.dart';
 import 'package:hive/hive.dart';
-import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
-  const SplashScreen({required this.initialLink, Key? key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -26,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _auth = AuthService();
+
   }
 
   @override
@@ -59,59 +54,34 @@ class _SplashScreenState extends State<SplashScreen> {
         backgroundColor: Colors.black,
         splashTransition: SplashTransition.fadeTransition,
         nextScreen: StreamBuilder(
-          stream: Connectivity().onConnectivityChanged,
-          builder: (context, snapshot) {
-            if(snapshot.hasData) {
-              if(snapshot.connectionState == ConnectivityResult.none) {
-                return Scaffold();
-              } else {
-                return StreamBuilder(
-                  stream: _auth.auth.authStateChanges(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      Hive.openBox('${_auth.auth.currentUser?.uid}-favourites');
-                      Hive.openBox('${_auth.auth.currentUser?.uid}-downloads');
-                      return FutureBuilder(
-                        future: Hive.openBox('${_auth.auth.currentUser?.uid}-favourites'),
-                        builder: (context, snapshot) {
-                          if(snapshot.connectionState == ConnectionState.done) {
-                            if(snapshot.hasData) {
-                              return AppBottomNavigationBar(initialLink: widget.initialLink, firstPage: HomePage(initialLink: widget.initialLink),);
-                            } else {
-                              return const Scaffold(
-                                backgroundColor: Colors.black87,
-                              );
-                            }
+                stream: _auth.auth.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Hive.openBox('${_auth.auth.currentUser?.uid}-favourites');
+                    Hive.openBox('${_auth.auth.currentUser?.uid}-downloads');
+                    return FutureBuilder(
+                      future: Hive.openBox('${_auth.auth.currentUser?.uid}-favourites'),
+                      builder: (context, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.done) {
+                          if(snapshot.hasData) {
+                            return AppBottomNavigationBar(initialLink: null, firstPage: HomePage(initialLink: null),);
                           } else {
                             return const Scaffold(
                               backgroundColor: Colors.black87,
                             );
                           }
-                        },
-                      );
-                    } else {
-                      return WelcomePage(initialLink: widget.initialLink);
-                    }
-                  },
-                );
+                        } else {
+                          return const Scaffold(
+                            backgroundColor: Colors.black87,
+                          );
+                        }
+                      },
+                    );
+                  } else {
+                    return WelcomePage(initialLink: null);
+                  }
+                },
+              ),
+    );
               }
-            } else {
-              return Scaffold(
-                backgroundColor: Colors.black,
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset('assets/lottie/NoInternet.json'),
-                      Text('You Forgot to turn on the Internet', style: TextStyle(color: Colors.white,fontSize: MediaQuery.of(context).size.height / 41.72,
-                        fontFamily: 'Nexa',
-                        fontWeight: FontWeight.bold,),)
-                    ],
-                  ),
-                ),
-              );
-            }
-          }
-        ));
   }
-}

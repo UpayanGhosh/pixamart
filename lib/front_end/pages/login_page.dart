@@ -8,8 +8,6 @@ import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 
-import 'homepage.dart';
-
 class LoginPage extends StatefulWidget {
   final PendingDynamicLinkData? initialLink;
   const LoginPage({required this.initialLink, Key? key}) : super(key: key);

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
@@ -88,12 +90,18 @@ class _FavouritesPageState extends State<FavouritesPage> {
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: GestureDetector(
+                                  onLongPressStart: (longPress) {
+                                    HapticFeedback.lightImpact();
+                                    onShare(
+                                        favourites.imgShowUrl,
+                                        favourites.imgDownloadUrl);
+                                  },
                                   onTap: () {
                                     Navigator.pushNamed(context, '/imageView/',
                                         arguments: {
                                           'imgShowUrl': favourites.imgShowUrl,
                                           'imgDownloadUrl': favourites.imgDownloadUrl,
-                                          'alt': favourites.alt,
+                                          'imgTinyUrl': favourites.imgTinyUrl,
                                         });
                                   },
                                   child: Hero(
@@ -115,12 +123,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                   Favourites lastDeleted = Favourites(
                                       favourites.imgShowUrl,
                                       favourites.imgDownloadUrl,
-                                      favourites.alt);
+                                      favourites.imgTinyUrl);
                                   userFavouritesDatabase.child(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).remove();
                                   removedFromLiked.doc(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).set({
-                                    'imgShowUrl': lastDeleted.imgShowUrl,
-                                    'imgDownloadUrl': lastDeleted.imgDownloadUrl,
-                                    'alt': lastDeleted.alt,
+                                    'img': lastDeleted.imgDownloadUrl.split('/')[4],
                                   }); // when user removes an image from liked it goes to firestore
                                   favouritesBox.deleteAt(favouritesBox.length - index - 1);
                                   setState(() {});
@@ -137,9 +143,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                       onPressed: () {
                                         favouritesBox.add(lastDeleted);
                                         userFavouritesDatabase.child(lastDeleted.imgDownloadUrl.split('/')[4]).set({
-                                          'imgShowUrl': lastDeleted.imgShowUrl,
-                                          'imgDownloadUrl': lastDeleted.imgDownloadUrl,
-                                          'alt': lastDeleted.alt,
+                                          'img': lastDeleted.imgDownloadUrl.split('/')[4],
                                         }); // RD write complete
                                         setState(() {});
                                       },
@@ -197,11 +201,17 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: GestureDetector(
+                          onLongPressStart: (longPress) {
+                            HapticFeedback.lightImpact();
+                            onShare(
+                                favourites.imgShowUrl,
+                                favourites.imgDownloadUrl);
+                          },
                           onTap: () {
                             Navigator.pushNamed(context, '/imageView/', arguments: {
                               'imgShowUrl': favourites.imgShowUrl,
                               'imgDownloadUrl': favourites.imgDownloadUrl,
-                              'alt': favourites.alt,
+                              'imgTinyUrl': favourites.imgTinyUrl,
                             });
                           },
                           child: Hero(
@@ -221,12 +231,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         ),
                         onTap: () {
                           Favourites lastDeleted = Favourites(favourites.imgShowUrl,
-                              favourites.imgDownloadUrl, favourites.alt);
+                              favourites.imgDownloadUrl, favourites.imgTinyUrl);
                           userFavouritesDatabase.child(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).remove();
                           removedFromLiked.doc(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).set({
-                            'imgShowUrl': favouritesBox.getAt(favouritesBox.length - index - 1).imgShowUrl,
-                            'imgDownloadUrl': favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl,
-                            'alt': favouritesBox.getAt(favouritesBox.length - index - 1).alt,
+                            'img': favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4],
                           }); // when user removes an image from liked it goes to firestore
                           favouritesBox.deleteAt(index);
                           setState(() {});
@@ -243,9 +251,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               onPressed: () {
                                 favouritesBox.add(lastDeleted);
                                 userFavouritesDatabase.child(lastDeleted.imgDownloadUrl.split('/')[4]).set({
-                                  'imgShowUrl': lastDeleted.imgShowUrl,
-                                  'imgDownloadUrl': lastDeleted.imgDownloadUrl,
-                                  'alt': lastDeleted.alt,
+                                  'img': lastDeleted.imgDownloadUrl.split('/')[4],
                                 }); // RD write complete
                                 setState(() {});
                               },
