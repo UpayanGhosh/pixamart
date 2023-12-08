@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/widget/animated_search_bar.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+class Search_Bar extends StatefulWidget {
+  const Search_Bar({Key? key}) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<Search_Bar> createState() => _Search_BarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _Search_BarState extends State<Search_Bar> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -19,9 +19,14 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 24.5, 0, 0, 0),
-      child: AnimatedSearchBar(width: MediaQuery.of(context).size.width / 1.57, textController: searchController, onSuffixTap: (){
-      }, searchQuery: searchController,),
+      padding: EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width / 24.5, 0, 0, 0),
+      child: AnimatedSearchBar(
+        width: MediaQuery.of(context).size.width / 1.57,
+        textController: searchController,
+        onSuffixTap: () {},
+        searchQuery: searchController,
+      ),
     );
   }
 }

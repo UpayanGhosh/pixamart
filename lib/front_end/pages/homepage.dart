@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:PixaMart/backend/functions/on_share.dart';
+import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,7 +16,6 @@ import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:PixaMart/backend/model/categories_model.dart';
 import 'package:PixaMart/backend/model/wallpaper_model.dart';
-import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
 import 'package:PixaMart/private/api_key.dart';
 import 'package:PixaMart/private/get_pexels_api_key.dart';
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<dynamic>> getPexelsCuratedWallpapers() async {
     Response url = await get(
-        Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
+        Uri.parse("https://api.pexels.com/v1/curated?per_page=80"),
         headers: {"Authorization": getPexelsApiKey()});
     if (url.statusCode == 200) {
       Map<String, dynamic> curated = jsonDecode(url.body);
@@ -292,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SearchBar(),
+                              const Search_Bar(),
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height / 16.68,

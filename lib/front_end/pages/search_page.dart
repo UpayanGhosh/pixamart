@@ -271,7 +271,7 @@ class _SearchPageState extends State<SearchPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SearchBar(),
+                              const Search_Bar(),
                               SizedBox(
                                 height: MediaQuery.of(context).size.height / 16.68,
                                 child: ListView.builder(

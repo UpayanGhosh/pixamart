@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:PixaMart/front_end/widget/categories.dart';
+import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:PixaMart/private/get_pexels_api_key.dart';
 import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:get/get.dart' as Getx;
@@ -272,7 +272,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SearchBar(),
+                              const Search_Bar(),
                               SizedBox(
                                 height: MediaQuery.of(context).size.height / 16.68,
                                 child: ListView.builder(
