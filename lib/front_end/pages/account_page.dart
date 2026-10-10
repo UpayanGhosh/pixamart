@@ -102,7 +102,7 @@ class _AccountPageState extends State<AccountPage> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  LineAwesomeIcons.pen,
+                                  LineAwesomeIcons.pen_solid,
                                   color: const Color(0xFF212121),
                                   size: MediaQuery.of(context).size.height / 60,
                                 ),
@@ -162,7 +162,7 @@ class _AccountPageState extends State<AccountPage> {
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.blueAccent,
+                            backgroundColor: Colors.blueAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -202,7 +202,7 @@ class _AccountPageState extends State<AccountPage> {
                                     builder: (context) => DownloadPage()));
                           },
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.blueAccent,
+                              backgroundColor: Colors.blueAccent,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24)),
@@ -212,7 +212,7 @@ class _AccountPageState extends State<AccountPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(LineAwesomeIcons.download),
+                              const Icon(LineAwesomeIcons.download_solid),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width / 24.5,
                               ),
@@ -261,7 +261,7 @@ class _AccountPageState extends State<AccountPage> {
                             _auth.logout();
                           },
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.blueAccent,
+                              backgroundColor: Colors.blueAccent,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24)),
@@ -271,7 +271,7 @@ class _AccountPageState extends State<AccountPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(LineAwesomeIcons.alternate_sign_out),
+                              const Icon(LineAwesomeIcons.sign_out_alt_solid),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width / 24.5,
                               ),

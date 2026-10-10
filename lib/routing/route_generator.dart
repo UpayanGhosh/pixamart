@@ -5,7 +5,7 @@ import 'package:PixaMart/front_end/pages/signup_page.dart';
 import 'package:PixaMart/front_end/pages/welcome_page.dart';
 import 'package:PixaMart/front_end/widget/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/front_end/pages/image_view_page.dart';
 import 'package:PixaMart/front_end/pages/search_page.dart';
@@ -13,7 +13,7 @@ import 'package:PixaMart/front_end/pages/category_page.dart';
 import 'package:PixaMart/front_end/pages/splash_screen.dart';
 
 class RouteGenerator {
-  PendingDynamicLinkData? initialLink;
+  SharedLink? initialLink;
   Route<dynamic> generateRoute(RouteSettings settings) {
     if(settings.name == '/') {
       final args = settings.arguments as Map<String, dynamic>;

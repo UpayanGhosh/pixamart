@@ -95,7 +95,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           items: [
             Icon(
               widget.firstPage.toString() == 'HomePage'
-                  ? Ionicons.home_outline
+                  ? Ionicons.homeOutline
                   : widget.firstPage.toString() == 'CategoryPage'
                       ? Icons.category_outlined
                       : Icons.search_outlined,
@@ -103,7 +103,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
               size: iconSize / 44.90,
             ),
             Icon(
-              Ionicons.heart_outline,
+              Ionicons.heartOutline,
               color: Colors.blue,
               size: iconSize / 44.90,
             ),

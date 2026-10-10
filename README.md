@@ -1,10 +1,10 @@
 # PixaMart 🎨
 
-PixaMart is a feature-rich, high-performance wallpaper application built with **Flutter**. It provides users with access to a vast library of high-quality wallpapers powered by the **Pexels API**. The app offers a seamless user experience with smooth animations, offline capabilities, and cloud synchronization.
+PixaMart is a feature-rich, high-performance wallpaper application built with **Flutter**. It provides users with access to a vast library of high-quality wallpapers from seven sources: **Pexels, Unsplash, Pixabay, Wallhaven, Openverse, NASA Image Library and Bing Daily**. The app offers a seamless user experience with smooth animations, offline capabilities, and cloud synchronization.
 
 ## 📱 Features
 
-*   **Vast Wallpaper Library**: Browse thousands of high-quality wallpapers sourced from Pexels.
+*   **Multiple Wallpaper Sources**: Switch between Pexels, Unsplash, Pixabay, Wallhaven (SFW only), Openverse, NASA and Bing Daily with the source picker on the home screen. Photographer/licence credit is shown on each image.
 *   **Categories**: Explore wallpapers organized into various categories for easy discovery.
 *   **Search Functionality**: Quickly find specific wallpapers using keywords.
 *   **User Authentication**: Secure login and signup using **Firebase Auth** (including Google Sign-In).
@@ -13,7 +13,7 @@ PixaMart is a feature-rich, high-performance wallpaper application built with **
     *   Set images as Home Screen, Lock Screen, or Both directly from the app.
     *   Download images to your device gallery.
 *   **Favourites**: Save your preferred wallpapers to a dedicated list for quick access.
-*   **Smart Sharing**: Share wallpapers with friends using **Firebase Dynamic Links**, which open the specific image directly in the app.
+*   **Sharing**: Share a link to the wallpaper's source page with the system share sheet.
 *   **Offline Support**: Uses **Hive** for local storage to cache favourites and downloads for offline access.
 *   **Optimized Performance**: Implements advanced caching strategies with `flutter_cache_manager` and `cached_network_image` to save data and load images instantly.
 *   **Beautiful UI/UX**:
@@ -38,8 +38,7 @@ PixaMart is a feature-rich, high-performance wallpaper application built with **
     *   **Authentication**: User management.
     *   **Firestore**: Storing user data (downloads history, app versioning).
     *   **Realtime Database**: Real-time syncing of favourites.
-    *   **Dynamic Links**: Deep linking for content sharing.
-*   **API**: [Pexels API](https://www.pexels.com/api/) for fetching wallpaper data.
+*   **APIs**: [Pexels](https://www.pexels.com/api/), [Unsplash](https://unsplash.com/developers), [Pixabay](https://pixabay.com/api/docs/), [Wallhaven](https://wallhaven.cc/help/api), [Openverse](https://api.openverse.org/v1/), [NASA Image Library](https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf) and Bing's daily image archive (unofficial, best-effort).
 
 ### Data & Networking
 *   **Local Storage**: [Hive](https://docs.hivedb.dev/) (NoSQL database) for fast local data persistence.
@@ -67,10 +66,10 @@ lib/
 ## 🚀 Getting Started
 
 ### Prerequisites
-*   Flutter SDK (version >=2.16.2 <3.0.0)
+*   Flutter SDK 3.22+ (Dart 3.4+)
 *   Dart SDK
 *   Android Studio / VS Code
-*   A Pexels API Key
+*   (Optional) Pexels, Unsplash and Pixabay API keys
 *   A Firebase Project
 
 ### Installation
@@ -92,14 +91,27 @@ lib/
     *   Download `google-services.json` (for Android) and place it in `android/app/`.
     *   Download `GoogleService-Info.plist` (for iOS) and place it in `ios/Runner/`.
 
-4.  **Configure API Keys:**
-    *   Obtain an API key from [Pexels](https://www.pexels.com/api/).
-    *   Update `lib/private/api_key.dart` (or create it if missing) with your key.
+4.  **Configure API Keys (optional):**
+    Keys are injected at build time and never committed. Copy the example file and fill in any keys you have:
+    ```bash
+    cp api_keys.example.json api_keys.json   # api_keys.json is git-ignored
+    ```
+    Sources whose key is empty are hidden automatically. Wallhaven, Openverse, NASA and Bing need no key.
 
 5.  **Run the App:**
     ```bash
-    flutter run
+    flutter run --dart-define-from-file=api_keys.json
     ```
+
+6.  **Build an APK:**
+    ```bash
+    flutter build apk --release --dart-define-from-file=api_keys.json
+    ```
+    Without `android/key.properties` the release APK is signed with the debug key (fine for sideloading, not for the Play Store).
+    To sign properly, create `android/key.properties` with `storeFile`, `storePassword`, `keyAlias` and `keyPassword`.
+
+### Firebase security rules
+`firestore.rules` and `database.rules.json` restrict each user to their own favourites/downloads. Deploy them with `firebase deploy --only firestore:rules,database`.
 
 ## 🤝 Contributing
 

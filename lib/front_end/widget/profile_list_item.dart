@@ -17,7 +17,7 @@ class ProfileListItem extends StatelessWidget {
             Navigator.pushNamed(context, page);
           },
           style: ElevatedButton.styleFrom(
-              primary: Colors.blueAccent,
+              backgroundColor: Colors.blueAccent,
               elevation: 0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24)),

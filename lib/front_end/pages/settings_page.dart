@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SettingsTile(
               color: Colors.blue,
-              icon: Ionicons.image_outline,
+              icon: Ionicons.imageOutline,
               title: 'Change number of Images',
               onTap: () {},
             ),

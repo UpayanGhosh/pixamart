@@ -1,24 +1,22 @@
+import 'package:PixaMart/front_end/widget/source_picker.dart';
+import 'package:PixaMart/backend/sources/wallpaper.dart';
+import 'package:PixaMart/backend/sources/wallpaper_repository.dart';
 // This is the HomePage of the application
 //todo find info about limitedbox widget (kingshuk)
 
 import 'dart:async';
-import 'dart:convert';
 import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Getx;
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
 import 'package:PixaMart/backend/model/categories_model.dart';
-import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:PixaMart/front_end/widget/app_title.dart';
-import 'package:PixaMart/private/api_key.dart';
-import 'package:PixaMart/private/get_pexels_api_key.dart';
 import 'package:PixaMart/front_end/widget/categories.dart';
 import 'package:PixaMart/front_end/widget/category_tile.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
@@ -27,7 +25,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:PixaMart/backend/functions/animate_to_top.dart';
 
 class HomePage extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const HomePage({required this.initialLink, Key? key}) : super(key: key);
   @override
   State<HomePage> createState() => _HomePageState();
@@ -69,6 +67,8 @@ class _HomePageState extends State<HomePage> {
     ];
     manageOpacity();
     scrollController = ScrollController();
+    scrollController.addListener(loadMoreOnScroll);
+    wallpapersFuture = loadWallpapers();
     syncFavourites();
   }
 
@@ -108,58 +108,47 @@ class _HomePageState extends State<HomePage> {
       final cloudFavourites = snapshot.children;
       for (int i = 0; i < cloudFavourites.length; i++) {
         var favourite = cloudFavourites.elementAt(i).value as Map;
-        Favourites fav = Favourites(
-            'https://images.pexels.com/photos/${favourite['img']}/pexels-photo-${favourite['img']}.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-            'https://images.pexels.com/photos/${favourite['img']}/pexels-photo-2014422.jpeg',
-            'https://images.pexels.com/photos/${favourite['img']}/pexels-photo-${favourite['img']}.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280');
+        final urls = urlsFromCloudRecord(favourite);
+          Favourites fav = Favourites(urls[0], urls[1], urls[2]);
         Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
       }
     }
     setState(() {});
   }
 
-  Future<List<dynamic>> getPexelsCuratedWallpapers() async {
-    Response url = await get(
-        Uri.parse("https://api.pexels.com/v1/curated?per_page=80"),
-        headers: {"Authorization": getPexelsApiKey()});
-    if (url.statusCode == 200) {
-      Map<String, dynamic> curated = jsonDecode(url.body);
-      List<dynamic> photos = curated['photos']
-          .map((dynamic item) => Photos.fromJson(item))
-          .toList();
-      photoList.addAll(photos);
-      photos.removeRange(0, photos.length); // added new line
-      scrollController.addListener(() async {
-        if (scrollController.offset >=
-                scrollController.position.maxScrollExtent / 2 &&
-            !scrollController.position.outOfRange) {
-          if (currentMaxScrollExtent <
-              scrollController.position.maxScrollExtent) {
-            currentMaxScrollExtent = scrollController.position.maxScrollExtent;
-            page++;
-            Response url = await get(
-                Uri.parse(
-                    'https://api.pexels.com/v1/curated/?page=$page&per_page=80'),
-                headers: {"Authorization": getPexelsApiKey()});
-            if (url.statusCode == 200) {
-              Map<String, dynamic> nextPage = jsonDecode(url.body);
-              setState(() {
-                photoList.addAll(nextPage['photos']
-                    .map((dynamic item) => Photos.fromJson(item))
-                    .toList());
-              });
-            } else {
-              throw Exception('Failed to Fetch Curated');
-            }
-          }
-        }
-      });
-      return photoList;
-    } else {
-      swapKeys();
-      return photoList;
-      //throw Exception('Failed to Fetch Curated');
+  late Future<List<dynamic>> wallpapersFuture;
+  bool loadingMore = false;
+
+  Future<List<dynamic>> loadWallpapers() async {
+    page = 1;
+    final firstPage = await WallpaperRepository.curated(page);
+    photoList
+      ..clear()
+      ..addAll(firstPage);
+    return photoList;
+  }
+
+  void loadMoreOnScroll() async {
+    if (loadingMore || !scrollController.hasClients) return;
+    final position = scrollController.position;
+    if (position.pixels < position.maxScrollExtent * 0.7) return;
+    loadingMore = true;
+    try {
+      final more = await WallpaperRepository.curated(page + 1);
+      if (more.isNotEmpty && mounted) {
+        page++;
+        setState(() => photoList.addAll(more));
+      }
+    } catch (_) {
+    } finally {
+      loadingMore = false;
     }
+  }
+
+  void changeSource(WallpaperSourceId id) {
+    WallpaperRepository.select(id);
+    if (scrollController.hasClients) scrollController.jumpTo(0);
+    setState(() => wallpapersFuture = loadWallpapers());
   }
 
   checkIfLiked({required String imgShowUrl}) {
@@ -181,8 +170,8 @@ class _HomePageState extends State<HomePage> {
     if (index == -1) {
       HapticFeedback.lightImpact(); // may remove later
       Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
-      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-        'img': imgDownloadUrl.split('/')[4],
+      userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).set({
+        ...cloudRecordFor(imgDownloadUrl),
       }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
@@ -199,9 +188,9 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             Hive.box('${user?.uid}-favourites')
                 .deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
-            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
-            removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-              'img': imgDownloadUrl.split('/')[4],
+            userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).remove();
+            removedFromLiked.doc(cloudKeyFor(imgDownloadUrl)).set({
+              ...cloudRecordFor(imgDownloadUrl),
             }); // when user removes an image from liked it goes to firestore
             setState(() {});
           },
@@ -210,10 +199,10 @@ class _HomePageState extends State<HomePage> {
     } else {
       Hive.box('${user?.uid}-favourites').deleteAt(index);
       userFavouritesDatabase
-          .child(imgDownloadUrl.split('/')[4])
+          .child(cloudKeyFor(imgDownloadUrl))
           .remove(); // RD deletion code
-      removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-        'img': imgDownloadUrl.split('/')[4],
+      removedFromLiked.doc(cloudKeyFor(imgDownloadUrl)).set({
+        ...cloudRecordFor(imgDownloadUrl),
       }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
@@ -231,8 +220,8 @@ class _HomePageState extends State<HomePage> {
             Favourites lastDeleted =
                 Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.imgTinyUrl);
             favouritesList.add(lastDeleted);
-            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-              'img': imgDownloadUrl.split('/')[4],
+            userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).set({
+              ...cloudRecordFor(imgDownloadUrl),
             });
             setState(() {});
           },
@@ -320,12 +309,14 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 80,
                     ),
+                    SourcePicker(onChanged: changeSource),
+                    SizedBox(height: MediaQuery.of(context).size.height / 80),
                     Getx.Obx(
                       () => AnimatedOpacity(
                         duration: const Duration(milliseconds: 1000),
                         opacity: opacityManager[2].value,
                         child: FutureBuilder(
-                          future: getPexelsCuratedWallpapers(),
+                          future: wallpapersFuture,
                           builder:
                               (context, AsyncSnapshot<List<dynamic>> snapshot) {
                             if (snapshot.hasData) {
@@ -373,45 +364,36 @@ class _HomePageState extends State<HomePage> {
                                                           onLongPressStart:
                                                               (longPress) {
                                                             onShare(
-                                                                photo.src.tiny,
-                                                                photo.src
-                                                                    .original);
+                                                                photo.tinyUrl,
+                                                                photo.downloadUrl);
                                                           },
                                                           onDoubleTap: () {
                                                             handleLiked(
-                                                                imgShowUrl: photo
-                                                                    .src
-                                                                    .portrait,
+                                                                imgShowUrl: photo.showUrl,
                                                                 imgDownloadUrl:
-                                                                    photo.src
-                                                                        .original,
+                                                                    photo.downloadUrl,
                                                                 imgTinyUrl:
-                                                                    photo.src
-                                                                        .tiny);
+                                                                    photo.tinyUrl);
                                                           },
                                                           onTap: () {
                                                             Navigator.pushNamed(
                                                                 context,
-                                                                '/imageView/${photo.src.portrait.split('/')[4]}',
+                                                                '/imageView/${photo.id}',
                                                                 arguments: {
                                                                   'imgShowUrl':
-                                                                      photo.src
-                                                                          .portrait,
+                                                                      photo.showUrl,
                                                                   'imgDownloadUrl':
-                                                                      photo.src
-                                                                          .original,
+                                                                      photo.downloadUrl,
                                                                   'imgTinyUrl':
-                                                                      photo.src
-                                                                          .tiny
+                                                                      photo.tinyUrl
                                                                 });
                                                           },
                                                           child: Hero(
-                                                              tag: photo
-                                                                  .src.portrait,
+                                                              tag: photo.showUrl,
                                                               child:
                                                                   CachedNetworkImage(
                                                                 imageUrl:
-                                                                    '${photo.src.portrait}',
+                                                                    '${photo.showUrl}',
                                                                 placeholder: (context,
                                                                         url) =>
                                                                     const Icon(
@@ -431,9 +413,7 @@ class _HomePageState extends State<HomePage> {
                                                         child: Builder(
                                                             builder: (context) {
                                                           if (checkIfLiked(
-                                                                  imgShowUrl: photo
-                                                                      .src
-                                                                      .portrait) ==
+                                                                  imgShowUrl: photo.showUrl) ==
                                                               -1) {
                                                             return const Icon(
                                                               Icons
@@ -452,13 +432,10 @@ class _HomePageState extends State<HomePage> {
                                                         }),
                                                         onTap: () {
                                                           handleLiked(
-                                                              imgShowUrl: photo
-                                                                  .src.portrait,
+                                                              imgShowUrl: photo.showUrl,
                                                               imgDownloadUrl:
-                                                                  photo.src
-                                                                      .original,
-                                                              imgTinyUrl: photo
-                                                                  .src.tiny);
+                                                                  photo.downloadUrl,
+                                                              imgTinyUrl: photo.tinyUrl);
                                                         },
                                                       ),
                                                     ),
@@ -485,7 +462,7 @@ class _HomePageState extends State<HomePage> {
                                                 -1);
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          primary: Colors.black54,
+                                          backgroundColor: Colors.black54,
                                           shape: const CircleBorder()),
                                       child: Lottie.asset(
                                           'assets/lottie/Rocket.json',

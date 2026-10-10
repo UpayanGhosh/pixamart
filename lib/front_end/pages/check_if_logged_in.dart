@@ -1,6 +1,6 @@
 import 'package:PixaMart/front_end/pages/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -8,7 +8,7 @@ import 'package:hive/hive.dart';
 import 'image_view_page.dart';
 
 class CheckIfShared extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const CheckIfShared({required this.initialLink, Key? key}) : super(key: key);
 
   @override

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
@@ -8,7 +8,7 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 
 class WelcomePage extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const WelcomePage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
@@ -205,7 +205,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 horizontal: MediaQuery.of(context).size.width / 2.8,
                                 vertical: MediaQuery.of(context).size.height / 41.7),
                             elevation: 0,
-                            primary: const Color(0xfff07371),
+                            backgroundColor: const Color(0xfff07371),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
                           ),
@@ -246,7 +246,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 horizontal: MediaQuery.of(context).size.width / 2.92,
                                 vertical: MediaQuery.of(context).size.height / 41.7),
                             elevation: 0,
-                            primary: const Color(0xff8ab6fd),
+                            backgroundColor: const Color(0xff8ab6fd),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
                           ),

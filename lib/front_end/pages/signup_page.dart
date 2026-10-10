@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -8,7 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 
 class SignupPage extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const SignupPage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
@@ -176,21 +176,6 @@ class _SignupPageState extends State<SignupPage> {
                                   _email = val;
                                 });
                                 setState(() => _email = val);
-                                if (_email.contains('@') &&
-                                    _email.contains('.')) {
-                                  List<String> userSignInMethods = [];
-                                  userSignInMethods = await _auth
-                                      .checkIfUserExists(email: _email);
-                                  if (userSignInMethods.isEmpty &&
-                                      _email != '') {
-                                    emailProperties.value = 'New Account';
-                                    color[0].value = 'green';
-                                  } else {
-                                    emailProperties.value =
-                                        'Account already exists';
-                                    color[0].value = 'red';
-                                  }
-                                }
                               },
                               cursorColor: Colors.white,
                               style: const TextStyle(color: Colors.white),
@@ -264,11 +249,11 @@ class _SignupPageState extends State<SignupPage> {
                                           },
                                           icon: obscureText.value
                                               ? const Icon(
-                                                  Ionicons.eye_outline,
+                                                  Ionicons.eyeOutline,
                                                   color: Colors.white,
                                                 )
                                               : const Icon(
-                                                  Ionicons.eye_off_outline,
+                                                  Ionicons.eyeOffOutline,
                                                   color: Colors.white,
                                                 )),
                                   enabledBorder: OutlineInputBorder(
@@ -316,7 +301,7 @@ class _SignupPageState extends State<SignupPage> {
                           vertical: MediaQuery.of(context).size.height / 41.7),
                       side: const BorderSide(color: Colors.transparent),
                       elevation: 0,
-                      primary: const Color(0xff8ab6fd),
+                      backgroundColor: const Color(0xff8ab6fd),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
@@ -360,7 +345,7 @@ class _SignupPageState extends State<SignupPage> {
                           horizontal: MediaQuery.of(context).size.width / 4.8,
                           vertical: MediaQuery.of(context).size.height / 35.6),
                       elevation: 0,
-                      primary: const Color(0xff63c54f),
+                      backgroundColor: const Color(0xff63c54f),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),

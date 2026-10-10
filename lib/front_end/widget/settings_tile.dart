@@ -53,7 +53,7 @@ class SettingsTile extends StatelessWidget {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: const Icon(Ionicons.chevron_forward_outline),
+                child: const Icon(Ionicons.chevronForwardOutline),
               ),
             )),
       ],

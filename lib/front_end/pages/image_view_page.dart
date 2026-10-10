@@ -1,3 +1,5 @@
+import 'package:PixaMart/backend/sources/wallpaper.dart';
+import 'package:PixaMart/backend/sources/wallpaper_repository.dart';
 // This is when a user clicks on an image and lands on the page where he/she can set it as wallpaper.
 // Todo Build System to share Images through App (Kingshuk)
 
@@ -10,17 +12,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'dart:ui';
@@ -29,7 +31,7 @@ class ImageView extends StatefulWidget {
   final String imgShowUrl;
   final String imgDownloadUrl;
   final String imgTinyUrl;
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const ImageView(
       {required this.imgShowUrl,
       required this.imgDownloadUrl,
@@ -131,12 +133,12 @@ class _ImageViewState extends State<ImageView>
       HapticFeedback.lightImpact(); // may remove later
       Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
       if(widget.initialLink == null) {
-        userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-          'img': imgDownloadUrl.split('/')[4],
+        userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).set({
+          ...cloudRecordFor(imgDownloadUrl),
         }); // RD write complete
         isLiked = 0;
       } else {
-        userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
+        userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).set({
           'img': widget.initialLink?.link.path.split('/')[2],
         }); // RD write complete
       }
@@ -146,17 +148,17 @@ class _ImageViewState extends State<ImageView>
       isLiked = -1;
       if(widget.initialLink == null) {
         userFavouritesDatabase
-            .child(imgDownloadUrl.split('/')[4])
+            .child(cloudKeyFor(imgDownloadUrl))
             .remove(); // RD deletion code
-        removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-          'img': imgDownloadUrl.split('/')[4],
+        removedFromLiked.doc(cloudKeyFor(imgDownloadUrl)).set({
+          ...cloudRecordFor(imgDownloadUrl),
         }); // when user removes an image from liked it goes to firestore
       } else {
         userFavouritesDatabase
             .child(widget.initialLink!.link.path.split('/')[2])
             .remove(); // RD deletion code
         removedFromLiked.doc(widget.initialLink?.link.path.split('/')[2]).set({
-          'img': imgDownloadUrl.split('/')[4],
+          ...cloudRecordFor(imgDownloadUrl),
         }); // when user removes an image from liked it goes to firestore
       }
     }
@@ -174,6 +176,7 @@ class _ImageViewState extends State<ImageView>
 
   saveToGallery() async {
     opacity = 1.0;
+    WallpaperRepository.trackDownload(widget.imgDownloadUrl);
     int index;
     if (widget.initialLink == null) {
       index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
@@ -187,8 +190,8 @@ class _ImageViewState extends State<ImageView>
     if (index == -1) {
         downloadsList?.add(fav);
         if(widget.initialLink == null) {
-          cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
-            'img': widget.imgDownloadUrl.split('/')[4],
+          cloudDownloads.doc(cloudKeyFor(widget.imgDownloadUrl)).set({
+            ...cloudRecordFor(widget.imgDownloadUrl),
           });
         } else {
           cloudDownloads.doc(widget.initialLink?.link.path.split('/')[2]).set({
@@ -214,7 +217,7 @@ class _ImageViewState extends State<ImageView>
         );
       }
     final result =
-      await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
+      await ImageGallerySaverPlus.saveImage(Uint8List.fromList(response.data));
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
             'Wallpaper saved to gallery Successfully',
@@ -238,6 +241,7 @@ class _ImageViewState extends State<ImageView>
 
   Future<void> setWallpaper(String place) async {
     opacity = 1.0;
+    WallpaperRepository.trackDownload(widget.imgDownloadUrl);
     int index;
     if(widget.initialLink == null) {
       index = checkIfDownloaded(imgShowUrl: widget.imgShowUrl);
@@ -247,8 +251,8 @@ class _ImageViewState extends State<ImageView>
     if (index == -1) {
       downloadsList?.add(fav);
       if(widget.initialLink == null) {
-        cloudDownloads.doc(widget.imgDownloadUrl.split('/')[4]).set({
-          'img': widget.imgDownloadUrl.split('/')[4],
+        cloudDownloads.doc(cloudKeyFor(widget.imgDownloadUrl)).set({
+          ...cloudRecordFor(widget.imgDownloadUrl),
         });
       } else {
         cloudDownloads.doc(widget.initialLink?.link.path.split('/')[2]).set({
@@ -260,7 +264,7 @@ class _ImageViewState extends State<ImageView>
     int midProgressValue = Random().nextInt(15) + 55;
     String filePath;
     if(widget.initialLink == null) {
-      filePath = '${dir?.path}/${widget.imgDownloadUrl.split('/')[4]}.jpg';
+      filePath = '${dir?.path}/wallpaper_${widget.imgDownloadUrl.hashCode.abs()}.jpg';
     } else {
       filePath = '${dir?.path}/${widget.initialLink?.link.path.split('/')[2]}.jpg';
     }
@@ -283,13 +287,14 @@ class _ImageViewState extends State<ImageView>
     }
     int location;
     if (place == 'homescreen') {
-      location = WallpaperManager.HOME_SCREEN;
+      location = 1;
     } else if (place == 'lockscreen') {
-      location = WallpaperManager.LOCK_SCREEN;
+      location = 2;
     } else {
-      location = WallpaperManager.BOTH_SCREEN;
+      location = 3;
     }
-    await WallpaperManager.setWallpaperFromFile(filePath, location)
+    await const MethodChannel('com.wallpaper.pixamart/wallpaper')
+        .invokeMethod('setWallpaper', {'path': filePath, 'location': location})
         .then((value) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -419,6 +424,34 @@ class _ImageViewState extends State<ImageView>
                                     ),
                                   ),
                                 ),
+                                if (WallpaperRepository.lookup(widget.imgShowUrl) != null)
+                                  Positioned(
+                                    top: MediaQuery.of(context).padding.top + 12,
+                                    left: 16,
+                                    right: 16,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        final pageUrl = WallpaperRepository.lookup(widget.imgShowUrl)?.pageUrl;
+                                        if (pageUrl != null) {
+                                          launchUrl(Uri.parse(pageUrl), mode: LaunchMode.externalApplication);
+                                        }
+                                      },
+                                      child: Text(
+                                        WallpaperRepository.lookup(widget.imgShowUrl)!.attribution,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Nexa',
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: Colors.white,
+                                          shadows: [Shadow(blurRadius: 6, color: Colors.black)],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 AnimatedOpacity(
                                   opacity: opacity,
                                   duration: const Duration(milliseconds: 400),
@@ -508,7 +541,7 @@ class _ImageViewState extends State<ImageView>
                                     setState(() {});
                                   }),
                               SpeedDialChild(
-                                  child: const Icon(Ionicons.share_social, color: Colors.orange,),
+                                  child: const Icon(Ionicons.shareSocial, color: Colors.orange,),
                                   backgroundColor: Colors.white,
                                   label: 'Share',
                                   labelStyle: const TextStyle(

@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "$path": {
+      ".read": "auth != null && $path === auth.uid + '-favourites'",
+      ".write": "auth != null && $path === auth.uid + '-favourites'"
+    }
+  }
+}
