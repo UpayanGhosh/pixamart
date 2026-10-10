@@ -1,7 +1,8 @@
+import 'package:PixaMart/backend/sources/wallpaper.dart';
+import 'package:PixaMart/backend/sources/wallpaper_repository.dart';
 // This Page is for when the user clicks on a Category tile and lands on the page where all of the images of the same category is shown
 
 import 'dart:async';
-import 'dart:convert';
 import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:PixaMart/front_end/widget/categories.dart';
 import 'package:PixaMart/front_end/widget/search_bar.dart';
@@ -11,12 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
-import 'package:PixaMart/private/get_pexels_api_key.dart';
-import 'package:PixaMart/backend/model/wallpaper_model.dart';
 import 'package:get/get.dart' as Getx;
-import 'package:PixaMart/private/api_key.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
 import 'package:flutter/services.dart';
 import 'package:PixaMart/backend/model/categories_model.dart';
@@ -55,10 +52,11 @@ class _CategoryPageState extends State<CategoryPage> {
         FirebaseDatabase.instance.ref('${user?.uid}-favourites/');
     removedFromLiked =
         FirebaseFirestore.instance.collection('${user?.uid}-favourites/');
-    getSearchWallpapers(widget.categoryName);
     page = 2;
     currentMaxScrollExtent = 0.0;
     scrollController = ScrollController();
+    scrollController.addListener(() => loadMoreOnScroll(widget.categoryName));
+    wallpapersFuture = loadWallpapers(widget.categoryName);
     categories = getCategory();
     opacityManager = [
       0.0.obs,
@@ -80,45 +78,32 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
-  Future<List<dynamic>> getSearchWallpapers(String query) async {
-    Response url = await get(
-        Uri.parse("https://api.pexels.com/v1/search?query=$query&per_page=80"),
-        headers: {"Authorization": getPexelsApiKey()});
-    if (url.statusCode == 200) {
-      dynamic body = jsonDecode(url.body);
-      List<dynamic> photos =
-      body['photos'].map((dynamic item) => Photos.fromJson(item)).toList();
-      photoList.addAll(photos);
-      scrollController.addListener(() async {
-        if (scrollController.offset >=
-            scrollController.position.maxScrollExtent &&
-            !scrollController.position.outOfRange) {
-          if (currentMaxScrollExtent <
-              scrollController.position.maxScrollExtent) {
-            currentMaxScrollExtent = scrollController.position.maxScrollExtent;
-            Response url = await get(
-                Uri.parse(
-                    'https://api.pexels.com/v1/search?query=$query/?page=$page&per_page=80'),
-                headers: {"Authorization": getPexelsApiKey()});
-            page++;
-            if (url.statusCode == 200) {
-              Map<String, dynamic> newPhotos = jsonDecode(url.body);
-              photoList.addAll(newPhotos['photos']
-                  .map((dynamic item) => Photos.fromJson(item))
-                  .toList());
+  late Future<List<dynamic>> wallpapersFuture;
+  bool loadingMore = false;
 
-              setState(() {});
-            } else {
-              throw Exception('Failed to Fetch Curated');
-            }
-          }
-        }
-      });
-      return photoList;
-    } else {
-      swapKeys();
-      return photoList;
-      //throw Exception('Failed to Fetch Photos');
+  Future<List<dynamic>> loadWallpapers(String query) async {
+    final firstPage = await WallpaperRepository.search(query, 1);
+    page = 2;
+    photoList
+      ..clear()
+      ..addAll(firstPage);
+    return photoList;
+  }
+
+  void loadMoreOnScroll(String query) async {
+    if (loadingMore || !scrollController.hasClients) return;
+    final position = scrollController.position;
+    if (position.pixels < position.maxScrollExtent * 0.7) return;
+    loadingMore = true;
+    try {
+      final more = await WallpaperRepository.search(query, page);
+      if (more.isNotEmpty && mounted) {
+        page++;
+        setState(() => photoList.addAll(more));
+      }
+    } catch (_) {
+    } finally {
+      loadingMore = false;
     }
   }
 
@@ -141,8 +126,8 @@ class _CategoryPageState extends State<CategoryPage> {
     if (index == -1) {
       HapticFeedback.lightImpact(); // may remove later
       Hive.box('${user?.uid}-favourites').add(fav); // Hive write complete
-      userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-        'img': imgDownloadUrl.split('/')[4],
+      userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).set({
+        ...cloudRecordFor(imgDownloadUrl),
       }); // RD write complete
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
@@ -159,9 +144,9 @@ class _CategoryPageState extends State<CategoryPage> {
           onPressed: () {
             Hive.box('${user?.uid}-favourites')
                 .deleteAt(Hive.box('${user?.uid}-favourites').length - 1);
-            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).remove();
-            removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-              'img': imgDownloadUrl.split('/')[4],
+            userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).remove();
+            removedFromLiked.doc(cloudKeyFor(imgDownloadUrl)).set({
+              ...cloudRecordFor(imgDownloadUrl),
             }); // when user removes an image from liked it goes to firestore
             setState(() {});
           },
@@ -170,10 +155,10 @@ class _CategoryPageState extends State<CategoryPage> {
     } else {
       Hive.box('${user?.uid}-favourites').deleteAt(index);
       userFavouritesDatabase
-          .child(imgDownloadUrl.split('/')[4])
+          .child(cloudKeyFor(imgDownloadUrl))
           .remove(); // RD deletion code
-      removedFromLiked.doc(imgDownloadUrl.split('/')[4]).set({
-        'img': imgDownloadUrl.split('/')[4],
+      removedFromLiked.doc(cloudKeyFor(imgDownloadUrl)).set({
+        ...cloudRecordFor(imgDownloadUrl),
       }); // when user removes an image from liked it goes to firestore
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
@@ -191,8 +176,8 @@ class _CategoryPageState extends State<CategoryPage> {
             Favourites lastDeleted =
             Favourites(fav.imgShowUrl, fav.imgDownloadUrl, fav.imgTinyUrl);
             favouritesList.add(lastDeleted);
-            userFavouritesDatabase.child(imgDownloadUrl.split('/')[4]).set({
-              'img': imgDownloadUrl.split('/')[4],
+            userFavouritesDatabase.child(cloudKeyFor(imgDownloadUrl)).set({
+              ...cloudRecordFor(imgDownloadUrl),
             });
             setState(() {});
           },
@@ -309,7 +294,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                   ? 1.45
                                   : 1.68),
                           child: FutureBuilder(
-                            future: getSearchWallpapers(widget.categoryName),
+                            future: wallpapersFuture,
                             builder:
                                 (context, AsyncSnapshot<List<dynamic>> snapshot) {
                               if (snapshot.hasData) {
@@ -347,36 +332,30 @@ class _CategoryPageState extends State<CategoryPage> {
                                                     onLongPressStart: (longPress) {
                                                       HapticFeedback.lightImpact();
                                                       onShare(
-                                                          photo.src
-                                                              .portrait,
-                                                          photo.src
-                                                              .original);
+                                                          photo.showUrl,
+                                                          photo.downloadUrl);
                                                     },
                                                     onDoubleTap: () {
                                                       handleLiked(
-                                                          imgShowUrl: photo
-                                                              .src.portrait,
-                                                          imgDownloadUrl: photo
-                                                              .src.original,
-                                                          imgTinyUrl: photo.src.tiny);
+                                                          imgShowUrl: photo.showUrl,
+                                                          imgDownloadUrl: photo.downloadUrl,
+                                                          imgTinyUrl: photo.tinyUrl);
                                                     },
                                                     onTap: () {
                                                       Navigator.pushNamed(
                                                           context,
                                                           '/imageView/',
                                                           arguments: {
-                                                            'imgShowUrl': photo
-                                                                .src.portrait,
+                                                            'imgShowUrl': photo.showUrl,
                                                             'imgDownloadUrl':
-                                                            photo.src
-                                                                .original,
-                                                            'imgTinyUrl': photo.src.tiny
+                                                            photo.downloadUrl,
+                                                            'imgTinyUrl': photo.tinyUrl
                                                           });
                                                     },
                                                     child: Hero(
-                                                      tag: photo.src.portrait,
+                                                      tag: photo.showUrl,
                                                       child: CachedNetworkImage(
-                                                        imageUrl: '${photo.src.portrait}',
+                                                        imageUrl: '${photo.showUrl}',
                                                         placeholder: (context, url) => const Icon(Icons.add),
                                                         fit: BoxFit.cover,
                                                       ),
@@ -387,10 +366,10 @@ class _CategoryPageState extends State<CategoryPage> {
                                                   onTap: () {
                                                     handleLiked(
                                                         imgShowUrl:
-                                                        photo.src.portrait,
+                                                        photo.showUrl,
                                                         imgDownloadUrl:
-                                                        photo.src.original,
-                                                        imgTinyUrl: photo.src.tiny);
+                                                        photo.downloadUrl,
+                                                        imgTinyUrl: photo.tinyUrl);
                                                   },
                                                   child: Padding(
                                                     padding:
@@ -399,9 +378,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                                     child: Builder(
                                                         builder: (context) {
                                                           if (checkIfLiked(
-                                                              imgShowUrl: photo
-                                                                  .src
-                                                                  .portrait) ==
+                                                              imgShowUrl: photo.showUrl) ==
                                                               -1) {
                                                             return const Icon(
                                                               Icons
@@ -440,7 +417,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                               -1);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.black54,
+                                            backgroundColor: Colors.black54,
                                             shape: const CircleBorder()),
                                         child: Lottie.asset(
                                             'assets/lottie/Rocket.json',

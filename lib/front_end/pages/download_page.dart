@@ -1,3 +1,4 @@
+import 'package:PixaMart/backend/sources/wallpaper.dart';
 import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,7 +41,8 @@ class _DownloadPageState extends State<DownloadPage> {
         final snapshot = await cloudDownloads.get();
         for (var element in snapshot.docs) {
           var download = element.data() as Map;
-          Favourites fav = Favourites('https://images.pexels.com/photos/${download['img']}/pexels-photo-${download['img']}.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800', 'https://images.pexels.com/photos/${download['img']}/pexels-photo-2014422.jpeg', 'https://images.pexels.com/photos/${download['img']}/pexels-photo-${download['img']}.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280');
+          final urls = urlsFromCloudRecord(download);
+          Favourites fav = Favourites(urls[0], urls[1], urls[2]);
           downloadsList.add(fav);
         }
       }

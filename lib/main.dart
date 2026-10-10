@@ -1,9 +1,10 @@
+import 'package:PixaMart/backend/sources/wallpaper_repository.dart';
 // Todo try and add a notification system (kingshuk)
 // Todo try adding a showcase system for new users (kingshuk)
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/material.dart';
 import 'package:PixaMart/routing/route_generator.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,8 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   Hive.registerAdapter(FavouritesAdapter());
-  final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+  const SharedLink? initialLink = null;
+  await WallpaperRepository.init();
   if(FirebaseAuth.instance.currentUser?.uid != null) {
     await Hive.openBox('${FirebaseAuth.instance.currentUser?.uid}-downloads');
     await Hive.openBox('${FirebaseAuth.instance.currentUser?.uid}-favourites');
@@ -34,7 +36,7 @@ void main() async {
 }
 
 class PixaMartApp extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const PixaMartApp({required this.initialLink, Key? key}) : super(key: key);
 
   @override
@@ -113,7 +115,7 @@ class _PixaMartAppState extends State<PixaMartApp> {
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen()));
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.white, elevation: 0),
+                                  backgroundColor: Colors.white, elevation: 0),
                               child: Text('No thanks',
                                   style: TextStyle(
                                       color: Colors.greenAccent,
@@ -132,7 +134,7 @@ class _PixaMartAppState extends State<PixaMartApp> {
                                         builder: (context) => const SplashScreen()));
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.greenAccent, elevation: 0),
+                                  backgroundColor: Colors.greenAccent, elevation: 0),
                               child: Text(
                                 'Update',
                                 style: TextStyle(

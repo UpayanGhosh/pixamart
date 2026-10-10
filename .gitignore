@@ -48,3 +48,8 @@ app.*.map.json
 
 # Library Files
 /lib/private/api_key.dart
+
+# Build-time API keys and signing material
+api_keys.json
+*.jks
+*.keystore

@@ -1,3 +1,4 @@
+import 'package:PixaMart/backend/sources/wallpaper.dart';
 import 'dart:async';
 import 'package:PixaMart/backend/functions/on_share.dart';
 import 'package:PixaMart/backend/model/favourites_model.dart';
@@ -124,9 +125,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                       favourites.imgShowUrl,
                                       favourites.imgDownloadUrl,
                                       favourites.imgTinyUrl);
-                                  userFavouritesDatabase.child(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).remove();
-                                  removedFromLiked.doc(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).set({
-                                    'img': lastDeleted.imgDownloadUrl.split('/')[4],
+                                  userFavouritesDatabase.child(cloudKeyFor(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl)).remove();
+                                  removedFromLiked.doc(cloudKeyFor(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl)).set({
+                                    ...cloudRecordFor(lastDeleted.imgDownloadUrl),
                                   }); // when user removes an image from liked it goes to firestore
                                   favouritesBox.deleteAt(favouritesBox.length - index - 1);
                                   setState(() {});
@@ -142,8 +143,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                       label: 'Undo',
                                       onPressed: () {
                                         favouritesBox.add(lastDeleted);
-                                        userFavouritesDatabase.child(lastDeleted.imgDownloadUrl.split('/')[4]).set({
-                                          'img': lastDeleted.imgDownloadUrl.split('/')[4],
+                                        userFavouritesDatabase.child(cloudKeyFor(lastDeleted.imgDownloadUrl)).set({
+                                          ...cloudRecordFor(lastDeleted.imgDownloadUrl),
                                         }); // RD write complete
                                         setState(() {});
                                       },
@@ -165,7 +166,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           -1);
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.black54, shape: const CircleBorder()),
+                        backgroundColor: Colors.black54, shape: const CircleBorder()),
                     child: Lottie.asset('assets/lottie/Rocket.json',
                         height: MediaQuery.of(context).size.width /
                             6.53, width: MediaQuery.of(context).size.width /
@@ -232,9 +233,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         onTap: () {
                           Favourites lastDeleted = Favourites(favourites.imgShowUrl,
                               favourites.imgDownloadUrl, favourites.imgTinyUrl);
-                          userFavouritesDatabase.child(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).remove();
-                          removedFromLiked.doc(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4]).set({
-                            'img': favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl.split('/')[4],
+                          userFavouritesDatabase.child(cloudKeyFor(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl)).remove();
+                          removedFromLiked.doc(cloudKeyFor(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl)).set({
+                            ...cloudRecordFor(favouritesBox.getAt(favouritesBox.length - index - 1).imgDownloadUrl),
                           }); // when user removes an image from liked it goes to firestore
                           favouritesBox.deleteAt(index);
                           setState(() {});
@@ -250,8 +251,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                               label: 'Undo',
                               onPressed: () {
                                 favouritesBox.add(lastDeleted);
-                                userFavouritesDatabase.child(lastDeleted.imgDownloadUrl.split('/')[4]).set({
-                                  'img': lastDeleted.imgDownloadUrl.split('/')[4],
+                                userFavouritesDatabase.child(cloudKeyFor(lastDeleted.imgDownloadUrl)).set({
+                                  ...cloudRecordFor(lastDeleted.imgDownloadUrl),
                                 }); // RD write complete
                                 setState(() {});
                               },

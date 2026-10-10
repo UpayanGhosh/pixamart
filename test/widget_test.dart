@@ -1,30 +1,26 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:PixaMart/backend/sources/wallpaper.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pixamart/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Pexels URLs keep their legacy numeric cloud key', () {
+    expect(
+        cloudKeyFor('https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg'),
+        '2014422');
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  test('Other sources get a Firebase-safe key', () {
+    final key = cloudKeyFor('https://w.wallhaven.cc/full/gw/wallhaven-gw1ppq.jpg');
+    expect(key, startsWith('u_'));
+    expect(key, isNot(matches(RegExp(r'[.#$\[\]/=]'))));
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('Cloud records round-trip non-Pexels URLs', () {
+    const url = 'https://images.unsplash.com/photo-123?ixid=abc';
+    expect(urlsFromCloudRecord(cloudRecordFor(url)), [url, url, url]);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('Legacy Pexels records rebuild Pexels URLs', () {
+    final urls = urlsFromCloudRecord({'img': '42'});
+    expect(urls[1], 'https://images.pexels.com/photos/42/pexels-photo-42.jpeg');
   });
 }

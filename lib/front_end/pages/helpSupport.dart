@@ -41,7 +41,7 @@ class HelpSupport extends StatelessWidget {
                       vertical:
                       MediaQuery.of(context).size.height / 41.7),
                   elevation: 0,
-                  primary: Colors.blueAccent,
+                  backgroundColor: Colors.blueAccent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),
                 ),

@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /version/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /{collection}/{doc} {
+      allow read, write: if request.auth != null
+        && (collection == request.auth.uid + '-favourites'
+            || collection == request.auth.uid + '-downloads');
+    }
+  }
+}

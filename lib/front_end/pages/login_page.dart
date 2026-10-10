@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:PixaMart/backend/model/auth_model.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:PixaMart/backend/model/shared_link.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
-  final PendingDynamicLinkData? initialLink;
+  final SharedLink? initialLink;
   const LoginPage({required this.initialLink, Key? key}) : super(key: key);
 
   @override
@@ -177,22 +177,6 @@ class _LoginPageState extends State<LoginPage> {
                                     keyboardType: TextInputType.emailAddress,
                                     onChanged: (val) async {
                                       setState(() => _email = val);
-                                      if (_email.contains('@') &&
-                                          _email.contains('.')) {
-                                        List<String> userSignInMethods = [];
-                                        userSignInMethods = await auth
-                                            .checkIfUserExists(email: _email);
-                                        if (userSignInMethods.isEmpty &&
-                                            _email != '') {
-                                          emailProperties.value =
-                                              'Account does\'nt exist';
-                                          color[0].value = 'red';
-                                        } else {
-                                          emailProperties.value =
-                                              'Account exists';
-                                          color[0].value = 'green';
-                                        }
-                                      }
                                       //setState(() {});
                                     },
                                     cursorColor: Colors.white,
@@ -260,11 +244,11 @@ class _LoginPageState extends State<LoginPage> {
                                               },
                                               icon: obscureText.value
                                                   ? const Icon(
-                                                      Ionicons.eye_outline,
+                                                      Ionicons.eyeOutline,
                                                       color: Colors.white,
                                                     )
                                                   : const Icon(
-                                                      Ionicons.eye_off_outline,
+                                                      Ionicons.eyeOffOutline,
                                                       color: Colors.white,
                                                     )),
                                       enabledBorder: OutlineInputBorder(
@@ -313,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                                 vertical:
                                     MediaQuery.of(context).size.height / 41.7),
                             elevation: 0,
-                            primary: const Color(0xfff07371),
+                            backgroundColor: const Color(0xfff07371),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
                           ),
@@ -331,7 +315,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Future.delayed(
                                         const Duration(milliseconds: 300));
                                   });
-                                  if (value == 'wrong-password') {
+                                  if (value == 'wrong-password' || value == 'invalid-credential') {
                                     color[1].value = 'red';
                                     passwordProperties.value = 'Wrong Password';
                                     HapticFeedback.vibrate();
@@ -375,7 +359,7 @@ class _LoginPageState extends State<LoginPage> {
                                 vertical:
                                     MediaQuery.of(context).size.height / 41.7),
                             elevation: 0,
-                            primary: const Color(0xff63c54f),
+                            backgroundColor: const Color(0xff63c54f),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
                           ),

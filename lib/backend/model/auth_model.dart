@@ -45,9 +45,6 @@ class AuthService {
     }
   }
 
-  Future checkIfUserExists({required String email}) {
-    return auth.fetchSignInMethodsForEmail(email);
-  }
 
   Future logout() async {
     await auth.signOut();

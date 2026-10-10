@@ -19,46 +19,44 @@ version: 2.2.0+20
 # Remember to change buildNumber in Firestore
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: ">=3.4.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^2.0.0
   http: ^1.1.2
-  image_gallery_saver:
-  dio:
-  flutter_wallpaper_manager: ^0.0.3
+  image_gallery_saver_plus: ^5.1.1
+  dio: ^5.4.0
   flutter_cache_manager: ^3.1.2
-  rive: ^0.12.3
+  rive: ^0.13.20
   animated_splash_screen: ^1.2.0
   page_transition: ^2.0.5
-  lottie: ^2.7.0
+  lottie: ^3.6.1
   flutter_speed_dial: ^7.0.0
   path_provider: ^2.0.11
   curved_navigation_bar: ^1.0.3
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   get: ^4.6.5
-  liquid_progress_indicator_ns: ^1.0.0
-  line_awesome_flutter: ^2.0.0
-  google_fonts: ^6.1.0
+  liquid_progress_indicator_v2: ^0.5.0
+  line_awesome_flutter: ^3.0.1
+  google_fonts: ^9.0.0
   simple_animations: ^5.0.2
-  ionicons: ^0.2.2
-  confetti: ^0.7.0
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.15.2
-  firebase_database: ^10.3.8
-  google_sign_in: ^6.1.6
-  cloud_firestore: ^4.13.5
-  firebase_dynamic_links: ^5.4.8
-  share_plus: ^7.2.1
-  package_info_plus: ^5.0.1
+  ionicons: ^0.2.3
+  confetti: ^0.8.0
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  firebase_database: ^12.6.0
+  google_sign_in: ^6.2.2
+  cloud_firestore: ^6.10.0
+  share_plus: ^13.3.1
+  package_info_plus: ^10.2.2
   url_launcher: ^6.1.5
   open_store: ^0.5.0
-  connectivity_plus: ^5.0.2
-  cached_network_image: ^3.2.1
+  connectivity_plus: ^7.3.2
+  cached_network_image: ^4.0.4
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +67,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
   hive_generator: ^2.0.1
   build_runner: ^2.1.11
 
